@@ -2,6 +2,7 @@ package org.techtown.mymvvmtest
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import org.techtown.mymvvmtest.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
@@ -9,10 +10,18 @@ class MainActivity : AppCompatActivity() {
     private lateinit var userFragment: UserFragment
     private lateinit var myFavoritesFragment: MyFavoritesFragment
 
+    //뷰바인딩 추가
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+
         initSet()
+        initClick()
+    }
     }
 
     //초기 설정.
