@@ -22,6 +22,16 @@ class MainActivity : AppCompatActivity() {
         initSet()
         initClick()
     }
+
+    //클릭 리스너 등록.
+    private fun initClick() {
+        binding.btnUser.setOnClickListener {
+            supportFragmentManager.beginTransaction().replace(R.id.cl_container, userFragment).commit()
+        }
+
+        binding.btnFavorites.setOnClickListener {
+            supportFragmentManager.beginTransaction().replace(R.id.cl_container, myFavoritesFragment).commit()
+        }
     }
 
     //초기 설정.
