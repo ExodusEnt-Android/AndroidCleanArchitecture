@@ -1,7 +1,9 @@
 package org.techtown.mymvvmtest.model
 
+import com.google.gson.annotations.SerializedName
+
 data class UserRootModel(
-    val incomplete_results: Boolean,
-    val items: List<UserModel>,
-    val total_count: Int
+    @SerializedName("incomplete_results") val incomplete_results: Boolean,
+    @SerializedName("items") val items: List<UserModel>,
+    @SerializedName("total_count") val total_count: Int
 )
