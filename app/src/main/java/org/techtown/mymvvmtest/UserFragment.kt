@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import org.techtown.mymvvmtest.adapter.UserListAdapter
 import org.techtown.mymvvmtest.databinding.FragmentUserBinding
 
 
@@ -29,6 +30,10 @@ class UserFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        //어댑터 연결부분. 
+        val userAdapter = UserListAdapter()
+        binding.rvUser.adapter = userAdapter
     }
 
     override fun onDestroyView() {
