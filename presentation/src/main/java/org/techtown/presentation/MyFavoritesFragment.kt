@@ -1,11 +1,12 @@
-package org.techtown.mymvvmtest
+package org.techtown.presentation
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import org.techtown.mymvvmtest.databinding.FragmentMyFavoritesBinding
+import org.techtown.presentation.databinding.FragmentMyFavoritesBinding
+
 
 class MyFavoritesFragment : Fragment() {
 

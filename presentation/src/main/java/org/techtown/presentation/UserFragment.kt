@@ -1,4 +1,4 @@
-package org.techtown.mymvvmtest
+package org.techtown.presentation
 
 import android.os.Bundle
 import android.util.Log
@@ -9,11 +9,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import org.techtown.mymvvmtest.adapter.UserListAdapter
-import org.techtown.mymvvmtest.databinding.FragmentUserBinding
-import org.techtown.mymvvmtest.model.UserModel
-import org.techtown.mymvvmtest.model.UserRootModel
-import org.techtown.mymvvmtest.retorfit.RetrofitBuilder
+import org.techtown.presentation.adapter.UserListAdapter
+import org.techtown.presentation.databinding.FragmentUserBinding
+import org.techtown.presentation.model.UserRootModel
+import org.techtown.presentation.retorfit.RetrofitBuilder
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -56,7 +55,7 @@ class UserFragment : Fragment() {
                         val userList = response.body()!!.items
 
                         //어댑터 연결부분.
-                        userListAdapter = UserListAdapter()
+                        userListAdapter = UserListAdapter(requireActivity())
                         binding.rvUser.apply {
                             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))

@@ -1,8 +1,8 @@
-package org.techtown.mymvvmtest
+package org.techtown.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import org.techtown.mymvvmtest.databinding.ActivityMainBinding
+import org.techtown.presentation.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,11 +25,11 @@ class MainActivity : AppCompatActivity() {
     //클릭 리스너 등록.
     private fun initClick() {
         binding.btnUser.setOnClickListener {
-            supportFragmentManager.beginTransaction().replace(R.id.cl_container, userFragment).commit()
+            supportFragmentManager.beginTransaction().replace(binding.liContainer.id, userFragment).commit()
         }
 
         binding.btnFavorites.setOnClickListener {
-            supportFragmentManager.beginTransaction().replace(R.id.cl_container, myFavoritesFragment).commit()
+            supportFragmentManager.beginTransaction().replace(binding.liContainer.id, myFavoritesFragment).commit()
         }
     }
 
@@ -39,6 +39,6 @@ class MainActivity : AppCompatActivity() {
         myFavoritesFragment = MyFavoritesFragment()
 
         //처음엔 유저 화면 보여줌.
-        supportFragmentManager.beginTransaction().replace(R.id.cl_container, userFragment).commit()
+        supportFragmentManager.beginTransaction().replace(binding.liContainer.id, userFragment).commit()
     }
 }

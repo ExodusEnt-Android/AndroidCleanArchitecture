@@ -1,15 +1,21 @@
-package org.techtown.mymvvmtest.adapter
+package org.techtown.presentation.adapter
 
+import android.content.Context
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import org.techtown.mymvvmtest.databinding.ItemUserBinding
-import org.techtown.mymvvmtest.model.UserModel
+import com.bumptech.glide.Glide
+import org.techtown.presentation.databinding.ItemUserBinding
+import org.techtown.presentation.model.UserModel
 
-class UserListAdapter : ListAdapter<UserModel, UserListAdapter.ViewHolder>(diffUtil){
+
+class UserListAdapter(private val context: Context) : ListAdapter<UserModel, UserListAdapter.ViewHolder>(diffUtil){
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder{
         //뷰바인딩 이용.
         val viewHolder = ViewHolder(ItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -17,13 +23,16 @@ class UserListAdapter : ListAdapter<UserModel, UserListAdapter.ViewHolder>(diffU
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        Log.d("Response", "바인딩되었음")
         holder.bind(getItem(position))
     }
 
-    class ViewHolder(private val binding: ItemUserBinding) :RecyclerView.ViewHolder(binding.root){
+    inner class ViewHolder(private val binding: ItemUserBinding) :RecyclerView.ViewHolder(binding.root){
         fun bind(item: UserModel){
             //간단하게 유저 이미지 및 닉네임 넣어주기.
-            binding.ivUserAvatar.setImageURI(Uri.parse(item.avatar_url))
+            Glide.with(context)
+                .load(item.avatar_url)
+                .into(binding.ivUserAvatar)
             binding.tvUserName.text = item.login
         }
     }

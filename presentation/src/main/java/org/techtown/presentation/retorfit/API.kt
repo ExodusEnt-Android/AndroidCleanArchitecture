@@ -1,7 +1,6 @@
-package org.techtown.mymvvmtest.retorfit
+package org.techtown.presentation.retorfit
 
-import org.techtown.mymvvmtest.model.UserModel
-import org.techtown.mymvvmtest.model.UserRootModel
+import org.techtown.presentation.model.UserRootModel
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
