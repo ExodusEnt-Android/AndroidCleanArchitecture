@@ -1,4 +1,4 @@
-package org.techtown.mymvvmtest.model
+package org.techtown.presentation.model
 
 import com.google.gson.annotations.SerializedName
 
