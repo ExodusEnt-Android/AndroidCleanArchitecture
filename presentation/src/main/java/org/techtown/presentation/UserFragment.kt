@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.techtown.presentation.adapter.UserListAdapter
 import org.techtown.presentation.databinding.FragmentUserBinding
+import org.techtown.presentation.model.UserModel
 import org.techtown.presentation.model.UserRootModel
 import org.techtown.presentation.retorfit.RetrofitBuilder
 import retrofit2.Call
@@ -27,6 +28,9 @@ class UserFragment : Fragment() {
 
     //유저 리스트 어댑터.
     private lateinit var userListAdapter: UserListAdapter
+
+    //받아온 유저 리스트.
+    private lateinit var userList: ArrayList<UserModel>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,30 +52,43 @@ class UserFragment : Fragment() {
     }
 
     private fun getUserInfo() {
-        RetrofitBuilder.api.getUserInfo("hello").enqueue(object : Callback<UserRootModel>{
-            override fun onResponse(call: Call<UserRootModel>, response: Response<UserRootModel>) {
-                if(response.isSuccessful){
-                    if(response.code() == 200){
-                        val userList = response.body()!!.items
 
-                        //어댑터 연결부분.
-                        userListAdapter = UserListAdapter(requireActivity())
-                        binding.rvUser.apply {
-                            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-                            adapter = userListAdapter
-                        }
-                        //ListAdapter는 notify필요없이 submitList로 item비교 전달 및 MainThread ui업데이트해줌.
-                        userListAdapter.submitList(userList)
+        userList = arguments?.getSerializable("user_list") as ArrayList<UserModel>
 
-                    }
-                }
-            }
+        //어댑터 연결부분.
+        userListAdapter = UserListAdapter(requireActivity())
+        binding.rvUser.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+            adapter = userListAdapter
+        }
+        //ListAdapter는 notify필요없이 submitList로 item비교 전달 및 MainThread ui업데이트해줌.
+        userListAdapter.submitList(userList)
 
-            override fun onFailure(call: Call<UserRootModel>, t: Throwable) {
-                Toast.makeText(activity, "데이터 불러오기 실패", Toast.LENGTH_LONG).show()
-            }
-        })
+//        RetrofitBuilder.api.getUserInfo("hello").enqueue(object : Callback<UserRootModel>{
+//            override fun onResponse(call: Call<UserRootModel>, response: Response<UserRootModel>) {
+//                if(response.isSuccessful){
+//                    if(response.code() == 200){
+//                        val userList = response.body()!!.items
+//
+//                        //어댑터 연결부분.
+//                        userListAdapter = UserListAdapter(requireActivity())
+//                        binding.rvUser.apply {
+//                            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+//                            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+//                            adapter = userListAdapter
+//                        }
+//                        //ListAdapter는 notify필요없이 submitList로 item비교 전달 및 MainThread ui업데이트해줌.
+//                        userListAdapter.submitList(userList)
+//
+//                    }
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<UserRootModel>, t: Throwable) {
+//                Toast.makeText(activity, "데이터 불러오기 실패", Toast.LENGTH_LONG).show()
+//            }
+//        })
     }
 
     override fun onDestroyView() {

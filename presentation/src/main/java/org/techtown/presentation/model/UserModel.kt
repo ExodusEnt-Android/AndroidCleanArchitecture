@@ -1,6 +1,7 @@
 package org.techtown.presentation.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class UserModel(
     @SerializedName("avatar_url") val avatar_url: String,
@@ -22,4 +23,4 @@ data class UserModel(
     @SerializedName("subscriptions_url") val subscriptions_url: String,
     @SerializedName("type") val type: String,
     @SerializedName("url") val url: String
-)
+) :Serializable

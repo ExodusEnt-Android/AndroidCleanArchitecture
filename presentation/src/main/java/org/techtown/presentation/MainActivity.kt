@@ -3,6 +3,7 @@ package org.techtown.presentation
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import org.techtown.presentation.databinding.ActivityMainBinding
+import org.techtown.presentation.model.UserModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,7 +36,17 @@ class MainActivity : AppCompatActivity() {
 
     //초기 설정.
     private fun initSet(){
+
+        //스플래시화면에서 받아온 초기 유저리스트 받아와주기.
+        val userList = intent.getSerializableExtra("user_list") as ArrayList<UserModel>
+
+        //프래그먼트 데이터전송을위한 번들생성.
+        val userBundle = Bundle()
+        userBundle.putSerializable("user_list", userList)
+
         userFragment = UserFragment()
+        userFragment.arguments = userBundle
+
         myFavoritesFragment = MyFavoritesFragment()
 
         //처음엔 유저 화면 보여줌.
