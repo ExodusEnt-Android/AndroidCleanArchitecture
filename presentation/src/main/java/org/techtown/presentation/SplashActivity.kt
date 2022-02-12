@@ -88,10 +88,4 @@ class SplashActivity : AppCompatActivity() {
             }
         })
     }
-
-    fun getCurrentTime(): String? {
-        val time = System.currentTimeMillis()
-        val dayTime = SimpleDateFormat("yyyy-mm-dd hh:mm:ss")
-        return dayTime.format(Date(time))
-    }
 }
