@@ -20,8 +20,14 @@ class SplashActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySplashBinding
 
     //3초 카운트다운 세기위해서 추가.
-    private var count = 3
+    private var count = 9
     private var countDownTimer:CountDownTimer? = null
+
+    //통신 성공 여부.
+    private var isSuccess:Boolean = false
+
+    //타이머 여러개돌면 안되므로 한번만 초기화하게 해줌.
+    private var countResponse : Boolean = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,15 +52,24 @@ class SplashActivity : AppCompatActivity() {
 
     }
 
-    private fun countDownTimer(userList: ArrayList<UserModel>) {
-        countDownTimer = object : CountDownTimer(3000L, 1000L){
+    private fun countDownTimer(userList: ArrayList<UserModel>?) {
+        countDownTimer = object : CountDownTimer(9000L, 1000L){
             override fun onTick(p0: Long) {
                 binding.tvCount.text = "$count"
                 count --
-                if(count == 0){ //0일될떄는 3초가 다 지났으므로 다음화면으로 넘어가줍니다.
+                if(count <= 8 && isSuccess){ //0일될떄는 3초가 다 지났으므로 다음화면으로 넘어가줍니다(최소 2초일때 넘어가지게하기).
                     val intent = Intent(this@SplashActivity, MainActivity::class.java)
                     intent.putExtra("user_list", userList)
                     startActivity(intent)
+                    countDownTimer!!.cancel()
+                    countDownTimer = null
+                } else if(count % 3 == 1 && count <= 7 && !isSuccess && count != 1) { //3초마다 재연결을 해줘야 되므로.
+                    getFirstUserInfo()
+                } else if(count % 3 == 1 && count == 1 && !isSuccess){ //마지막까지 통신 안될시에는 사용자에게 알려주기.
+                    binding.tvCount.text = "카운트종료"
+                    countDownTimer!!.cancel()
+                    countDownTimer = null
+                    Toast.makeText(this@SplashActivity, "데이터 통신 실패하였습니다." , Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -73,18 +88,38 @@ class SplashActivity : AppCompatActivity() {
 
                         val userList = response.body()!!.items
 
-                        countDownTimer(userList)
+                        if(!countResponse){
+                            countDownTimer(userList)
+                        }
                         countDownTimer!!.start()
 
-                        Toast.makeText(this@SplashActivity, "데이터를 불러오는데 성공하였습니다." , Toast.LENGTH_LONG).show()
+                        isSuccess = true
 
-
+                    } else {
+                        if(!countResponse){
+                            countDownTimer(null)
+                            countDownTimer!!.start()
+                        }
+                        isSuccess = false
                     }
+                } else {
+                    if(!countResponse){
+                        countDownTimer(null)
+                        countDownTimer!!.start()
+                    }
+                    isSuccess = false
                 }
+                countResponse = true
             }
 
             override fun onFailure(call: Call<UserRootModel>, t: Throwable) {
-                Toast.makeText(this@SplashActivity, "데이터 불러오기 실패", Toast.LENGTH_LONG).show()
+                countDownTimer(null)
+                if(!countResponse){
+                    countDownTimer(null)
+                    countDownTimer!!.start()
+                }
+                isSuccess = false
+                countResponse = true
             }
         })
     }
