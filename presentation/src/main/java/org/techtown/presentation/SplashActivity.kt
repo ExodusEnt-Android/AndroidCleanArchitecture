@@ -1,6 +1,9 @@
 package org.techtown.presentation
 
+import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -29,6 +32,8 @@ class SplashActivity : AppCompatActivity() {
     //타이머 여러개돌면 안되므로 한번만 초기화하게 해줌.
     private var countResponse : Boolean = false
 
+    //프로그래스바.
+    private var progressDialog: ProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,8 +86,10 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun getFirstUserInfo() {
+        showProgrss()
         RetrofitBuilder.api.getUserInfo("hello").enqueue(object : Callback<UserRootModel> {
             override fun onResponse(call: Call<UserRootModel>, response: Response<UserRootModel>) {
+                closeProgress()
                 if(response.isSuccessful){
                     if(response.code() == 200){
 
@@ -113,6 +120,7 @@ class SplashActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<UserRootModel>, t: Throwable) {
+                closeProgress()
                 countDownTimer(null)
                 if(!countResponse){
                     countDownTimer(null)
@@ -122,5 +130,22 @@ class SplashActivity : AppCompatActivity() {
                 countResponse = true
             }
         })
+    }
+
+    //프래그래스 보여줌.
+    private fun showProgrss(){
+        if(progressDialog != null && progressDialog!!.isShowing){
+            return
+        }
+        progressDialog = ProgressDialog.show(this, null, null, true, false)
+        progressDialog?.window?.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
+        progressDialog?.setContentView(R.layout.progress_layout)
+    }
+
+    //프래그래스 닫아줌.
+    private fun closeProgress(){
+        if(progressDialog != null && progressDialog!!.isShowing){
+            progressDialog!!.dismiss()
+        }
     }
 }
