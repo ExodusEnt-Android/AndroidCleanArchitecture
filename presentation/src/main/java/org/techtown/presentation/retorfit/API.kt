@@ -9,5 +9,5 @@ import retrofit2.http.Query
 interface API {
 
     @GET("search/users")
-    fun getUserInfo(@Query("q") name : String): Call<UserRootModel>
+    fun getUserInfo(@Query("q") name : String?): Call<UserRootModel>
 }
