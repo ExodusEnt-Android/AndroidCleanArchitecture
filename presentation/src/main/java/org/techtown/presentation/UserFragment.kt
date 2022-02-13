@@ -1,13 +1,14 @@
 package org.techtown.presentation
 
+import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.techtown.presentation.adapter.UserListAdapter
@@ -42,6 +43,7 @@ class UserFragment : Fragment(),
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        setHasOptionsMenu(true)
         _binding = FragmentUserBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -49,11 +51,11 @@ class UserFragment : Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //초기유저정보를 가져옵니다.
-        getUserInfo()
+        //초기유저정보를 세팅해줌.
+        setUserInfo()
     }
 
-    private fun getUserInfo() {
+    private fun setUserInfo() {
 
         userList = arguments?.getSerializable("user_list") as ArrayList<UserModel>
 
@@ -68,31 +70,55 @@ class UserFragment : Fragment(),
         }
         //ListAdapter는 notify필요없이 submitList로 item비교 전달 및 MainThread ui업데이트해줌.
         userListAdapter.submitList(userList)
+    }
 
-//        RetrofitBuilder.api.getUserInfo("hello").enqueue(object : Callback<UserRootModel>{
-//            override fun onResponse(call: Call<UserRootModel>, response: Response<UserRootModel>) {
-//                if(response.isSuccessful){
-//                    if(response.code() == 200){
-//                        val userList = response.body()!!.items
-//
-//                        //어댑터 연결부분.
-//                        userListAdapter = UserListAdapter(requireActivity())
-//                        binding.rvUser.apply {
-//                            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-//                            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-//                            adapter = userListAdapter
-//                        }
-//                        //ListAdapter는 notify필요없이 submitList로 item비교 전달 및 MainThread ui업데이트해줌.
-//                        userListAdapter.submitList(userList)
-//
-//                    }
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<UserRootModel>, t: Throwable) {
-//                Toast.makeText(activity, "데이터 불러오기 실패", Toast.LENGTH_LONG).show()
-//            }
-//        })
+    //검색을 통한 유저정보 가져와줌.
+    private fun getUserInfo(query: String?){
+        Util.showProgress(requireActivity())
+        RetrofitBuilder.api.getUserInfo(query).enqueue(object : Callback<UserRootModel> {
+            override fun onResponse(call: Call<UserRootModel>, response: Response<UserRootModel>) {
+                Util.closeProgress()
+                if (response.isSuccessful) {
+                    if (response.code() == 200) {
+                        val userList = response.body()!!.items
+                        userListAdapter.submitList(userList)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<UserRootModel>, t: Throwable) {
+                Util.closeProgress()
+                Toast.makeText(activity, "데이터 불러오기 실패", Toast.LENGTH_LONG).show()
+            }
+        })
+    }
+
+    //검색창 세팅. 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menu.clear()
+        inflater.inflate(R.menu.options_menu, menu)
+
+        val item = menu.findItem(R.id.search)
+        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW or MenuItem.SHOW_AS_ACTION_IF_ROOM)
+
+        val searchView = item.actionView as SearchView
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                getUserInfo(query)
+                //검색후 포커스가 한번더 searchView에잡히기때문에 두번 검색이 되므로 클리어시켜줌.
+                searchView.clearFocus()
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+
+        })
+
+        searchView.setOnClickListener { view -> }
     }
 
     override fun onDestroyView() {

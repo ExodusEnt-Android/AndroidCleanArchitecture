@@ -86,10 +86,10 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun getFirstUserInfo() {
-        showProgrss()
+        Util.showProgress(this@SplashActivity)
         RetrofitBuilder.api.getUserInfo("hello").enqueue(object : Callback<UserRootModel> {
             override fun onResponse(call: Call<UserRootModel>, response: Response<UserRootModel>) {
-                closeProgress()
+                Util.closeProgress()
                 if(response.isSuccessful){
                     if(response.code() == 200){
 
@@ -120,7 +120,7 @@ class SplashActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<UserRootModel>, t: Throwable) {
-                closeProgress()
+                Util.closeProgress()
                 countDownTimer(null)
                 if(!countResponse){
                     countDownTimer(null)
@@ -130,22 +130,5 @@ class SplashActivity : AppCompatActivity() {
                 countResponse = true
             }
         })
-    }
-
-    //프래그래스 보여줌.
-    private fun showProgrss(){
-        if(progressDialog != null && progressDialog!!.isShowing){
-            return
-        }
-        progressDialog = ProgressDialog.show(this, null, null, true, false)
-        progressDialog?.window?.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
-        progressDialog?.setContentView(R.layout.progress_layout)
-    }
-
-    //프래그래스 닫아줌.
-    private fun closeProgress(){
-        if(progressDialog != null && progressDialog!!.isShowing){
-            progressDialog!!.dismiss()
-        }
     }
 }
