@@ -2,6 +2,7 @@ package org.techtown.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import org.techtown.presentation.databinding.ActivityMainBinding
 import org.techtown.presentation.model.UserModel
 
@@ -13,6 +14,9 @@ class MainActivity : AppCompatActivity() {
 
     //뷰바인딩 추가
     private lateinit var binding: ActivityMainBinding
+
+    //Back key눌림여부 확인.
+    private var isBackPressed = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,5 +55,15 @@ class MainActivity : AppCompatActivity() {
 
         //처음엔 유저 화면 보여줌.
         supportFragmentManager.beginTransaction().replace(binding.liContainer.id, userFragment).commit()
+    }
+
+    override fun onBackPressed() {
+        if(isBackPressed) {
+            super.onBackPressed()
+        } else {
+            isBackPressed = true
+            Toast.makeText(this, "한번더 눌러주세요.", Toast.LENGTH_SHORT).show()
+        }
+
     }
 }
