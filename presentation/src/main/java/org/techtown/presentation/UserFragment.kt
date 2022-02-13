@@ -1,5 +1,6 @@
 package org.techtown.presentation
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -19,7 +20,8 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class UserFragment : Fragment() {
+class UserFragment : Fragment(),
+    UserListAdapter.onUserClickListener {
 
     //onDestroy때 완전 제거를 위해 null허용.
     private var _binding: FragmentUserBinding? = null
@@ -56,7 +58,9 @@ class UserFragment : Fragment() {
         userList = arguments?.getSerializable("user_list") as ArrayList<UserModel>
 
         //어댑터 연결부분.
-        userListAdapter = UserListAdapter(requireActivity())
+        userListAdapter = UserListAdapter(requireActivity()){ userModel: UserModel, view: View, i: Int ->
+            onUserClick(userModel, view, i)
+        }
         binding.rvUser.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
@@ -105,5 +109,11 @@ class UserFragment : Fragment() {
 //                    putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun onUserClick(model: UserModel, v: View, position: Int) {
+        val intent = Intent(activity, UserDetailActivity::class.java)
+        intent.putExtra("user_model",model)
+        startActivity(intent)
     }
 }
