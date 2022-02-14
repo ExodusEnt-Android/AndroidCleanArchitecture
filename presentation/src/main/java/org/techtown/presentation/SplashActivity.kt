@@ -66,6 +66,7 @@ class SplashActivity : AppCompatActivity() {
                     val intent = Intent(this@SplashActivity, MainActivity::class.java)
                     intent.putParcelableArrayListExtra("user_list", userList)
                     startActivity(intent)
+                    finish()
                     countDownTimer!!.cancel()
                     countDownTimer = null
                 } else if(count % 3 == 1 && count <= 7 && !isSuccess && count != 1) { //3초마다 재연결을 해줘야 되므로.
