@@ -7,7 +7,7 @@ import java.io.Serializable
 
 @Parcelize
 data class UserRootModel(
-    @SerializedName("incomplete_results") val incomplete_results: Boolean,
-    @SerializedName("items") val items: ArrayList<UserModel>,
-    @SerializedName("total_count") val total_count: Int
+    val incomplete_results: Boolean,
+    val items: ArrayList<UserModel>,
+    val total_count: Int
 ) : Parcelable
