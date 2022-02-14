@@ -12,6 +12,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.techtown.presentation.adapter.UserListAdapter
+import org.techtown.presentation.adapter.UserViewHolder
 import org.techtown.presentation.databinding.FragmentUserBinding
 import org.techtown.presentation.model.UserModel
 import org.techtown.presentation.model.UserRootModel
@@ -22,7 +23,7 @@ import retrofit2.Response
 
 
 class UserFragment : Fragment(),
-    UserListAdapter.onUserClickListener {
+    UserViewHolder.onUserClickListener {
 
     //onDestroy때 완전 제거를 위해 null허용.
     private var _binding: FragmentUserBinding? = null
