@@ -23,6 +23,13 @@ class MainActivity : AppCompatActivity() {
     private var lastTime = 0L
     private var firstTime = 0L
 
+    override fun onResume() {
+        super.onResume()
+        lastTime = 0L
+        firstTime = 0L
+        isBackPressed = false
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
