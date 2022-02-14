@@ -2,6 +2,7 @@ package org.techtown.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.SystemClock
 import android.widget.Toast
 import org.techtown.presentation.databinding.ActivityMainBinding
 import org.techtown.presentation.model.UserModel
@@ -17,6 +18,10 @@ class MainActivity : AppCompatActivity() {
 
     //Back key눌림여부 확인.
     private var isBackPressed = false
+
+    //Back key 시간초 재는거.
+    private var lastTime = 0L
+    private var firstTime = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,9 +63,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if(isBackPressed) {
+        lastTime = SystemClock.elapsedRealtime()
+        //만약 두번째 빠르게 눌렀을경우엔 firstTime이 초기화 되지 않기때문에 맨처음 초기화된 시간이 들어가서 lastTime이랑비교해줌.
+        if(isBackPressed && (lastTime - firstTime < 2000L)){
             super.onBackPressed()
-        } else {
+        } else { 
+            firstTime = SystemClock.elapsedRealtime()
             isBackPressed = true
             Toast.makeText(this, "한번더 눌러주세요.", Toast.LENGTH_SHORT).show()
         }
