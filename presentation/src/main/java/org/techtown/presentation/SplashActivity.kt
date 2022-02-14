@@ -87,7 +87,7 @@ class SplashActivity : AppCompatActivity() {
 
     private fun getFirstUserInfo() {
         Util.showProgress(this@SplashActivity)
-        RetrofitBuilder.api.getUserInfo("hello").enqueue(object : Callback<UserRootModel> {
+        RetrofitBuilder.api.getUserInfo("hello", Const.START_PAGE, Const.PER_PAGE_LIST).enqueue(object : Callback<UserRootModel> {
             override fun onResponse(call: Call<UserRootModel>, response: Response<UserRootModel>) {
                 Util.closeProgress()
                 if(response.isSuccessful){

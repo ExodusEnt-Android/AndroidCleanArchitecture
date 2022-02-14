@@ -75,7 +75,7 @@ class UserFragment : Fragment(),
     //검색을 통한 유저정보 가져와줌.
     private fun getUserInfo(query: String?){
         Util.showProgress(requireActivity())
-        RetrofitBuilder.api.getUserInfo(query).enqueue(object : Callback<UserRootModel> {
+        RetrofitBuilder.api.getUserInfo(query, Const.START_PAGE, Const.PER_PAGE_LIST).enqueue(object : Callback<UserRootModel> {
             override fun onResponse(call: Call<UserRootModel>, response: Response<UserRootModel>) {
                 Util.closeProgress()
                 if (response.isSuccessful) {
