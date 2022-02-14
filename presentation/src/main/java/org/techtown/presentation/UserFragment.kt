@@ -57,7 +57,7 @@ class UserFragment : Fragment(),
 
     private fun setUserInfo() {
 
-        userList = arguments?.getSerializable("user_list") as ArrayList<UserModel>
+        userList = arguments?.getParcelableArrayList<UserModel>("user_list") as ArrayList<UserModel>
 
         //어댑터 연결부분.
         userListAdapter = UserListAdapter(requireActivity()){ userModel: UserModel, view: View, i: Int ->

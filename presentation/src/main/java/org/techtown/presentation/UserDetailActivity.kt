@@ -23,7 +23,8 @@ class UserDetailActivity : AppCompatActivity() {
     }
 
     private fun initSet() {
-        user = intent.getSerializableExtra("user_model") as UserModel
+        user = intent.getParcelableExtra<UserModel>("user_model") as UserModel
+
 
         //이름 , 스코어만 가져와줌.
         bindnig.tvUserName.text = user.login

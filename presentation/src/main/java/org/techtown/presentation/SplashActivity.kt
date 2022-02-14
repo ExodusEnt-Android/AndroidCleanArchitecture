@@ -64,7 +64,7 @@ class SplashActivity : AppCompatActivity() {
                 count --
                 if(count <= 8 && isSuccess){ //0일될떄는 3초가 다 지났으므로 다음화면으로 넘어가줍니다(최소 2초일때 넘어가지게하기).
                     val intent = Intent(this@SplashActivity, MainActivity::class.java)
-                    intent.putExtra("user_list", userList)
+                    intent.putParcelableArrayListExtra("user_list", userList)
                     startActivity(intent)
                     countDownTimer!!.cancel()
                     countDownTimer = null
