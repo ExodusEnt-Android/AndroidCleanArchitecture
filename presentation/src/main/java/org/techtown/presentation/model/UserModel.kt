@@ -1,8 +1,10 @@
 package org.techtown.presentation.model
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import java.io.Serializable
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class UserModel(
     @SerializedName("avatar_url") val avatar_url: String,
     @SerializedName("events_url") val events_url: String,
@@ -23,4 +25,4 @@ data class UserModel(
     @SerializedName("subscriptions_url") val subscriptions_url: String,
     @SerializedName("type") val type: String,
     @SerializedName("url") val url: String
-) :Serializable
+) : Parcelable
