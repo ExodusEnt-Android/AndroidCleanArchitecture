@@ -15,36 +15,17 @@ import org.techtown.presentation.model.UserModel
 
 
 class UserListAdapter(private val context: Context,
-                      private val userClick: (UserModel, View, Int) -> Unit) : ListAdapter<UserModel, UserListAdapter.ViewHolder>(diffUtil) {
+                      private val userClick: (UserModel, View, Int) -> Unit) : ListAdapter<UserModel, UserViewHolder>(diffUtil) {
 
-    interface onUserClickListener{
-        fun onUserClick(model: UserModel, v:View, position: Int)
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder{
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         //뷰바인딩 이용.
-        val viewHolder = ViewHolder(ItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        val viewHolder = UserViewHolder(ItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false), context) { userModel, view, i -> userClick(userModel, view, i) }
         return viewHolder
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         Log.d("Response", "바인딩되었음")
         holder.bind(getItem(position), position)
-    }
-
-    inner class ViewHolder(private val binding: ItemUserBinding) :RecyclerView.ViewHolder(binding.root){
-        fun bind(item: UserModel, position: Int){
-            //간단하게 유저 이미지 및 닉네임 넣어주기.
-            Glide.with(context)
-                .load(item.avatar_url)
-                .into(binding.ivUserAvatar)
-            binding.tvUserName.text = item.login
-
-            //유저 클릭 추가.
-            binding.clUser.setOnClickListener { v ->
-                userClick(item,v , position)
-            }
-        }
     }
 
     companion object{
