@@ -55,10 +55,12 @@ class MainActivity : AppCompatActivity() {
 
         //스플래시화면에서 받아온 초기 유저리스트 받아와주기.
         val userList = intent.getParcelableArrayListExtra<UserModel>("user_list") as ArrayList<UserModel>
+        val firstQuery = intent.getStringExtra("first_query")
 
         //프래그먼트 데이터전송을위한 번들생성.
         val userBundle = Bundle()
         userBundle.putParcelableArrayList("user_list", userList)
+        userBundle.putString("first_query", firstQuery)
 
         userFragment = UserFragment()
         userFragment.arguments = userBundle

@@ -35,6 +35,9 @@ class SplashActivity : AppCompatActivity() {
     //프로그래스바.
     private var progressDialog: ProgressDialog? = null
 
+    //처음 들어갈떄 임의용으로 정한 쿼리.
+    private var firstQuery = "hello"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
@@ -65,6 +68,7 @@ class SplashActivity : AppCompatActivity() {
                 if(count <= 8 && isSuccess){ //0일될떄는 3초가 다 지났으므로 다음화면으로 넘어가줍니다(최소 2초일때 넘어가지게하기).
                     val intent = Intent(this@SplashActivity, MainActivity::class.java)
                     intent.putParcelableArrayListExtra("user_list", userList)
+                    intent.putExtra("first_query", firstQuery)
                     startActivity(intent)
                     finish()
                     countDownTimer!!.cancel()
@@ -88,7 +92,7 @@ class SplashActivity : AppCompatActivity() {
 
     private fun getFirstUserInfo() {
         Util.showProgress(this@SplashActivity)
-        RetrofitBuilder.api.getUserInfo("hello", Const.START_PAGE, Const.PER_PAGE_LIST).enqueue(object : Callback<UserRootModel> {
+        RetrofitBuilder.api.getUserInfo(firstQuery, Const.START_PAGE, Const.PER_PAGE_LIST).enqueue(object : Callback<UserRootModel> {
             override fun onResponse(call: Call<UserRootModel>, response: Response<UserRootModel>) {
                 Util.closeProgress()
                 if(response.isSuccessful){
