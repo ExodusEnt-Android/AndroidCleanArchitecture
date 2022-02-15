@@ -80,7 +80,7 @@ class UserFragment : Fragment(),
                 val itemTotalCount = (binding.rvUser.adapter?.itemCount ?: 1) - 1
                 if(lastVisibleItemPosition == itemTotalCount){
                     currentPage +=1
-                    getUserInfo(currentQuery, currentPage)
+                    getUserInfo(currentQuery, false)
                 }
             }
         })
@@ -105,15 +105,24 @@ class UserFragment : Fragment(),
     }
 
     //검색을 통한 유저정보 가져와줌.
-    private fun getUserInfo(query: String?, page: Int){
+    private fun getUserInfo(query: String?, isSearch:Boolean){
         Util.showProgress(requireActivity())
-        RetrofitBuilder.api.getUserInfo(query, page, Const.PER_PAGE_LIST).enqueue(object : Callback<UserRootModel> {
+        if(isSearch){ //검색일땐 첫페이지부터 보여줘야되므로 1로 넣어줌.
+            currentPage = 1
+        }
+        RetrofitBuilder.api.getUserInfo(query, currentPage, Const.PER_PAGE_LIST).enqueue(object : Callback<UserRootModel> {
             override fun onResponse(call: Call<UserRootModel>, response: Response<UserRootModel>) {
                 Util.closeProgress()
                 if (response.isSuccessful) {
                     if (response.code() == 200) {
-                        userList.addAll(response.body()!!.items)
-                        userListAdapter.submitList(userList.distinct().toList())
+                        if(isSearch){//검색일떄.
+                            userList.clear()
+                            userList.addAll(response.body()!!.items)
+                            userListAdapter.submitList(userList.distinct().toList())
+                        } else { //페이징일떄.
+                            userList.addAll(response.body()!!.items)
+                            userListAdapter.submitList(userList.distinct().toList())
+                        }
                     }
                 }
             }
@@ -139,7 +148,7 @@ class UserFragment : Fragment(),
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
                 currentQuery = query.toString()
-                getUserInfo(currentQuery, Const.START_PAGE)
+                getUserInfo(currentQuery, true)
                 //검색후 포커스가 한번더 searchView에잡히기때문에 두번 검색이 되므로 클리어시켜줌.
                 searchView.clearFocus()
                 return false
