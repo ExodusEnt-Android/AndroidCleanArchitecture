@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import org.techtown.presentation.databinding.ItemUserBinding
+import org.techtown.presentation.gson.MyGson
 import org.techtown.presentation.model.UserModel
 
 
@@ -26,6 +27,11 @@ class UserListAdapter(private val context: Context,
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         Log.d("Response", "바인딩되었음")
         holder.bind(getItem(position), position)
+    }
+
+    override fun submitList(list: MutableList<UserModel>?) {
+        super.submitList(list?.let { ArrayList(it) })
+
     }
 
     companion object{
