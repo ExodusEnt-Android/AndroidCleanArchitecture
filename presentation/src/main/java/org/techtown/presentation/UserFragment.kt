@@ -37,7 +37,7 @@ class UserFragment : Fragment(),
     private lateinit var userListAdapter: UserListAdapter
 
     //받아온 유저 리스트.
-    private lateinit var userList: MutableList<UserModel>
+    private lateinit var userList: ArrayList<UserModel>
 
     //현재 검색 쿼리.
     private var currentQuery = ""
@@ -80,7 +80,6 @@ class UserFragment : Fragment(),
                 val itemTotalCount = (binding.rvUser.adapter?.itemCount ?: 1) - 1
                 if(lastVisibleItemPosition == itemTotalCount){
                     currentPage +=1
-                    Log.d("Scrolled", "last Position and currentpage ${currentPage}")
                     getUserInfo(currentQuery, currentPage)
                 }
             }
@@ -113,22 +112,8 @@ class UserFragment : Fragment(),
                 Util.closeProgress()
                 if (response.isSuccessful) {
                     if (response.code() == 200) {
-//                        Log.d("Scrolled", "it's success ${query} ${page}")
-//                        for(i in 0 until userList.size){
-//                            Log.d("Scrolled", "old List ${userList[i].login}")
-//
-//                        }
-//
-//                        for(j in 0 until userList.size){
-//                            Log.d("Scrolled", "new List ${response.body()!!.items[j].login}")
-//                        }
-//
-//                        userList.addAll(response.body()!!.items)
-//                        for(j in 0 until userList.size){
-//                            Log.d("Scrolled", "change ${userList[j].login} ${userList.size}")
-//                        }
-                        userListAdapter.submitList(userList)
-//                        userListAdapter.notifyDataSetChanged()
+                        userList.addAll(response.body()!!.items)
+                        userListAdapter.submitList(userList.distinct().toList())
                     }
                 }
             }
