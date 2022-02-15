@@ -29,9 +29,8 @@ class UserListAdapter(private val context: Context,
         holder.bind(getItem(position), position)
     }
 
-    override fun submitList(list: MutableList<UserModel>?) {
+    override fun submitList(list: List<UserModel>?) {
         super.submitList(list?.let { ArrayList(it) })
-
     }
 
     companion object{
