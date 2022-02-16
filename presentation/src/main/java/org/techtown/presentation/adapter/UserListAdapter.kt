@@ -18,15 +18,24 @@ import org.techtown.presentation.model.UserModel
 class UserListAdapter(private val context: Context,
                       private val userClick: (UserModel, View, Int) -> Unit) : ListAdapter<UserModel, UserViewHolder>(diffUtil) {
 
+    interface onUserClickListener{
+        fun onUserClick(model: UserModel, v: View, position: Int)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         //뷰바인딩 이용.
-        val viewHolder = UserViewHolder(ItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false), context) { userModel, view, i -> userClick(userModel, view, i) }
+        val viewHolder = UserViewHolder(ItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false), context)
         return viewHolder
     }
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         Log.d("Response", "바인딩되었음")
-        holder.bind(getItem(position), position)
+        holder.apply {
+            bind(getItem(position), position)
+            itemView.setOnClickListener { v->
+                userClick(getItem(position), v, position)
+            }
+        }
     }
 
     override fun submitList(list: List<UserModel>?) {

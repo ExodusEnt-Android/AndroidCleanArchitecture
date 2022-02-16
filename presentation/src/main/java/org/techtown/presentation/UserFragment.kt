@@ -26,7 +26,7 @@ import retrofit2.Response
 
 
 class UserFragment : Fragment(),
-    UserViewHolder.onUserClickListener {
+    UserListAdapter.onUserClickListener {
 
     //onDestroy때 완전 제거를 위해 null허용.
     private var _binding: FragmentUserBinding? = null
