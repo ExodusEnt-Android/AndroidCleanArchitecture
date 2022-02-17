@@ -1,10 +1,12 @@
 package org.techtown.presentation.model
 
 import android.os.Parcelable
+import androidx.room.Entity
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
+@Entity(tableName = "UserInfo")
 data class UserModel(
     val avatar_url: String,
     val events_url: String,
