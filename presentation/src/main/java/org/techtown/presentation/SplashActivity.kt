@@ -8,6 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.widget.Toast
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.observers.DisposableSingleObserver
+import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.*
 import org.techtown.presentation.databinding.ActivitySplashBinding
 import org.techtown.presentation.model.UserModel
@@ -38,6 +42,9 @@ class SplashActivity : AppCompatActivity() {
     //처음 들어갈떄 임의용으로 정한 쿼리.
     private var firstQuery = "hello"
 
+    //os gc가발동할떄 프로세스가 죽어버리니까 single객체 가로채야됨.
+    private var disposable = CompositeDisposable()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
@@ -57,6 +64,9 @@ class SplashActivity : AppCompatActivity() {
         }
 
         countDownTimer = null
+
+        //프로세스 종료시 통신작업 중단.
+        disposable.clear()
 
     }
 
@@ -92,48 +102,29 @@ class SplashActivity : AppCompatActivity() {
 
     private fun getFirstUserInfo() {
         Util.showProgress(this@SplashActivity)
-        RetrofitBuilder.api.getUserInfo(firstQuery, Const.START_PAGE, Const.PER_PAGE_LIST).enqueue(object : Callback<UserRootModel> {
-            override fun onResponse(call: Call<UserRootModel>, response: Response<UserRootModel>) {
+        disposable.add(RetrofitBuilder.api.getUserInfo(firstQuery, Const.START_PAGE, Const.PER_PAGE_LIST)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
                 Util.closeProgress()
-                if(response.isSuccessful){
-                    if(response.code() == 200){
+                val userList = it!!.items
 
-                        val userList = response.body()!!.items
-
-                        if(!countResponse){
-                            countDownTimer(userList)
-                        }
-                        countDownTimer!!.start()
-
-                        isSuccess = true
-
-                    } else {
-                        if(!countResponse){
-                            countDownTimer(null)
-                            countDownTimer!!.start()
-                        }
-                        isSuccess = false
-                    }
-                } else {
-                    if(!countResponse){
-                        countDownTimer(null)
-                        countDownTimer!!.start()
-                    }
-                    isSuccess = false
+                if (!countResponse) {
+                    countDownTimer(userList)
                 }
-                countResponse = true
-            }
+                countDownTimer!!.start()
 
-            override fun onFailure(call: Call<UserRootModel>, t: Throwable) {
+                isSuccess = true
+                countResponse = true
+            },{
                 Util.closeProgress()
-                countDownTimer(null)
                 if(!countResponse){
                     countDownTimer(null)
                     countDownTimer!!.start()
                 }
                 isSuccess = false
                 countResponse = true
-            }
-        })
+            })
+        )
     }
 }

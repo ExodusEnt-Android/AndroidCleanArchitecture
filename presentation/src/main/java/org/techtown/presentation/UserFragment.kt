@@ -13,6 +13,9 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import org.techtown.presentation.adapter.UserListAdapter
 import org.techtown.presentation.adapter.UserViewHolder
 import org.techtown.presentation.databinding.FragmentUserBinding
@@ -45,6 +48,9 @@ class UserFragment : Fragment(),
     //초기 페이지.
     private var currentPage = 1
 
+    //os gc가발동할떄 프로세스가 죽어버리니까 single객체 가로채야됨.
+    private var disposable = CompositeDisposable()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -64,6 +70,11 @@ class UserFragment : Fragment(),
         //초기유저정보를 세팅해줌.
         setUserInfo()
         setClickLisener()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.clear()
     }
 
     private fun setClickLisener(){
@@ -110,28 +121,24 @@ class UserFragment : Fragment(),
         if(isSearch){ //검색일땐 첫페이지부터 보여줘야되므로 1로 넣어줌.
             currentPage = 1
         }
-        RetrofitBuilder.api.getUserInfo(query, currentPage, Const.PER_PAGE_LIST).enqueue(object : Callback<UserRootModel> {
-            override fun onResponse(call: Call<UserRootModel>, response: Response<UserRootModel>) {
-                Util.closeProgress()
-                if (response.isSuccessful) {
-                    if (response.code() == 200) {
-                        if(isSearch){//검색일떄.
-                            userList.clear()
-                            userList.addAll(response.body()!!.items)
-                            userListAdapter.submitList(userList.distinct().toList())
-                        } else { //페이징일떄.
-                            userList.addAll(response.body()!!.items)
-                            userListAdapter.submitList(userList.distinct().toList())
-                        }
-                    }
-                }
-            }
 
-            override fun onFailure(call: Call<UserRootModel>, t: Throwable) {
+        disposable.add(RetrofitBuilder.api.getUserInfo(query, currentPage, Const.PER_PAGE_LIST)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                Util.closeProgress()
+                if(isSearch){//검색일떄.
+                    userList.clear()
+                    userList.addAll(it.items)
+                    userListAdapter.submitList(userList.distinct().toList())
+                } else { //페이징일떄.
+                    userList.addAll(it.items)
+                    userListAdapter.submitList(userList.distinct().toList())
+                }
+            },{
                 Util.closeProgress()
                 Toast.makeText(activity, "데이터 불러오기 실패", Toast.LENGTH_LONG).show()
-            }
-        })
+            }))
     }
 
     //검색창 세팅. 

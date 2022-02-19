@@ -1,6 +1,7 @@
 package org.techtown.presentation.retorfit
 
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitBuilder {
@@ -10,6 +11,8 @@ object RetrofitBuilder {
     init {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://api.github.com/")
+            .addCallAdapterFactory(
+                RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
