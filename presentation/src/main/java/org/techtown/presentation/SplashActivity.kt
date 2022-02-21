@@ -1,22 +1,22 @@
 package org.techtown.presentation
 
-import android.app.ProgressDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.util.Log
 import android.widget.Toast
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.disposables.Disposables
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.kotlin.addTo
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.*
 import org.techtown.presentation.databinding.ActivitySplashBinding
+import org.techtown.presentation.datasource.remote.RemoteDataSourceImpl
 import org.techtown.presentation.model.UserModel
-import org.techtown.presentation.model.UserRootModel
+import org.techtown.presentation.repository.UserRepository
+import org.techtown.presentation.repository.UserRepositoryImpl
 import org.techtown.presentation.retorfit.RetrofitBuilder
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
@@ -35,13 +35,20 @@ class SplashActivity : AppCompatActivity() {
     private var firstQuery = "hello"
 
     //os gc가발동할떄 프로세스가 죽어버리니까 single객체 가로채야됨.
-    private var disposable = CompositeDisposable()
+    private var compositeDisposable = CompositeDisposable()
 
     //유저 리스트.
     private var userList: ArrayList<UserModel>? = null
 
     //타이머 저장(화면 Destroy될때 없애주기위함).
     private lateinit var timerDisposable: Disposable
+
+    //repository setting
+    private val userRepository: UserRepository by lazy {
+        //remote 데이터 세팅.
+        val remoteDataSource = RemoteDataSourceImpl(api = RetrofitBuilder.api)
+        UserRepositoryImpl(remoteDataSource)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,7 +98,7 @@ class SplashActivity : AppCompatActivity() {
         super.onDestroy()
 
         //프로세스 종료시 통신작업 중단.
-        disposable.clear()
+        compositeDisposable.dispose()
 
         //타이머도 중단.
         timerDisposable.dispose()
@@ -102,18 +109,18 @@ class SplashActivity : AppCompatActivity() {
         runOnUiThread {
             Util.showProgress(this@SplashActivity)
         }
-        disposable.add(RetrofitBuilder.api.getUserInfo(firstQuery, Const.START_PAGE, Const.PER_PAGE_LIST)
+
+        userRepository.getUserInfo(firstQuery, Const.START_PAGE, Const.PER_PAGE_LIST)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 Util.closeProgress()
-                userList = it!!.items
+                userList = it.items
                 isSuccess = true
             },{
                 Util.closeProgress()
                 isSuccess = false
                 countResponse = true
-            })
-        )
+            }).addTo(compositeDisposable)
     }
 }
