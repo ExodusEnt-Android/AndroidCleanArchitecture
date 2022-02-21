@@ -1,11 +1,8 @@
 package org.techtown.presentation.retorfit
 
-import io.reactivex.Observable
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 import org.techtown.presentation.model.UserRootModel
-import retrofit2.Call
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface API {
