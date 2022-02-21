@@ -1,31 +1,25 @@
 package org.techtown.presentation
 
-import android.app.SearchManager
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import android.widget.AbsListView
-import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.addTo
+import io.reactivex.rxjava3.schedulers.Schedulers
 import org.techtown.presentation.adapter.UserListAdapter
-import org.techtown.presentation.adapter.UserViewHolder
 import org.techtown.presentation.databinding.FragmentUserBinding
-import org.techtown.presentation.gson.MyGson
+import org.techtown.presentation.datasource.remote.RemoteDataSourceImpl
 import org.techtown.presentation.model.UserModel
-import org.techtown.presentation.model.UserRootModel
+import org.techtown.presentation.repository.UserRepositoryImpl
+import org.techtown.presentation.repository.UserRepository
 import org.techtown.presentation.retorfit.RetrofitBuilder
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 class UserFragment : Fragment(),
@@ -33,6 +27,7 @@ class UserFragment : Fragment(),
 
     //onDestroy때 완전 제거를 위해 null허용.
     private var _binding: FragmentUserBinding? = null
+
     //매번 null체크 번거러움 제거.
     private val binding get() = _binding!!
 
@@ -49,7 +44,14 @@ class UserFragment : Fragment(),
     private var currentPage = 1
 
     //os gc가발동할떄 프로세스가 죽어버리니까 single객체 가로채야됨.
-    private var disposable = CompositeDisposable()
+    private var compositeDisposable = CompositeDisposable()
+
+    //repository setting
+    private val userRepository: UserRepository by lazy {
+        //remote 데이터 세팅.
+        val remoteDataSource = RemoteDataSourceImpl(api = RetrofitBuilder.api)
+        UserRepositoryImpl(remoteDataSource)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,8 +59,10 @@ class UserFragment : Fragment(),
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         setHasOptionsMenu(true)
         _binding = FragmentUserBinding.inflate(inflater, container, false)
         return binding.root
@@ -74,12 +78,12 @@ class UserFragment : Fragment(),
 
     override fun onDestroy() {
         super.onDestroy()
-        disposable.clear()
+        compositeDisposable.dispose()
     }
 
-    private fun setClickLisener(){
+    private fun setClickLisener() {
         //리사이클러뷰 스크롤 리스너등록.
-        binding.rvUser.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+        binding.rvUser.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
             }
@@ -87,10 +91,11 @@ class UserFragment : Fragment(),
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                val lastVisibleItemPosition = (binding.rvUser.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
+                val lastVisibleItemPosition =
+                    (binding.rvUser.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
                 val itemTotalCount = (binding.rvUser.adapter?.itemCount ?: 1) - 1
-                if(lastVisibleItemPosition == itemTotalCount){
-                    currentPage +=1
+                if (lastVisibleItemPosition == itemTotalCount) {
+                    currentPage += 1
                     getUserInfo(currentQuery, false)
                 }
             }
@@ -103,9 +108,10 @@ class UserFragment : Fragment(),
         currentQuery = arguments?.getString("first_query") as String
 
         //어댑터 연결부분.
-        userListAdapter = UserListAdapter(requireActivity()){ userModel: UserModel, view: View, i: Int ->
-            onUserClick(userModel, view, i)
-        }
+        userListAdapter =
+            UserListAdapter(requireActivity()) { userModel: UserModel, view: View, i: Int ->
+                onUserClick(userModel, view, i)
+            }
         binding.rvUser.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
@@ -116,18 +122,18 @@ class UserFragment : Fragment(),
     }
 
     //검색을 통한 유저정보 가져와줌.
-    private fun getUserInfo(query: String?, isSearch:Boolean){
+    private fun getUserInfo(query: String?, isSearch: Boolean) {
         Util.showProgress(requireActivity())
-        if(isSearch){ //검색일땐 첫페이지부터 보여줘야되므로 1로 넣어줌.
+        if (isSearch) { //검색일땐 첫페이지부터 보여줘야되므로 1로 넣어줌.
             currentPage = 1
         }
 
-        disposable.add(RetrofitBuilder.api.getUserInfo(query, currentPage, Const.PER_PAGE_LIST)
+        userRepository.getUserInfo(query, currentPage, Const.PER_PAGE_LIST)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
+            .subscribe({ it ->
                 Util.closeProgress()
-                if(isSearch){//검색일떄.
+                if (isSearch) {//검색일떄.
                     userList.clear()
                     userList.addAll(it.items)
                     userListAdapter.submitList(userList.distinct().toList())
@@ -135,10 +141,10 @@ class UserFragment : Fragment(),
                     userList.addAll(it.items)
                     userListAdapter.submitList(userList.distinct().toList())
                 }
-            },{
+            }, {
                 Util.closeProgress()
                 Toast.makeText(activity, "데이터 불러오기 실패", Toast.LENGTH_LONG).show()
-            }))
+            }).addTo(compositeDisposable)
     }
 
     //검색창 세팅. 
@@ -152,7 +158,7 @@ class UserFragment : Fragment(),
 
         val searchView = item.actionView as SearchView
 
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 currentQuery = query.toString()
                 getUserInfo(currentQuery, true)
@@ -188,7 +194,7 @@ class UserFragment : Fragment(),
 
     override fun onUserClick(model: UserModel, v: View, position: Int) {
         val intent = Intent(activity, UserDetailActivity::class.java)
-        intent.putExtra("user_model",model)
+        intent.putExtra("user_model", model)
         startActivity(intent)
     }
 }
