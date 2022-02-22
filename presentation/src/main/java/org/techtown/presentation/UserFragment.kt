@@ -15,7 +15,9 @@ import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.techtown.presentation.adapter.UserListAdapter
 import org.techtown.presentation.databinding.FragmentUserBinding
+import org.techtown.presentation.datasource.local.LocalDataSourceImpl
 import org.techtown.presentation.datasource.remote.RemoteDataSourceImpl
+import org.techtown.presentation.db.UserDatabase
 import org.techtown.presentation.model.UserModel
 import org.techtown.presentation.repository.UserRepositoryImpl
 import org.techtown.presentation.repository.UserRepository
@@ -51,7 +53,8 @@ class UserFragment : Fragment(),
     private val userRepository: UserRepository by lazy {
         //remote 데이터 세팅.
         val remoteDataSource = RemoteDataSourceImpl(api = RetrofitBuilder.api)
-        UserRepositoryImpl(remoteDataSource)
+        val localDataSource = LocalDataSourceImpl(userDatabase = UserDatabase.getInstance(context))
+        UserRepositoryImpl(remoteDataSource, localDataSource)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,7 +113,15 @@ class UserFragment : Fragment(),
 
         //어댑터 연결부분.
         userListAdapter =
-            UserListAdapter(requireActivity()) { userModel: UserModel, view: View, i: Int ->
+            UserListAdapter(
+                requireActivity(),
+                { userModel: UserModel, view: View, i: Int ->
+                    onFavClick(
+                        userModel,
+                        view,
+                        i
+                    )
+                }) { userModel: UserModel, view: View, i: Int ->
                 onUserClick(userModel, view, i)
             }
         binding.rvUser.apply {
