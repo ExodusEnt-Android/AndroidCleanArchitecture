@@ -23,7 +23,8 @@ import org.techtown.presentation.retorfit.RetrofitBuilder
 
 
 class UserFragment : Fragment(),
-    UserListAdapter.onUserClickListener {
+    UserListAdapter.onUserClickListener,
+    UserListAdapter.onFavClickListener {
 
     //onDestroy때 완전 제거를 위해 null허용.
     private var _binding: FragmentUserBinding? = null
@@ -196,5 +197,8 @@ class UserFragment : Fragment(),
         val intent = Intent(activity, UserDetailActivity::class.java)
         intent.putExtra("user_model", model)
         startActivity(intent)
+    }
+
+    override fun onFavClick(model: UserModel, v: View, position: Int) {
     }
 }

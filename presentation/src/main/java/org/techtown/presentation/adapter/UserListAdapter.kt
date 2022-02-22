@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -15,16 +16,29 @@ import org.techtown.presentation.gson.MyGson
 import org.techtown.presentation.model.UserModel
 
 
-class UserListAdapter(private val context: Context,
-                      private val userClick: (UserModel, View, Int) -> Unit) : ListAdapter<UserModel, UserViewHolder>(diffUtil) {
+class UserListAdapter(
+    private val context: Context,
+    private val userClick: (UserModel, View, Int) -> Unit,
+    private val favClick: (UserModel, View, Int) -> Unit
+) : ListAdapter<UserModel, UserViewHolder>(diffUtil) {
 
-    interface onUserClickListener{
+    interface onUserClickListener {
         fun onUserClick(model: UserModel, v: View, position: Int)
+    }
+
+    interface onFavClickListener {
+        fun onFavClick(model: UserModel, v: View, position: Int)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         //뷰바인딩 이용.
-        val viewHolder = UserViewHolder(ItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false), context)
+        val viewHolder = UserViewHolder(
+            ItemUserBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            ), context
+        )
         return viewHolder
     }
 
@@ -32,8 +46,12 @@ class UserListAdapter(private val context: Context,
         Log.d("Response", "바인딩되었음")
         holder.apply {
             bind(getItem(position), position)
-            itemView.setOnClickListener { v->
+            itemView.setOnClickListener { v ->
                 userClick(getItem(position), v, position)
+            }
+
+            binding.ivStar.setOnClickListener { v ->
+                favClick(getItem(position), v, position)
             }
         }
     }
@@ -42,10 +60,13 @@ class UserListAdapter(private val context: Context,
         super.submitList(list?.let { ArrayList(it) })
     }
 
-    companion object{
-        val diffUtil = object : DiffUtil.ItemCallback<UserModel>(){
-            override fun areItemsTheSame(oldItem: UserModel, newItem: UserModel) = oldItem.id == newItem.id
-            override fun areContentsTheSame(oldItem: UserModel, newItem: UserModel) = oldItem == newItem
+    companion object {
+        val diffUtil = object : DiffUtil.ItemCallback<UserModel>() {
+            override fun areItemsTheSame(oldItem: UserModel, newItem: UserModel) =
+                oldItem.id == newItem.id
+
+            override fun areContentsTheSame(oldItem: UserModel, newItem: UserModel) =
+                oldItem == newItem
 
         }
     }
