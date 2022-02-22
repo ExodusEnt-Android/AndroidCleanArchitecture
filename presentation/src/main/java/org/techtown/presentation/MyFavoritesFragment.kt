@@ -19,8 +19,10 @@ class MyFavoritesFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentMyFavoritesBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -28,6 +30,18 @@ class MyFavoritesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initSet()
+    }
+
+    private fun initSet() {
+
+        favoriteListAdapter = FavoriteListAdapter(requireActivity())
+
+        binding.rvUser.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+            adapter = favoriteListAdapter
+        }
     }
 
     override fun onDestroyView() {
