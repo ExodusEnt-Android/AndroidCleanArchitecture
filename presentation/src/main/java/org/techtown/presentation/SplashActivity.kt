@@ -13,7 +13,9 @@ import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.*
 import org.techtown.presentation.databinding.ActivitySplashBinding
+import org.techtown.presentation.datasource.local.LocalDataSourceImpl
 import org.techtown.presentation.datasource.remote.RemoteDataSourceImpl
+import org.techtown.presentation.db.UserDatabase
 import org.techtown.presentation.model.UserModel
 import org.techtown.presentation.repository.UserRepository
 import org.techtown.presentation.repository.UserRepositoryImpl
@@ -47,7 +49,8 @@ class SplashActivity : AppCompatActivity() {
     private val userRepository: UserRepository by lazy {
         //remote 데이터 세팅.
         val remoteDataSource = RemoteDataSourceImpl(api = RetrofitBuilder.api)
-        UserRepositoryImpl(remoteDataSource)
+        val localDataSource = LocalDataSourceImpl(userDatabase = UserDatabase.getInstance(this))
+        UserRepositoryImpl(remoteDataSource, localDataSource)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
