@@ -34,6 +34,8 @@
         android:id="@+id/iv_star"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minWidth="100dp"
+        android:minHeight="100dp"
         android:src="@drawable/star_unselected_36"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
