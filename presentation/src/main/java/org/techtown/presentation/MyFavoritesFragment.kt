@@ -5,13 +5,32 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import org.techtown.presentation.adapter.FavoriteListAdapter
 import org.techtown.presentation.databinding.FragmentMyFavoritesBinding
+import org.techtown.presentation.datasource.local.LocalDataSourceImpl
+import org.techtown.presentation.datasource.remote.RemoteDataSourceImpl
+import org.techtown.presentation.db.UserDatabase
+import org.techtown.presentation.repository.UserRepository
+import org.techtown.presentation.repository.UserRepositoryImpl
+import org.techtown.presentation.retorfit.RetrofitBuilder
 
 
 class MyFavoritesFragment : Fragment() {
 
     private var _binding: FragmentMyFavoritesBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var favoriteListAdapter: FavoriteListAdapter
+
+    //repository setting
+    private val userRepository: UserRepository by lazy {
+        //remote 데이터 세팅.
+        val remoteDataSource = RemoteDataSourceImpl(api = RetrofitBuilder.api)
+        val localDataSource = LocalDataSourceImpl(userDatabase = UserDatabase.getInstance(context))
+        UserRepositoryImpl(remoteDataSource, localDataSource)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +61,11 @@ class MyFavoritesFragment : Fragment() {
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             adapter = favoriteListAdapter
         }
+
+        userRepository.getFavUserInfo(true)?.observe(viewLifecycleOwner,
+            {
+                favoriteListAdapter.submitList(it)
+            })
     }
 
     override fun onDestroyView() {

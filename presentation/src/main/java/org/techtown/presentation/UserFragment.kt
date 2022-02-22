@@ -116,13 +116,9 @@ class UserFragment : Fragment(),
             UserListAdapter(
                 requireActivity(),
                 { userModel: UserModel, view: View, i: Int ->
-                    onFavClick(
-                        userModel,
-                        view,
-                        i
-                    )
+                    onUserClick(userModel, view, i)
                 }) { userModel: UserModel, view: View, i: Int ->
-                onUserClick(userModel, view, i)
+                onFavClick(userModel, view, i)
             }
         binding.rvUser.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -211,5 +207,10 @@ class UserFragment : Fragment(),
     }
 
     override fun onFavClick(model: UserModel, v: View, position: Int) {
+        model.is_favorite = true
+        //즐겨찾기 추가.
+        userRepository.setFavUserInfo(model, true) {
+            Log.d("Database", "제대로 저장 완료 ${it}")
+        }
     }
 }
