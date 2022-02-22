@@ -11,7 +11,7 @@ abstract class UserDatabase : RoomDatabase() {
         private var instance: UserDatabase ?=null
 
         @Synchronized
-        fun getInstance(context : Context) : UserDatabase?{
+        fun getInstance(context : Context?) : UserDatabase?{
             if(instance == null){
                 synchronized(UserDatabase::class){
                     instance = Room.databaseBuilder(context.applicationContext,
