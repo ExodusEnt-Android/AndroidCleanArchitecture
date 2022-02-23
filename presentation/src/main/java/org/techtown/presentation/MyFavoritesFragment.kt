@@ -1,10 +1,12 @@
 package org.techtown.presentation
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.techtown.presentation.adapter.UserListAdapter
@@ -89,5 +91,14 @@ class MyFavoritesFragment : Fragment(),
                 arguments = Bundle().apply {
                 }
             }
+    }
+
+    override fun onFavClick(model: UserModel, v: View, position: Int) {
+        Log.d("Database", "즐겨찾기 해제 완료.")
+        model.is_favorite = false
+        //즐겨찾기 해제
+        userRepository.deleteFavUserInfo(model.id) {
+            Log.d("Database", "제대로 삭제 완료 ${it}")
+        }
     }
 }
