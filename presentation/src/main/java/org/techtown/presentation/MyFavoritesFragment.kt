@@ -7,22 +7,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import org.techtown.presentation.adapter.FavoriteListAdapter
+import org.techtown.presentation.adapter.UserListAdapter
 import org.techtown.presentation.databinding.FragmentMyFavoritesBinding
 import org.techtown.presentation.datasource.local.LocalDataSourceImpl
 import org.techtown.presentation.datasource.remote.RemoteDataSourceImpl
 import org.techtown.presentation.db.UserDatabase
+import org.techtown.presentation.model.UserModel
 import org.techtown.presentation.repository.UserRepository
 import org.techtown.presentation.repository.UserRepositoryImpl
 import org.techtown.presentation.retorfit.RetrofitBuilder
 
 
-class MyFavoritesFragment : Fragment() {
+class MyFavoritesFragment : Fragment(),
+    UserListAdapter.onFavClickListener{
 
     private var _binding: FragmentMyFavoritesBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var favoriteListAdapter: FavoriteListAdapter
+    private lateinit var userListAdapter: UserListAdapter
 
     //repository setting
     private val userRepository: UserRepository by lazy {
@@ -54,17 +56,23 @@ class MyFavoritesFragment : Fragment() {
 
     private fun initSet() {
 
-        favoriteListAdapter = FavoriteListAdapter(requireActivity())
+        userListAdapter = UserListAdapter(
+            requireActivity(),
+            null
+        ) { userModel: UserModel, view: View, i: Int ->
+            onFavClick(userModel, view, i)
+        }
 
         binding.rvUser.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-            adapter = favoriteListAdapter
+            adapter = userListAdapter
         }
 
         userRepository.getFavUserInfo(true)?.observe(viewLifecycleOwner,
             {
-                favoriteListAdapter.submitList(it)
+                Log.d("Database", "즐겨찾기 화면 목록 업데이트 완료.")
+                userListAdapter.submitList(it)
             })
     }
 

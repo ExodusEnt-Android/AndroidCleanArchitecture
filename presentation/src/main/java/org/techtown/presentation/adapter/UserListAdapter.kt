@@ -1,24 +1,19 @@
 package org.techtown.presentation.adapter
 
 import android.content.Context
-import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import org.techtown.presentation.databinding.ItemUserBinding
-import org.techtown.presentation.gson.MyGson
 import org.techtown.presentation.model.UserModel
 
 
 class UserListAdapter(
     private val context: Context,
-    private val userClick: (UserModel, View, Int) -> Unit,
+    private val userClick: ((UserModel, View, Int) -> Unit?)?,
     private val favClick: (UserModel, View, Int) -> Unit
 ) : ListAdapter<UserModel, UserViewHolder>(diffUtil) {
 
@@ -47,7 +42,7 @@ class UserListAdapter(
         holder.apply {
             bind(getItem(position), position)
             itemView.setOnClickListener { v ->
-                userClick(getItem(position), v, position)
+                userClick?.invoke(getItem(position), v, position)
             }
 
             binding.ivStar.setOnClickListener { v ->
