@@ -2,6 +2,7 @@ package org.techtown.presentation
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
@@ -127,6 +128,18 @@ class UserFragment : Fragment(),
         }
         //ListAdapter는 notify필요없이 submitList로 item비교 전달 및 MainThread ui업데이트해줌.
         userListAdapter.submitList(userList)
+
+        //검색화면 목록 즐겨찾기여부 확인하는데 사용.
+        userRepository.getFavUserInfo(true)?.observe(viewLifecycleOwner,
+            { item ->
+                Log.d("Database", "유저화면 즐겨찾기 목록 업데이트 완료.")
+                for (i in 0 until userList.size) {
+                    for (element in item) {
+                        userList[i].is_favorite = userList[i].id == element.id
+                    }
+                }
+                userListAdapter.submitList(userList)
+            })
     }
 
     //검색을 통한 유저정보 가져와줌.
@@ -209,8 +222,8 @@ class UserFragment : Fragment(),
     override fun onFavClick(model: UserModel, v: View, position: Int) {
         model.is_favorite = true
         //즐겨찾기 추가.
-        userRepository.setFavUserInfo(model, true) {
-            Log.d("Database", "제대로 저장 완료 ${it}")
+        userRepository.setFavUserInfo(model) {
+            Log.d("Database", "제대로 저장 완료 ${it} 즐겨찾기 완료.")
         }
     }
 }
