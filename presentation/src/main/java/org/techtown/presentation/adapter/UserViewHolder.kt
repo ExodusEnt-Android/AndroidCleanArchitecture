@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import org.techtown.presentation.R
 import org.techtown.presentation.databinding.ItemUserBinding
 import org.techtown.presentation.model.UserModel
 
@@ -19,6 +20,12 @@ class UserViewHolder(
             .load(item.avatar_url)
             .into(binding.ivUserAvatar)
         binding.tvUserName.text = item.login
+
+        if (item.is_favorite) {
+            binding.ivStar.setBackgroundResource(R.drawable.star_selected_36)
+        } else {
+            binding.ivStar.setBackgroundResource(R.drawable.star_unselected_36)
+        }
 
     }
 }
