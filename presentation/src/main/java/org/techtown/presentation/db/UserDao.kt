@@ -1,10 +1,7 @@
 package org.techtown.presentation.db
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import org.techtown.presentation.model.UserModel
 
 @Dao
@@ -14,4 +11,7 @@ interface UserDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun setFavUserInfo(userModel: UserModel)
+
+    @Query("DELETE FROM UserInfo WHERE id=:id")
+    fun deleteFavUserInfo(id: Int)
 }
