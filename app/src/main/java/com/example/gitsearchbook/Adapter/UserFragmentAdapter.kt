@@ -11,10 +11,21 @@ import com.example.gitsearchbook.Model.GitUserModel
 import com.example.gitsearchbook.R
 
 class UserFragmentAdapter(
-    gitUserModel: GitUserModel?
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>()  {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    private var gitUserModel : ArrayList<GitUserModel> = ArrayList()
+    private var onItemClickListener: OnItemClickListener? = null
 
+    interface OnItemClickListener{
+
+
+    }
+
+    //외부에서 아이템 클릭 처리할 리스너
+    fun setOnItemClickListener(onItemClickListener: OnItemClickListener) {
+        this.onItemClickListener = onItemClickListener
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val userInfoShow = LayoutInflater.from(parent.context).inflate(R.layout.fragment_user, parent, false)
         return UserInfoShowViewHolder(userInfoShow)
     }
@@ -27,7 +38,7 @@ class UserFragmentAdapter(
     }
 
     override fun getItemCount(): Int {
-        TODO("Not yet implemented")
+        return gitUserModel.size
     }
 
     inner class UserInfoShowViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
