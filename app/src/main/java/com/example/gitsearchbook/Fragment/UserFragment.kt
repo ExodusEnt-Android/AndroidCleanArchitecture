@@ -39,10 +39,18 @@ class UserFragment : Fragment() {
         etSearch = view.findViewById(R.id.et_search)
         btnSearch = view.findViewById(R.id.btn_search)
         rcvUser = view.findViewById(R.id.rcv_user)
-        userFragmentAdapter = UserFragmentAdapter(null)
+        userFragmentAdapter = UserFragmentAdapter()
         rcvUser.apply {
             adapter = userFragmentAdapter
         }
+
+        btnSearch.setOnClickListener {
+            getUserInfo(etSearch.toString())
+        }
+    }
+
+    fun getUserInfo(userName : String): ArrayList<GitUserModel> {
+        var gitUserName : ArrayList<GitUserModel> = ArrayList<GitUserModel>()
 
         val retrofit: Retrofit = Retrofit.Builder()
             .baseUrl("https://api.github.com/") //어떤 서버로 네트워크 통신을 요청할 것인지에 대한 설정
@@ -52,19 +60,25 @@ class UserFragment : Fragment() {
 
         val service = retrofit.create(GithubService::class.java)
 
-        service.getUserRepositories("min")?.enqueue(object : Callback<GitUserModel?> {
-            override fun onResponse(call: Call<GitUserModel?>?, response: Response<GitUserModel?>?) {
-                Log.d("mingue","arrayList 값 :: "+response?.body())
-                //어댑터 생성
+        service.getUserRepositories(userName).enqueue(object : Callback<ArrayList<GitUserModel>> {
+            override fun onResponse(call: Call<ArrayList<GitUserModel>>, response: Response<ArrayList<GitUserModel>>) {
+                Log.d("mingue","arrayList 값 :: "+response.body())
+                gitUserName = response.body()!!
 
             }
 
-            override fun onFailure(call: Call<GitUserModel?>?, t: Throwable?) {
-                Log.d("mingue","asdasd")
-                // Code...
+            override fun onFailure(call: Call<ArrayList<GitUserModel>> , t: Throwable?) {
+                Log.d("mingue","asdasd"+t?.message)
             }
         })
+        return gitUserName
+    }
 
+
+    private fun clickEvent() {
+        userFragmentAdapter.setOnItemClickListener(object : UserFragmentAdapter.OnItemClickListener{
+
+        })
     }
 
 
