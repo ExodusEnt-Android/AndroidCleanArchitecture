@@ -9,7 +9,11 @@ class LocalDataSourceImpl(private val userDatabase: UserDatabase?) : LocalDataSo
         return userDatabase?.userDao()?.getFavUserInfo(isFavorite)
     }
 
-    override fun setFavUserInfo(userModel: UserModel, isFavorite: Boolean) {
+    override fun setFavUserInfo(userModel: UserModel) {
         userDatabase?.userDao()?.setFavUserInfo(userModel)
+    }
+
+    override fun deleteFavUserInfo(id: Int) {
+        userDatabase?.userDao()?.deleteFavUserInfo(id)
     }
 }

@@ -21,10 +21,14 @@ class UserRepositoryImpl(
 
     override fun setFavUserInfo(
         userModel: UserModel,
-        isFavorite: Boolean,
         callback: (UserModel) -> Unit
     ) {
-        localDataSource.setFavUserInfo(userModel, isFavorite)
+        localDataSource.setFavUserInfo(userModel)
         callback(userModel) //잘 세팅되었나 확인용.
+    }
+
+    override fun deleteFavUserInfo(id: Int, callback: (Int) -> Unit) {
+        localDataSource.deleteFavUserInfo(id)
+        callback(id)
     }
 }

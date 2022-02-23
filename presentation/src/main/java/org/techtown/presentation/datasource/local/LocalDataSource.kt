@@ -9,5 +9,8 @@ interface LocalDataSource {
     fun getFavUserInfo(isFavorite: Boolean): LiveData<List<UserModel>>?
 
     //즐겨찾기 유저 목록 세팅.
-    fun setFavUserInfo(userModel: UserModel, isFavorite: Boolean)
+    fun setFavUserInfo(userModel: UserModel)
+
+    //즐겨찾기 유저 목록 삭제.
+    fun deleteFavUserInfo(id: Int)
 }

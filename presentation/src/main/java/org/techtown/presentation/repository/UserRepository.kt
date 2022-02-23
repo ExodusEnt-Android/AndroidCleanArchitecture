@@ -11,5 +11,7 @@ interface UserRepository {
 
     fun getFavUserInfo(isFavorite: Boolean): LiveData<List<UserModel>>?
 
-    fun setFavUserInfo(userModel: UserModel, isFavorite: Boolean, callback: (UserModel) -> Unit)
+    fun setFavUserInfo(userModel: UserModel, callback: (UserModel) -> Unit)
+
+    fun deleteFavUserInfo(id: Int, callback: (Int) -> Unit)
 }
