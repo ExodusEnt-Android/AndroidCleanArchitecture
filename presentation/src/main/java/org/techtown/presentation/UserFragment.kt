@@ -133,8 +133,15 @@ class UserFragment : Fragment(),
             { item ->
                 Log.d("Database", "유저화면 즐겨찾기 목록 업데이트 완료.")
 
-                for (element in item) {
-                    userList.find { it.id == element.id }?.is_favorite = true
+                for (i in 0 until userList.size) {
+                    for (element in item) {
+                        if (userList[i].id == element.id) {
+                            userList[i].is_favorite = true
+                            break
+                        } else {
+                            userList[i].is_favorite = false
+                        }
+                    }
                 }
                 userListAdapter.submitList(userList)
             })
