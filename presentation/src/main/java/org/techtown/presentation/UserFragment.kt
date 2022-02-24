@@ -126,17 +126,15 @@ class UserFragment : Fragment(),
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             adapter = userListAdapter
         }
-        //ListAdapter는 notify필요없이 submitList로 item비교 전달 및 MainThread ui업데이트해줌.
-        userListAdapter.submitList(userList)
 
+        //ListAdapter는 notify필요없이 submitList로 item비교 전달 및 MainThread ui업데이트해줌 (observer는 lifecycler영향을 받으므로 화면 onstart될때밑에 로직을 타게되있음).
         //검색화면 목록 즐겨찾기여부 확인하는데 사용.
         userRepository.getFavUserInfo(true)?.observe(viewLifecycleOwner,
             { item ->
                 Log.d("Database", "유저화면 즐겨찾기 목록 업데이트 완료.")
-                for (i in 0 until userList.size) {
-                    for (element in item) {
-                        userList[i].is_favorite = userList[i].id == element.id
-                    }
+
+                for (element in item) {
+                    userList.find { it.id == element.id }?.is_favorite = true
                 }
                 userListAdapter.submitList(userList)
             })
