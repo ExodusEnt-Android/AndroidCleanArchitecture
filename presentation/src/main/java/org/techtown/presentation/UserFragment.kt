@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -225,10 +226,19 @@ class UserFragment : Fragment(),
     }
 
     override fun onFavClick(model: UserModel, v: View, position: Int) {
-        model.is_favorite = true
-        //즐겨찾기 추가.
-        userRepository.setFavUserInfo(model) {
-            Log.d("Database", "제대로 저장 완료 ${it} 즐겨찾기 완료.")
+        if (!model.is_favorite) {
+            (v as AppCompatImageView).setBackgroundResource(R.drawable.star_selected_36)
+            model.is_favorite = true
+            //즐겨찾기 추가.
+            userRepository.setFavUserInfo(model) {
+                Log.d("Database", "제대로 저장 완료 ${it} 즐겨찾기 완료.")
+            }
+        } else {
+            (v as AppCompatImageView).setBackgroundResource(R.drawable.star_unselected_36)
+            model.is_favorite = false
+            userRepository.deleteFavUserInfo(model.id){
+                Log.d("Database", "제대로 유저화면에서 삭제 ${it} 완료.")
+            }
         }
     }
 }
