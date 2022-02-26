@@ -78,7 +78,7 @@ class UserFragment : Fragment(),
         super.onViewCreated(view, savedInstanceState)
 
         //초기유저정보를 세팅해줌.
-        setUserInfo()
+        initSet()
         setClickLisener()
     }
 
@@ -108,7 +108,7 @@ class UserFragment : Fragment(),
         })
     }
 
-    private fun setUserInfo() {
+    private fun initSet() {
 
         userList = arguments?.getParcelableArrayList<UserModel>("user_list") as ArrayList<UserModel>
         currentQuery = arguments?.getString("first_query") as String
