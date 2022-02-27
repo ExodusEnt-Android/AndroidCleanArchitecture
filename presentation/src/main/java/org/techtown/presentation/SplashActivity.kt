@@ -118,7 +118,7 @@ class SplashActivity : AppCompatActivity() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 Util.closeProgress()
-                userList = it.items
+                userList = it.body()!!.items
                 isSuccess = true
             },{
                 Util.closeProgress()

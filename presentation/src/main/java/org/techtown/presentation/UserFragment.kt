@@ -166,19 +166,27 @@ class UserFragment : Fragment(),
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ it ->
-                Util.closeProgress()
-                if (isSearch) {//검색일떄.
-                    userList.clear()
-                    userList.addAll(it.items)
-                    userListAdapter.submitList(userList.distinct().toList())
-                } else { //페이징일떄.
-                    userList.addAll(it.items)
-                    userListAdapter.submitList(userList.distinct().toList())
+                Log.d("Progressbar", "${it.code()} ${it.errorBody()}")
+                if (it.isSuccessful) {
+                    Util.closeProgress()
+                    if (isSearch) {//검색일떄.
+                        Log.d("Progressbar", "progress search")
+                        userList.clear()
+                        userList.addAll(it.body()!!.items)
+                        userListAdapter.submitList(userList.distinct().toList())
+                    } else { //페이징일떄.
+                        Log.d("Progressbar", "progress paging")
+                        userList.addAll(it.body()!!.items)
+                        userListAdapter.submitList(userList.distinct().toList())
+                    }
+                } else {
+                    throw Throwable()
                 }
             }, {
+                Log.d("Progressbar", "${it.message}")
                 Util.closeProgress()
                 Toast.makeText(activity, "데이터 불러오기 실패", Toast.LENGTH_LONG).show()
-            }).addTo(compositeDisposable)
+            }).addTo(compositeDisposable!!)
     }
 
     //검색창 세팅. 

@@ -1,13 +1,13 @@
 package org.techtown.presentation.db
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
+import io.reactivex.rxjava3.core.Observable
 import org.techtown.presentation.model.UserModel
 
 @Dao
 interface UserDao {
     @Query("SELECT * FROM UserInfo WHERE is_favorite=:isFavorite")
-    fun getFavUserInfo(isFavorite: Boolean): LiveData<List<UserModel>>?
+    fun getFavUserInfo(isFavorite: Boolean): Observable<List<UserModel>>?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun setFavUserInfo(userModel: UserModel)
