@@ -3,10 +3,9 @@ package com.example.gitsearchbook.Model
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
-
 @Parcelize
-data class GitUserModel(
-    val id : Int,
-    val name : String,
-    val owner : OwnerModel
-):Parcelable
+data class OwnerModel(
+    val login : String,
+    val avatar_url : String,
+    val html_url : String
+): Parcelable
