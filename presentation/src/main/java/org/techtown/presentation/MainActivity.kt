@@ -2,10 +2,16 @@ package org.techtown.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.SystemClock
 import android.widget.Toast
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.BackpressureStrategy
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.addTo
+import io.reactivex.rxjava3.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.Subject
 import org.techtown.presentation.databinding.ActivityMainBinding
 import org.techtown.presentation.model.UserModel
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,11 +29,22 @@ class MainActivity : AppCompatActivity() {
     private var lastTime = 0L
     private var firstTime = 0L
 
+    //os gc가발동할떄 프로세스가 죽어버리니까 single객체 가로채야됨.
+    private var compositeDisposable: CompositeDisposable? = null
+
+    private val backButtonSubject: Subject<Long> = BehaviorSubject.createDefault(0L).toSerialized()
+
     override fun onResume() {
         super.onResume()
         lastTime = 0L
         firstTime = 0L
         isBackPressed = false
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable!!.dispose()
+        compositeDisposable = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +69,12 @@ class MainActivity : AppCompatActivity() {
 
     //초기 설정.
     private fun initSet(){
+    private fun initSet() {
+
+        //항상 initSet할때마다 체크(Fragment tranction할때마다 onViewCreated가 불리므로 항상 이로직을 타게되어있음).
+        if (compositeDisposable == null) {
+            compositeDisposable = CompositeDisposable()
+        }
 
         //스플래시화면에서 받아온 초기 유저리스트 받아와주기.
         val userList = intent.getParcelableArrayListExtra<UserModel>("user_list") as ArrayList<UserModel>
@@ -68,19 +91,25 @@ class MainActivity : AppCompatActivity() {
         myFavoritesFragment = MyFavoritesFragment()
 
         //처음엔 유저 화면 보여줌.
-        supportFragmentManager.beginTransaction().replace(binding.liContainer.id, userFragment).commit()
+        supportFragmentManager.beginTransaction().replace(binding.liContainer.id, userFragment)
+            .commit()
+
+        backButtonSubject.toFlowable(BackpressureStrategy.BUFFER)
+            .observeOn(AndroidSchedulers.mainThread())
+            .buffer(2, 1)
+            .map { Pair(it[0], it[1]) }
+            .map { it.second - it.first < TimeUnit.SECONDS.toMillis(2) }
+            .subscribe { isFinish ->
+                if (isFinish && isBackPressed) {
+                    finish()
+                } else {
+                    isBackPressed = true
+                    Toast.makeText(this, "한번더 눌러주세요.", Toast.LENGTH_SHORT).show()
+                }
+            }.addTo(compositeDisposable!!)
     }
 
     override fun onBackPressed() {
-        lastTime = SystemClock.elapsedRealtime()
-        //만약 두번째 빠르게 눌렀을경우엔 firstTime이 초기화 되지 않기때문에 맨처음 초기화된 시간이 들어가서 lastTime이랑비교해줌.
-        if(isBackPressed && (lastTime - firstTime < 2000L)){
-            super.onBackPressed()
-        } else { 
-            firstTime = SystemClock.elapsedRealtime()
-            isBackPressed = true
-            Toast.makeText(this, "한번더 눌러주세요.", Toast.LENGTH_SHORT).show()
-        }
-
+        backButtonSubject.onNext(System.currentTimeMillis())
     }
 }
