@@ -59,16 +59,17 @@ class MainActivity : AppCompatActivity() {
     //클릭 리스너 등록.
     private fun initClick() {
         binding.btnUser.setOnClickListener {
-            supportFragmentManager.beginTransaction().replace(binding.liContainer.id, userFragment).commit()
+            supportFragmentManager.beginTransaction().replace(binding.liContainer.id, userFragment)
+                .commit()
         }
 
         binding.btnFavorites.setOnClickListener {
-            supportFragmentManager.beginTransaction().replace(binding.liContainer.id, myFavoritesFragment).commit()
+            supportFragmentManager.beginTransaction()
+                .replace(binding.liContainer.id, myFavoritesFragment).commit()
         }
     }
 
     //초기 설정.
-    private fun initSet(){
     private fun initSet() {
 
         //항상 initSet할때마다 체크(Fragment tranction할때마다 onViewCreated가 불리므로 항상 이로직을 타게되어있음).
@@ -77,7 +78,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         //스플래시화면에서 받아온 초기 유저리스트 받아와주기.
-        val userList = intent.getParcelableArrayListExtra<UserModel>("user_list") as ArrayList<UserModel>
+        val userList =
+            intent.getParcelableArrayListExtra<UserModel>("user_list") as ArrayList<UserModel>
         val firstQuery = intent.getStringExtra("first_query")
 
         //프래그먼트 데이터전송을위한 번들생성.
