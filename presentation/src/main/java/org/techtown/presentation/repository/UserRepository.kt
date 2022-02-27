@@ -9,7 +9,7 @@ import org.techtown.presentation.model.UserRootModel
 interface UserRepository {
     fun getUserInfo(name: String?, page: Int, perPage: Int): Single<UserRootModel>
 
-    fun getFavUserInfo(isFavorite: Boolean): LiveData<List<UserModel>>?
+    fun getFavUserInfo(isFavorite: Boolean): Observable<List<UserModel>>?
 
     fun setFavUserInfo(userModel: UserModel, callback: (UserModel) -> Unit)
 

@@ -15,7 +15,7 @@ class UserRepositoryImpl(
     override fun getUserInfo(name: String?, page: Int, perPage: Int): Single<UserRootModel> =
         remoteDatasouce.getUserInfo(name, page, perPage)
 
-    override fun getFavUserInfo(isFavorite: Boolean): LiveData<List<UserModel>>? {
+    override fun getFavUserInfo(isFavorite: Boolean): Observable<List<UserModel>>? {
         return localDataSource.getFavUserInfo(isFavorite)
     }
 

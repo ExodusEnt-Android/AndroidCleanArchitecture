@@ -49,7 +49,7 @@ class UserFragment : Fragment(),
     private var currentPage = 1
 
     //os gc가발동할떄 프로세스가 죽어버리니까 single객체 가로채야됨.
-    private var compositeDisposable = CompositeDisposable()
+    private var compositeDisposable: CompositeDisposable? = null
 
     //repository setting
     private val userRepository: UserRepository by lazy {
@@ -84,7 +84,6 @@ class UserFragment : Fragment(),
 
     override fun onDestroy() {
         super.onDestroy()
-        compositeDisposable.dispose()
     }
 
     private fun setClickLisener() {
@@ -109,6 +108,10 @@ class UserFragment : Fragment(),
     }
 
     private fun initSet() {
+        //항상 initSet할때마다 체크(Fragment tranction할때마다 onViewCreated가 불리므로 항상 이로직을 타게되어있음).
+        if (compositeDisposable == null) {
+            compositeDisposable = CompositeDisposable()
+        }
 
         userList = arguments?.getParcelableArrayList<UserModel>("user_list") as ArrayList<UserModel>
         currentQuery = arguments?.getString("first_query") as String
@@ -130,9 +133,10 @@ class UserFragment : Fragment(),
 
         //ListAdapter는 notify필요없이 submitList로 item비교 전달 및 MainThread ui업데이트해줌 (observer는 lifecycler영향을 받으므로 화면 onstart될때밑에 로직을 타게되있음).
         //검색화면 목록 즐겨찾기여부 확인하는데 사용.
-        userRepository.getFavUserInfo(true)?.observe(viewLifecycleOwner,
-            { item ->
-                Log.d("Database", "유저화면 즐겨찾기 목록 업데이트 완료.")
+        userRepository.getFavUserInfo(true)!!
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ item ->
 
                 for (i in 0 until userList.size) {
                     for (element in item) {
@@ -145,7 +149,10 @@ class UserFragment : Fragment(),
                     }
                 }
                 userListAdapter.submitList(userList)
-            })
+
+            }, {
+                Toast.makeText(activity, "유저화면에서 즐겨찾기 목록을 가져오는데 실패하셨습니다.", Toast.LENGTH_SHORT).show()
+            }).addTo(compositeDisposable!!)
     }
 
     //검색을 통한 유저정보 가져와줌.
@@ -205,6 +212,8 @@ class UserFragment : Fragment(),
 
     override fun onDestroyView() {
         _binding = null
+        compositeDisposable!!.dispose()
+        compositeDisposable = null
         super.onDestroyView()
     }
 

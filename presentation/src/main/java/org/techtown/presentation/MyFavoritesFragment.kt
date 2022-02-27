@@ -9,6 +9,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.addTo
+import io.reactivex.rxjava3.schedulers.Schedulers
 import org.techtown.presentation.adapter.UserListAdapter
 import org.techtown.presentation.databinding.FragmentMyFavoritesBinding
 import org.techtown.presentation.datasource.local.LocalDataSourceImpl
@@ -27,6 +31,9 @@ class MyFavoritesFragment : Fragment(),
     private val binding get() = _binding!!
 
     private lateinit var userListAdapter: UserListAdapter
+
+    //os gc가발동할떄 프로세스가 죽어버리니까 single객체 가로채야됨.
+    private var compositeDisposable: CompositeDisposable? = null
 
     //repository setting
     private val userRepository: UserRepository by lazy {
@@ -58,6 +65,10 @@ class MyFavoritesFragment : Fragment(),
 
     private fun initSet() {
 
+        if (compositeDisposable == null) {
+            compositeDisposable = CompositeDisposable()
+        }
+
         userListAdapter = UserListAdapter(
             requireActivity(),
             null
@@ -71,15 +82,20 @@ class MyFavoritesFragment : Fragment(),
             adapter = userListAdapter
         }
 
-        userRepository.getFavUserInfo(true)?.observe(viewLifecycleOwner,
-            {
-                Log.d("Database", "즐겨찾기 화면 목록 업데이트 완료.")
-                userListAdapter.submitList(it)
-            })
+        userRepository.getFavUserInfo(true)!!
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe({ item ->
+                userListAdapter.submitList(item)
+            }, {
+                Toast.makeText(activity, "즐찾화면에서 즐겨찾기 목록을 가져오는데 실패하셨습니다.", Toast.LENGTH_SHORT).show()
+            }).addTo(compositeDisposable!!)
     }
 
     override fun onDestroyView() {
         _binding = null
+        compositeDisposable!!.dispose()
+        compositeDisposable = null
         super.onDestroyView()
     }
 
