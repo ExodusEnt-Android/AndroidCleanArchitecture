@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.Toast
 import com.example.gitsearchbook.Fragment.FavoriteFragment
 import com.example.gitsearchbook.R
 import com.example.gitsearchbook.Fragment.UserFragment
@@ -22,9 +23,10 @@ import java.util.logging.Logger
 
 class MainActivity : AppCompatActivity(){
 
-    private lateinit var gitSearchAdapter: UserFragmentAdapter
     private lateinit var btnUser : Button
     private lateinit var btnFavorite : Button
+    private var backClickTime : Long = 0    //뒤로가기 시간 재기 위함.
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +48,17 @@ class MainActivity : AppCompatActivity(){
 
         }
 
+    }
+
+    override fun onBackPressed() {
+        if(System.currentTimeMillis() - backClickTime >=2000){
+            Toast.makeText(this,"한번 더 눌러주세요. 2초안에 누르셔야합니다.", Toast.LENGTH_SHORT).show()
+            backClickTime = System.currentTimeMillis()
+        }
+        else{
+            super.onBackPressed()   //else문안에 있어야 제대로 작동함.
+            Toast.makeText(this,"종료됩니다.", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onResume() {
