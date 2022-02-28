@@ -164,6 +164,10 @@ class UserFragment : Fragment(),
 
         userRepository.getUserInfo(query, currentPage, Const.PER_PAGE_LIST)
             .subscribeOn(Schedulers.io())
+            .retryWhen { it ->
+                it.delay(3, TimeUnit.SECONDS)
+                    .take(2)
+            }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ it ->
                 Log.d("Progressbar", "${it.code()} ${it.errorBody()}")
