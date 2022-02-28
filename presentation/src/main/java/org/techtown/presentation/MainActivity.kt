@@ -22,9 +22,6 @@ class MainActivity : AppCompatActivity() {
     //뷰바인딩 추가
     private lateinit var binding: ActivityMainBinding
 
-    //Back key눌림여부 확인.
-    private var isBackPressed = false
-
     //Back key 시간초 재는거.
     private var lastTime = 0L
     private var firstTime = 0L
@@ -38,12 +35,13 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         lastTime = 0L
         firstTime = 0L
-        isBackPressed = false
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        compositeDisposable!!.dispose()
+        compositeDisposable?.let {
+            it.dispose()
+        }
         compositeDisposable = null
     }
 
@@ -102,10 +100,9 @@ class MainActivity : AppCompatActivity() {
             .map { Pair(it[0], it[1]) }
             .map { it.second - it.first < TimeUnit.SECONDS.toMillis(2) }
             .subscribe { isFinish ->
-                if (isFinish && isBackPressed) {
+                if (isFinish) {
                     finish()
                 } else {
-                    isBackPressed = true
                     Toast.makeText(this, "한번더 눌러주세요.", Toast.LENGTH_SHORT).show()
                 }
             }.addTo(compositeDisposable!!)
