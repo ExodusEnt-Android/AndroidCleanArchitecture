@@ -2,8 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.techtown.presentation">
 
-    <application
-        android:name=".MyApplication">
+    <application>
         <activity
             android:name=".activity.UserDetailActivity"
             android:exported="false" />
