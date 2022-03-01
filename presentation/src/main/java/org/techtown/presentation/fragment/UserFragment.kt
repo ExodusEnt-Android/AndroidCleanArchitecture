@@ -1,4 +1,4 @@
-package org.techtown.presentation
+package org.techtown.presentation.fragment
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,9 +12,14 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.schedulers.Schedulers
+import org.techtown.presentation.util.Const
+import org.techtown.presentation.R
+import org.techtown.presentation.util.Util
+import org.techtown.presentation.activity.UserDetailActivity
 import org.techtown.presentation.adapter.UserListAdapter
 import org.techtown.presentation.databinding.FragmentUserBinding
 import org.techtown.presentation.datasource.local.LocalDataSourceImpl
@@ -24,6 +29,8 @@ import org.techtown.presentation.model.UserModel
 import org.techtown.presentation.repository.UserRepositoryImpl
 import org.techtown.presentation.repository.UserRepository
 import org.techtown.presentation.retorfit.RetrofitBuilder
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicInteger
 
 
 class UserFragment : Fragment(),
@@ -108,6 +115,8 @@ class UserFragment : Fragment(),
     }
 
     private fun initSet() {
+        Log.d("MyDatabase::in UserFragment", "initset")
+
         //항상 initSet할때마다 체크(Fragment tranction할때마다 onViewCreated가 불리므로 항상 이로직을 타게되어있음).
         if (compositeDisposable == null) {
             compositeDisposable = CompositeDisposable()
@@ -148,27 +157,38 @@ class UserFragment : Fragment(),
                         }
                     }
                 }
+
+                for (i in item.indices) {
+                    Log.d("MyDatabase::in UserFragment", "유저화면 ${item[i].login}")
+                }
+
                 userListAdapter.submitList(userList)
 
             }, {
-                Toast.makeText(activity, "유저화면에서 즐겨찾기 목록을 가져오는데 실패하셨습니다.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "유저화면에서 즐겨찾기 목록을 가져오는데 실패하셨습니다.", Toast.LENGTH_SHORT)
+                    .show()
             }).addTo(compositeDisposable!!)
     }
 
     //검색을 통한 유저정보 가져와줌.
     private fun getUserInfo(query: String?, isSearch: Boolean) {
+        Log.d("Progressbar", "show progress cur page ${currentPage}")
         Util.showProgress(requireActivity())
         if (isSearch) { //검색일땐 첫페이지부터 보여줘야되므로 1로 넣어줌.
             currentPage = 1
         }
+
+        Log.d("Progressbar", "in middle")
+
 
         userRepository.getUserInfo(query, currentPage, Const.PER_PAGE_LIST)
             .subscribeOn(Schedulers.io())
             .retryWhen { errors ->
                 var counter = AtomicInteger()
                 errors.takeWhile {
-                    counter.getAndIncrement() != 3
+                    counter.getAndIncrement() < 3
                 }.flatMap {
+                    Log.d("retryTest", "${counter.get()}")
                     Flowable.timer(counter.get().toLong(), TimeUnit.SECONDS)
                 }
             }
@@ -192,9 +212,12 @@ class UserFragment : Fragment(),
                 }
             }, {
                 Log.d("Progressbar", "${it.message}")
+                Log.d("retryTest", "${it.message} 모두 실패했네요.")
                 Util.closeProgress()
                 Toast.makeText(activity, "데이터 불러오기 실패", Toast.LENGTH_LONG).show()
             }).addTo(compositeDisposable!!)
+
+        Log.d("Progressbar", "in last")
     }
 
     //검색창 세팅. 
@@ -261,7 +284,7 @@ class UserFragment : Fragment(),
         } else {
             (v as AppCompatImageView).setBackgroundResource(R.drawable.star_unselected_36)
             model.is_favorite = false
-            userRepository.deleteFavUserInfo(model.id){
+            userRepository.deleteFavUserInfo(model.id) {
                 Log.d("Database", "제대로 유저화면에서 삭제 ${it} 완료.")
             }
         }

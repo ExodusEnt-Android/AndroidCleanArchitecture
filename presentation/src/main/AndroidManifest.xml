@@ -5,7 +5,7 @@
     <application
         android:name=".MyApplication">
         <activity
-            android:name=".UserDetailActivity"
+            android:name=".activity.UserDetailActivity"
             android:exported="false" />
     </application>
 

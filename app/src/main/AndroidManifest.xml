@@ -13,13 +13,13 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.MyMvvmTest">
         <activity
-            android:name="org.techtown.presentation.MainActivity"
+            android:name="org.techtown.presentation.activity.MainActivity"
             android:exported="true">
 
         </activity>
 
         <activity
-            android:name="org.techtown.presentation.SplashActivity"
+            android:name="org.techtown.presentation.activity.SplashActivity"
             android:exported="true">
 
             <intent-filter>

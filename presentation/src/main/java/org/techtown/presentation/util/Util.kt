@@ -1,9 +1,10 @@
-package org.techtown.presentation
+package org.techtown.presentation.util
 
 import android.app.ProgressDialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import org.techtown.presentation.R
 
 class Util {
     companion object{

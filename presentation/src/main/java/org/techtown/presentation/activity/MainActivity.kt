@@ -1,4 +1,4 @@
-package org.techtown.presentation
+package org.techtown.presentation.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,6 +9,8 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.Subject
+import org.techtown.presentation.fragment.MyFavoritesFragment
+import org.techtown.presentation.fragment.UserFragment
 import org.techtown.presentation.databinding.ActivityMainBinding
 import org.techtown.presentation.model.UserModel
 import java.util.concurrent.TimeUnit

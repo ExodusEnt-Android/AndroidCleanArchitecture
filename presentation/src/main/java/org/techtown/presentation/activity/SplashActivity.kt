@@ -1,9 +1,8 @@
-package org.techtown.presentation
+package org.techtown.presentation.activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -12,6 +11,8 @@ import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.*
+import org.techtown.presentation.util.Const
+import org.techtown.presentation.util.Util
 import org.techtown.presentation.databinding.ActivitySplashBinding
 import org.techtown.presentation.datasource.local.LocalDataSourceImpl
 import org.techtown.presentation.datasource.remote.RemoteDataSourceImpl

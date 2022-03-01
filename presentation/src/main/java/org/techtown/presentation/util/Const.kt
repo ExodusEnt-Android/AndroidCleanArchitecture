@@ -1,4 +1,4 @@
-package org.techtown.presentation
+package org.techtown.presentation.util
 
 class Const {
     companion object{
