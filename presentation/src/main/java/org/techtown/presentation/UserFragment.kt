@@ -164,9 +164,13 @@ class UserFragment : Fragment(),
 
         userRepository.getUserInfo(query, currentPage, Const.PER_PAGE_LIST)
             .subscribeOn(Schedulers.io())
-            .retryWhen { it ->
-                it.delay(3, TimeUnit.SECONDS)
-                    .take(2)
+            .retryWhen { errors ->
+                var counter = AtomicInteger()
+                errors.takeWhile {
+                    counter.getAndIncrement() != 3
+                }.flatMap {
+                    Flowable.timer(counter.get().toLong(), TimeUnit.SECONDS)
+                }
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ it ->
