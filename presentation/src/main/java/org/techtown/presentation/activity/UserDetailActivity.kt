@@ -32,7 +32,5 @@ class UserDetailActivity : AppCompatActivity() {
 
         //유저 아바타사진.
         Glide.with(this).load(user.avatar_url).into(bindnig.ivUserAvatar)
-
-
     }
 }

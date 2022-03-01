@@ -115,8 +115,6 @@ class UserFragment : Fragment(),
     }
 
     private fun initSet() {
-        Log.d("MyDatabase::in UserFragment", "initset")
-
         //항상 initSet할때마다 체크(Fragment tranction할때마다 onViewCreated가 불리므로 항상 이로직을 타게되어있음).
         if (compositeDisposable == null) {
             compositeDisposable = CompositeDisposable()
@@ -158,10 +156,6 @@ class UserFragment : Fragment(),
                     }
                 }
 
-                for (i in item.indices) {
-                    Log.d("MyDatabase::in UserFragment", "유저화면 ${item[i].login}")
-                }
-
                 userListAdapter.submitList(userList)
 
             }, {
@@ -172,14 +166,10 @@ class UserFragment : Fragment(),
 
     //검색을 통한 유저정보 가져와줌.
     private fun getUserInfo(query: String?, isSearch: Boolean) {
-        Log.d("Progressbar", "show progress cur page ${currentPage}")
         Util.showProgress(requireActivity())
         if (isSearch) { //검색일땐 첫페이지부터 보여줘야되므로 1로 넣어줌.
             currentPage = 1
         }
-
-        Log.d("Progressbar", "in middle")
-
 
         userRepository.getUserInfo(query, currentPage, Const.PER_PAGE_LIST)
             .subscribeOn(Schedulers.io())
@@ -188,22 +178,18 @@ class UserFragment : Fragment(),
                 errors.takeWhile {
                     counter.getAndIncrement() < 3
                 }.flatMap {
-                    Log.d("retryTest", "${counter.get()}")
                     Flowable.timer(counter.get().toLong(), TimeUnit.SECONDS)
                 }
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ it ->
-                Log.d("Progressbar", "${it.code()} ${it.errorBody()}")
                 if (it.isSuccessful) {
                     Util.closeProgress()
                     if (isSearch) {//검색일떄.
-                        Log.d("Progressbar", "progress search")
                         userList.clear()
                         userList.addAll(it.body()!!.items)
                         userListAdapter.submitList(userList.distinct().toList())
                     } else { //페이징일떄.
-                        Log.d("Progressbar", "progress paging")
                         userList.addAll(it.body()!!.items)
                         userListAdapter.submitList(userList.distinct().toList())
                     }
@@ -211,13 +197,9 @@ class UserFragment : Fragment(),
                     throw Throwable()
                 }
             }, {
-                Log.d("Progressbar", "${it.message}")
-                Log.d("retryTest", "${it.message} 모두 실패했네요.")
                 Util.closeProgress()
                 Toast.makeText(activity, "데이터 불러오기 실패", Toast.LENGTH_LONG).show()
             }).addTo(compositeDisposable!!)
-
-        Log.d("Progressbar", "in last")
     }
 
     //검색창 세팅. 

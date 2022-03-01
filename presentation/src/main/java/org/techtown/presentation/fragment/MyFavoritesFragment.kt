@@ -59,14 +59,11 @@ class MyFavoritesFragment : Fragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("Trans", "MyFavorites")
 
         initSet()
     }
 
     private fun initSet() {
-
-        Log.d("MyDatabase::in MyFavoritesFragment", "initset")
 
         if (compositeDisposable == null) {
             compositeDisposable = CompositeDisposable()
@@ -90,10 +87,6 @@ class MyFavoritesFragment : Fragment(),
             .subscribeOn(Schedulers.io())
             .subscribe({ item ->
                 userListAdapter.submitList(item)
-
-                for (i in item.indices) {
-                    Log.d("MyDatabase::in MyFavoritesFragment", "즐찾화면 ${item[i].login}")
-                }
             }, {
                 Toast.makeText(activity, "즐찾화면에서 즐겨찾기 목록을 가져오는데 실패하셨습니다.", Toast.LENGTH_SHORT).show()
             }).addTo(compositeDisposable!!)
