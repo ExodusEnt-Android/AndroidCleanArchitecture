@@ -178,7 +178,7 @@ class UserFragment : Fragment(),
                 errors.takeWhile {
                     counter.getAndIncrement() < 3
                 }.flatMap {
-                    Flowable.timer(counter.get().toLong(), TimeUnit.SECONDS)
+                    Flowable.timer(3, TimeUnit.SECONDS)
                 }
             }
             .observeOn(AndroidSchedulers.mainThread())
