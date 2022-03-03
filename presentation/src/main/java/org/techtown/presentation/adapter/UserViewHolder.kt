@@ -21,11 +21,7 @@ class UserViewHolder(
             .into(binding.ivUserAvatar)
         binding.tvUserName.text = item.login
 
-        if (item.is_favorite) {
-            binding.ivStar.setBackgroundResource(R.drawable.star_selected_36)
-        } else {
-            binding.ivStar.setBackgroundResource(R.drawable.star_unselected_36)
-        }
+        binding.ivStar.setBackgroundResource(if (item.is_favorite) R.drawable.star_selected_36 else R.drawable.star_unselected_36)
 
     }
 }
