@@ -1,10 +1,10 @@
 package com.example.gitsearchbook.Model
+
+
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
-
 @Parcelize
-data class GitUserModel (
-    val total_count : Int,
-    val items : UserItemModel
+data class UserItemModel (
+    val avatar_url : String
 ):Parcelable
