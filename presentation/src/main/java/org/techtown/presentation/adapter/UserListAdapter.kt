@@ -32,7 +32,7 @@ class UserListAdapter(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-            ), context
+            )
         )
         return viewHolder
     }
