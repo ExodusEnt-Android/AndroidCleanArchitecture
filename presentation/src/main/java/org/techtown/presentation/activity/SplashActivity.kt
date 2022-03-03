@@ -43,9 +43,6 @@ class SplashActivity : AppCompatActivity() {
     //유저 리스트.
     private var userList: ArrayList<UserModel>? = null
 
-    //타이머 저장(화면 Destroy될때 없애주기위함).
-    private lateinit var timerDisposable: Disposable
-
     //repository setting
     private val userRepository: UserRepository by lazy {
         //remote 데이터 세팅.
@@ -60,7 +57,7 @@ class SplashActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         //타이머 시작.
-        timerDisposable = excuteTimer()
+        excuteTimer()
     }
 
     private fun excuteTimer() = Observable.interval(1, 1, TimeUnit.SECONDS)
@@ -96,17 +93,13 @@ class SplashActivity : AppCompatActivity() {
                 }
             }
 
-        }
+        }.addTo(compositeDisposable)
 
     override fun onDestroy() {
         super.onDestroy()
 
         //프로세스 종료시 통신작업 중단.
         compositeDisposable.dispose()
-
-        //타이머도 중단.
-        timerDisposable.dispose()
-
     }
 
     private fun getFirstUserInfo() {
