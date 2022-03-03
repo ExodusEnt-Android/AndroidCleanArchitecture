@@ -12,7 +12,6 @@ import org.techtown.presentation.model.UserModel
 
 
 class UserListAdapter(
-    private val context: Context,
     private val userClick: ((UserModel, View, Int) -> Unit?)?,
     private val favClick: (UserModel, View, Int) -> Unit
 ) : ListAdapter<UserModel, UserViewHolder>(diffUtil) {
