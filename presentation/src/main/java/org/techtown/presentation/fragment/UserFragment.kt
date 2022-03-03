@@ -56,7 +56,10 @@ class UserFragment : Fragment(),
     private var currentPage = 1
 
     //os gc가발동할떄 프로세스가 죽어버리니까 single객체 가로채야됨.
-    private var compositeDisposable: CompositeDisposable? = null
+    private var _compositeDisposable: CompositeDisposable? = null
+
+    //여기서도 null체크 번거로움 제거.
+    private val compositeDisposable get() = _compositeDisposable!!
 
     //repository setting
     private val userRepository: UserRepository by lazy {
@@ -115,10 +118,7 @@ class UserFragment : Fragment(),
     }
 
     private fun initSet() {
-        //항상 initSet할때마다 체크(Fragment tranction할때마다 onViewCreated가 불리므로 항상 이로직을 타게되어있음).
-        if (compositeDisposable == null) {
-            compositeDisposable = CompositeDisposable()
-        }
+        _compositeDisposable = CompositeDisposable()
 
         userList = arguments?.getParcelableArrayList<UserModel>("user_list") as ArrayList<UserModel>
         currentQuery = arguments?.getString("first_query") as String
@@ -160,7 +160,7 @@ class UserFragment : Fragment(),
             }, {
                 Toast.makeText(activity, "유저화면에서 즐겨찾기 목록을 가져오는데 실패하셨습니다.", Toast.LENGTH_SHORT)
                     .show()
-            }).addTo(compositeDisposable!!)
+            }).addTo(compositeDisposable)
     }
 
     //검색을 통한 유저정보 가져와줌.
@@ -198,7 +198,7 @@ class UserFragment : Fragment(),
             }, {
                 Util.closeProgress()
                 Toast.makeText(activity, "데이터 불러오기 실패", Toast.LENGTH_LONG).show()
-            }).addTo(compositeDisposable!!)
+            }).addTo(compositeDisposable)
     }
 
     //검색창 세팅. 
@@ -232,8 +232,7 @@ class UserFragment : Fragment(),
 
     override fun onDestroyView() {
         _binding = null
-        compositeDisposable!!.dispose()
-        compositeDisposable = null
+        compositeDisposable.dispose()
         super.onDestroyView()
     }
 

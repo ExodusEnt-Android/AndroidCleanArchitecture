@@ -33,7 +33,10 @@ class MyFavoritesFragment : Fragment(),
     private lateinit var userListAdapter: UserListAdapter
 
     //os gc가발동할떄 프로세스가 죽어버리니까 single객체 가로채야됨.
-    private var compositeDisposable: CompositeDisposable? = null
+    private var _compositeDisposable: CompositeDisposable? = null
+
+    //여기서도 null체크 번거로움 제거.
+    private val compositeDisposable get() = _compositeDisposable!!
 
     //repository setting
     private val userRepository: UserRepository by lazy {
@@ -65,9 +68,7 @@ class MyFavoritesFragment : Fragment(),
 
     private fun initSet() {
 
-        if (compositeDisposable == null) {
-            compositeDisposable = CompositeDisposable()
-        }
+        _compositeDisposable = CompositeDisposable()
 
         userListAdapter = UserListAdapter(
             null
@@ -88,13 +89,12 @@ class MyFavoritesFragment : Fragment(),
                 userListAdapter.submitList(item)
             }, {
                 Toast.makeText(activity, "즐찾화면에서 즐겨찾기 목록을 가져오는데 실패하셨습니다.", Toast.LENGTH_SHORT).show()
-            }).addTo(compositeDisposable!!)
+            }).addTo(compositeDisposable)
     }
 
     override fun onDestroyView() {
         _binding = null
-        compositeDisposable!!.dispose()
-        compositeDisposable = null
+        compositeDisposable.dispose()
         super.onDestroyView()
     }
 
