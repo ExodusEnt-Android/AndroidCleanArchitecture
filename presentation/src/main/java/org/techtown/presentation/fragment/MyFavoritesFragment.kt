@@ -70,7 +70,6 @@ class MyFavoritesFragment : Fragment(),
         }
 
         userListAdapter = UserListAdapter(
-            requireActivity(),
             null
         ) { userModel: UserModel, view: View, i: Int ->
             onFavClick(userModel, view, i)

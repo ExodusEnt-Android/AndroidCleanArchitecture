@@ -126,7 +126,6 @@ class UserFragment : Fragment(),
         //어댑터 연결부분.
         userListAdapter =
             UserListAdapter(
-                requireActivity(),
                 { userModel: UserModel, view: View, i: Int ->
                     onUserClick(userModel, view, i)
                 }) { userModel: UserModel, view: View, i: Int ->
