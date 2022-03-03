@@ -2,23 +2,11 @@ package com.example.gitsearchbook.Activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import com.example.gitsearchbook.Fragment.FavoriteFragment
 import com.example.gitsearchbook.R
-import com.example.gitsearchbook.Fragment.UserFragment
-import com.example.gitsearchbook.Adapter.UserFragmentAdapter
-import retrofit2.converter.gson.GsonConverterFactory
-
-import retrofit2.Retrofit
-import com.google.gson.JsonArray
-
-import com.example.gitsearchbook.GithubService
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.util.logging.Logger
+import com.example.gitsearchbook.Fragment.UserDetailFragment
 
 
 class MainActivity : AppCompatActivity(){
@@ -32,24 +20,19 @@ class MainActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val retrofit: Retrofit = Retrofit.Builder()
-            .baseUrl("https://api.github.com/") //어떤 서버로 네트워크 통신을 요청할 것인지에 대한 설정
-            .addConverterFactory(GsonConverterFactory.create()) //통신이 완료된 후, 어떤 Converter를 이용하여 데이터를 파싱할 것인지에 대한 설정
-            .build()
-
-        btnUser = findViewById(R.id.btn_user)
+        btnUser = findViewById(R.id.btn_user)   //view binding으로 바꾸기(1주차) -> 2주차에 data binding
         btnFavorite = findViewById(R.id.btn_favorite)
 
         btnUser.setOnClickListener {
-            supportFragmentManager.beginTransaction().replace(R.id.ll_fragment, UserFragment()).commit()
+            supportFragmentManager.beginTransaction().replace(R.id.ll_fragment, UserDetailFragment()).commit()
         }
         btnFavorite.setOnClickListener {
             supportFragmentManager.beginTransaction().replace(R.id.ll_fragment, FavoriteFragment()).commit()
-
         }
 
     }
 
+    //뒤로가기 눌렀을 경우 두번 눌러야 꺼지게 설정
     override fun onBackPressed() {
         if(System.currentTimeMillis() - backClickTime >=2000){
             Toast.makeText(this,"한번 더 눌러주세요. 2초안에 누르셔야합니다.", Toast.LENGTH_SHORT).show()

@@ -9,18 +9,17 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
-import com.example.gitsearchbook.Model.GitUserModel
+import com.example.gitsearchbook.Model.GitRepoModel
 import com.example.gitsearchbook.R
 
-class UserFragmentAdapter(
+class UserDetailFragmentAdapter(
     private val mGlideRequestManager: RequestManager
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>()  {
-    private var gitUserModel : ArrayList<GitUserModel> = ArrayList()
+    private var gitRepoModel : ArrayList<GitRepoModel> = ArrayList()
     private var onItemClickListener: OnItemClickListener? = null
 
     interface OnItemClickListener{
-
-
+        fun clickUserLike(gitRepoModel: GitRepoModel)
     }
 
     //외부에서 아이템 클릭 처리할 리스너
@@ -28,8 +27,8 @@ class UserFragmentAdapter(
         this.onItemClickListener = onItemClickListener
     }
 
-    fun setGitUserArray(gitUserArray : ArrayList<GitUserModel>) {
-        this.gitUserModel = gitUserArray
+    fun setGitUserArray(gitRepoArray : ArrayList<GitRepoModel>) {
+        this.gitRepoModel = gitRepoArray
         notifyDataSetChanged()
     }
 
@@ -39,16 +38,25 @@ class UserFragmentAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        Log.d("asdasd::","asdasd")
-
         (holder as UserInfoShowViewHolder).apply {
-            this.bind(gitUserModel[position])
-            ibFavorite.setOnClickListener {  }
+            this.bind(gitRepoModel[position])
+            ibFavorite.setOnClickListener {
+                if(ibFavorite.resources.equals(R.drawable.heart_no)){
+                    Log.d("click heart no","heart no")
+                    ibFavorite.setImageResource(R.drawable.heart_ok)
+                    onItemClickListener?.clickUserLike(gitRepoModel[position])
+                }
+                else {
+                    Log.d("click heart no","heart yes")
+                    ibFavorite.setImageResource(R.drawable.heart_no)
+                    onItemClickListener?.clickUserLike(gitRepoModel[position])
+                }
+            }
         }
     }
 
     override fun getItemCount(): Int {
-        return gitUserModel.size
+        return gitRepoModel.size
     }
 
     inner class UserInfoShowViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
@@ -57,10 +65,10 @@ class UserFragmentAdapter(
         private var tvLink : TextView = itemView.findViewById(R.id.tv_link)
         var ibFavorite : ImageButton = itemView.findViewById(R.id.ib_favorite)
 
-        fun bind(gitUserModel: GitUserModel) {
-            mGlideRequestManager.load(gitUserModel.owner.avatar_url).into(ivUser)
-            tvUserInfo.text = gitUserModel.owner.login
-            tvLink.text = gitUserModel.owner.html_url
+        fun bind(gitRepoModel: GitRepoModel) {
+            mGlideRequestManager.load(gitRepoModel.owner.avatar_url).into(ivUser)
+            tvUserInfo.text = gitRepoModel.owner.login
+            tvLink.text = gitRepoModel.owner.html_url
         }
     }
 

@@ -1,18 +1,11 @@
 package com.example.gitsearchbook.Fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.gitsearchbook.GithubService
-import com.example.gitsearchbook.Model.GitUserModel
 import com.example.gitsearchbook.R
-import com.google.gson.JsonArray
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
