@@ -1,6 +1,7 @@
 package org.techtown.presentation.db
 
 import androidx.room.*
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import org.techtown.presentation.model.UserModel
 
@@ -10,8 +11,8 @@ interface UserDao {
     fun getFavUserInfo(isFavorite: Boolean): Observable<List<UserModel>>?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun setFavUserInfo(userModel: UserModel)
+    fun setFavUserInfo(userModel: UserModel): Completable?
 
     @Query("DELETE FROM UserInfo WHERE id=:id")
-    fun deleteFavUserInfo(id: Int)
+    fun deleteFavUserInfo(id: Int): Completable?
 }

@@ -112,8 +112,13 @@ class MyFavoritesFragment : Fragment(),
         Log.d("Database", "즐겨찾기 해제 완료.")
         model.is_favorite = false
         //즐겨찾기 해제
-        userRepository.deleteFavUserInfo(model.id) {
-            Log.d("Database", "제대로 삭제 완료 ${it}")
-        }
+        userRepository.deleteFavUserInfo(model.id)
+            ?.subscribeOn(Schedulers.io())
+            ?.observeOn(AndroidSchedulers.mainThread())
+            ?.subscribe({
+                Timber.d("Database::제대로 유저화면에서 삭제 ${model.login} 완료.")
+            }, {
+                Timber.d("Database::제대로 유저화면에서 삭제 실패 ${model.login}")
+            })?.addTo(compositeDisposable)
     }
 }

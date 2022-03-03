@@ -1,6 +1,7 @@
 package org.techtown.presentation.repository
 
 import androidx.lifecycle.LiveData
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import org.techtown.presentation.model.UserModel
@@ -13,7 +14,7 @@ interface UserRepository {
 
     fun getFavUserInfo(isFavorite: Boolean): Observable<List<UserModel>>?
 
-    fun setFavUserInfo(userModel: UserModel, callback: (UserModel) -> Unit)
+    fun setFavUserInfo(userModel: UserModel): Completable?
 
-    fun deleteFavUserInfo(id: Int, callback: (Int) -> Unit)
+    fun deleteFavUserInfo(id: Int): Completable?
 }

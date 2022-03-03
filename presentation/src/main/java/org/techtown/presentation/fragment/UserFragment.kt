@@ -259,15 +259,25 @@ class UserFragment : Fragment(),
             (v as AppCompatImageView).setBackgroundResource(R.drawable.star_selected_36)
             model.is_favorite = true
             //즐겨찾기 추가.
-            userRepository.setFavUserInfo(model) {
-                Log.d("Database", "제대로 저장 완료 ${it} 즐겨찾기 완료.")
-            }
+            userRepository.setFavUserInfo(model)
+                ?.subscribeOn(Schedulers.io())
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribe({
+                    Timber.d("Database::제대로 저장 완료 ${model.login} 즐겨찾기 완료.")
+                }, {
+                    Timber.d("Database::제대로 저장 실패 ${model.login}")
+                })?.addTo(compositeDisposable)
         } else {
             (v as AppCompatImageView).setBackgroundResource(R.drawable.star_unselected_36)
             model.is_favorite = false
-            userRepository.deleteFavUserInfo(model.id) {
-                Log.d("Database", "제대로 유저화면에서 삭제 ${it} 완료.")
-            }
+            userRepository.deleteFavUserInfo(model.id)
+                ?.subscribeOn(Schedulers.io())
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribe({
+                    Timber.d("Database::제대로 유저화면에서 삭제 ${model.login} 완료.")
+                }, {
+                    Timber.d("Database::제대로 유저화면에서 삭제 실패 ${model.login}")
+                })?.addTo(compositeDisposable)
         }
     }
 }
