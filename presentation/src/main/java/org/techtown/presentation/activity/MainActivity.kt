@@ -24,27 +24,14 @@ class MainActivity : AppCompatActivity() {
     //뷰바인딩 추가
     private lateinit var binding: ActivityMainBinding
 
-    //Back key 시간초 재는거.
-    private var lastTime = 0L
-    private var firstTime = 0L
-
     //os gc가발동할떄 프로세스가 죽어버리니까 single객체 가로채야됨.
-    private var compositeDisposable: CompositeDisposable? = null
+    private var compositeDisposable = CompositeDisposable()
 
     private val backButtonSubject: Subject<Long> = BehaviorSubject.createDefault(0L).toSerialized()
 
-    override fun onResume() {
-        super.onResume()
-        lastTime = 0L
-        firstTime = 0L
-    }
-
     override fun onDestroy() {
         super.onDestroy()
-        compositeDisposable?.let {
-            it.dispose()
-        }
-        compositeDisposable = null
+        compositeDisposable.dispose()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,11 +58,6 @@ class MainActivity : AppCompatActivity() {
 
     //초기 설정.
     private fun initSet() {
-
-        //항상 initSet할때마다 체크(Fragment tranction할때마다 onViewCreated가 불리므로 항상 이로직을 타게되어있음).
-        if (compositeDisposable == null) {
-            compositeDisposable = CompositeDisposable()
-        }
 
         //스플래시화면에서 받아온 초기 유저리스트 받아와주기.
         val userList =
@@ -107,7 +89,7 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     Toast.makeText(this, "한번더 눌러주세요.", Toast.LENGTH_SHORT).show()
                 }
-            }.addTo(compositeDisposable!!)
+            }.addTo(compositeDisposable)
     }
 
     override fun onBackPressed() {
