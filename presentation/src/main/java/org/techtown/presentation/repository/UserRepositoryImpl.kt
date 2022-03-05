@@ -13,8 +13,7 @@ import retrofit2.Response
 class UserRepositoryImpl(
     private val remoteDatasouce: RemoteDataSource,
     private val localDataSource: LocalDataSource
-) :
-    UserRepository {
+) : UserRepository {
     override fun getUserInfo(name: String?, page: Int, perPage: Int): Single<Response<UserRootModel>> =
         remoteDatasouce.getUserInfo(name, page, perPage)
 
