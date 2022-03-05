@@ -103,9 +103,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun getFirstUserInfo() {
-        runOnUiThread {
-            Util.showProgress(this@SplashActivity)
-        }
+        Util.showProgress(this@SplashActivity)
 
         userRepository.getUserInfo(firstQuery, Const.START_PAGE, Const.PER_PAGE_LIST)
             .subscribeOn(Schedulers.io())
