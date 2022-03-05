@@ -186,10 +186,10 @@ class UserFragment : Fragment(),
                     Util.closeProgress()
                     if (isSearch) {//검색일떄.
                         userList.clear()
-                        userList.addAll(it.body()!!.items)
+                        it.body()?.items?.let { it1 -> userList.addAll(it1) }
                         userListAdapter.submitList(userList.distinct().toList())
                     } else { //페이징일떄.
-                        userList.addAll(it.body()!!.items)
+                        it.body()?.items?.let { it1 -> userList.addAll(it1) }
                         userListAdapter.submitList(userList.distinct().toList())
                     }
                 } else {
