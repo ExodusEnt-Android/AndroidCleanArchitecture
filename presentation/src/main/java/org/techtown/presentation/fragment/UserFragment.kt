@@ -142,10 +142,9 @@ class UserFragment : Fragment(),
         userRepository.getFavUserInfo(true)!!
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ item ->
-
+            .map {
                 for (i in 0 until userList.size) {
-                    for (element in item) {
+                    for (element in it) {
                         if (userList[i].id == element.id) {
                             userList[i].is_favorite = true
                             break
@@ -154,6 +153,8 @@ class UserFragment : Fragment(),
                         }
                     }
                 }
+            }
+            .subscribe({ item ->
 
                 userListAdapter.submitList(userList)
 
