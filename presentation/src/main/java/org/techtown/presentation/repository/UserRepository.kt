@@ -12,7 +12,7 @@ import retrofit2.Response
 interface UserRepository {
     fun getUserInfo(name: String?, page: Int, perPage: Int): Single<Response<UserRootModel>>
 
-    fun getFavUserInfo(isFavorite: Boolean): Observable<List<UserModel>>?
+    fun getFavUserInfo(isFavorite: Boolean): Single<List<UserModel>>?
 
     fun setFavUserInfo(userModel: UserModel): Completable?
 

@@ -1,12 +1,12 @@
 package org.techtown.presentation.datasource.local
 
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import org.techtown.presentation.db.UserDatabase
 import org.techtown.presentation.model.UserModel
 
 class LocalDataSourceImpl(private val userDatabase: UserDatabase?) : LocalDataSource {
-    override fun getFavUserInfo(isFavorite: Boolean): Observable<List<UserModel>>? {
+    override fun getFavUserInfo(isFavorite: Boolean): Single<List<UserModel>>? {
         return userDatabase?.userDao()?.getFavUserInfo(isFavorite)
     }
 
