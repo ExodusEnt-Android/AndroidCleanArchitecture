@@ -86,8 +86,8 @@ class MyFavoritesFragment : Fragment(),
         }
 
         userRepository.getFavUserInfo(true)!!
-            .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ item ->
                 userListAdapter.submitList(item)
                 favUserList = item as ArrayList<UserModel>
