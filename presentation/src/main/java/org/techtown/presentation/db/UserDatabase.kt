@@ -20,7 +20,7 @@ abstract class UserDatabase : RoomDatabase() {
                     instance = Room.databaseBuilder(
                         context.applicationContext,
                         UserDatabase::class.java,
-                        "user-database"
+                        "room-database"
                     ).allowMainThreadQueries().build()
                 }
             }
