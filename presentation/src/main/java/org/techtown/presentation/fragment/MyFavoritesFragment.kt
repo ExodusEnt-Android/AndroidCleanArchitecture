@@ -38,6 +38,9 @@ class MyFavoritesFragment : Fragment(),
     //여기서도 null체크 번거로움 제거.
     private val compositeDisposable get() = _compositeDisposable!!
 
+    //즐찾화면에서 바로 제거하기위한 즐찾리스트 변수.
+    private lateinit var favUserList: ArrayList<UserModel>
+
     //repository setting
     private val userRepository: UserRepository by lazy {
         //remote 데이터 세팅.
@@ -87,6 +90,7 @@ class MyFavoritesFragment : Fragment(),
             .subscribeOn(Schedulers.io())
             .subscribe({ item ->
                 userListAdapter.submitList(item)
+                favUserList = item as ArrayList<UserModel>
             }, {
                 Toast.makeText(activity, "즐찾화면에서 즐겨찾기 목록을 가져오는데 실패하셨습니다.", Toast.LENGTH_SHORT).show()
             }).addTo(compositeDisposable)
@@ -117,6 +121,8 @@ class MyFavoritesFragment : Fragment(),
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribe({
                 Timber.d("Database::제대로 유저화면에서 삭제 ${model.login} 완료.")
+                favUserList.remove(model)
+                userListAdapter.submitList(favUserList)
             }, {
                 Timber.d("Database::제대로 유저화면에서 삭제 실패 ${model.login}")
             })?.addTo(compositeDisposable)
