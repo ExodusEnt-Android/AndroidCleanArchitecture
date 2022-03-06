@@ -61,18 +61,15 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun excuteTimer() = Observable.interval(1, 1, TimeUnit.SECONDS)
-        .take(7).subscribe{ count ->
+        .observeOn(AndroidSchedulers.mainThread())
+        .take(7).subscribe { count ->
 
             val countOfvalue = count.toInt()
-            runOnUiThread {
-                binding.tvCount.text = "$countOfvalue"
-            }
+            binding.tvCount.text = "$countOfvalue"
 
             //처음 들어갔을때 유저 목록 가져오기.
-            if(countOfvalue == 0){
-                runOnUiThread {
-                    getFirstUserInfo()
-                }
+            if (countOfvalue == 0) {
+                getFirstUserInfo()
             }
 
             if (isSuccess && userList != null) { //0일될떄는 3초가 다 지났으므로 다음화면으로 넘어가줍니다(최소 2초일때 넘어가지게하기).
@@ -82,15 +79,12 @@ class SplashActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             } else if (countOfvalue % 3 == 0 && countOfvalue >= 3 && countOfvalue < 6 && !isSuccess) { //3초마다 재연결을 해줘야 되므로.
-                runOnUiThread { //현재 백그라운드라서 progress때문에 UiThread에서 돌게해줌(어차피 retrofit에서 백그라운드라 도니까 상관없음).
-                    getFirstUserInfo()
-                }
+                getFirstUserInfo()
             } else if (countOfvalue % 3 == 0 && countOfvalue == 6 && !isSuccess) { //마지막까지 통신 안될시에는 사용자에게 알려주기.
-                runOnUiThread {
-                    binding.tvCount.text = "카운트종료"
-                    getFirstUserInfo()
-                    Toast.makeText(this@SplashActivity, "데이터 통신 실패하였습니다.", Toast.LENGTH_SHORT).show()
-                }
+                binding.tvCount.text = "카운트종료"
+                getFirstUserInfo()
+                Toast.makeText(this@SplashActivity, "데이터 통신 실패하였습니다.", Toast.LENGTH_SHORT)
+                    .show()
             }
 
         }.addTo(compositeDisposable)
@@ -112,7 +106,7 @@ class SplashActivity : AppCompatActivity() {
                 Util.closeProgress()
                 userList = it.body()?.items
                 isSuccess = true
-            },{
+            }, {
                 Util.closeProgress()
                 isSuccess = false
                 countResponse = true
