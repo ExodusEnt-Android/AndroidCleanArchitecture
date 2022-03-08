@@ -15,10 +15,9 @@ class UserViewHolder(
         //간단하게 유저 이미지 및 닉네임 넣어주기.
         Glide.with(itemView.context)
             .load(item.avatar_url)
-            .into(binding.ivUserAvatar)
+            .into(binding.ivU serAvatar)
         binding.tvUserName.text = item.login
 
         binding.ivStar.setBackgroundResource(if (item.is_favorite) R.drawable.star_selected_36 else R.drawable.star_unselected_36)
-
     }
 }
