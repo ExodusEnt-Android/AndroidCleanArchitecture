@@ -6,7 +6,7 @@
     android:padding="30dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UserDetailActivity">
+    tools:context=".activity.UserDetailActivity">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_user_avatar"
