@@ -6,5 +6,5 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class GitUserModel (
     val total_count : Int,
-    val items : UserItemModel
+    val items : ArrayList<UserItemModel>
 ):Parcelable

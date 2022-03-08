@@ -6,28 +6,27 @@ import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.gitsearchbook.Fragment.GitRetrofit
-import com.example.gitsearchbook.Model.GitRepoModel
-import com.example.gitsearchbook.R
+import com.example.gitsearchbook.Model.GitUserModel
 import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
-import javax.security.auth.callback.Callback
 
-public class SplashActivity : AppCompatActivity() {
+class SplashActivity : AppCompatActivity() {
 
     private var mHandler = Handler()
-    var gitRepoName : ArrayList<GitRepoModel>? = ArrayList<GitRepoModel>()
+    lateinit var gitRepoName : GitUserModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        GitRetrofit.userService.getUserName("mingue").enqueue(object : retrofit2.Callback<ArrayList<GitRepoModel>> {
-            override fun onResponse(call: Call<ArrayList<GitRepoModel>>, response: Response<ArrayList<GitRepoModel>>) {
-                gitRepoName = response.body()
-                Log.d("asdasd","asdasd::::"+gitRepoName)
+        GitRetrofit.userService.getUserName("hello",1,10).enqueue(object : Callback<GitUserModel> {
+            override fun onResponse(call: Call<GitUserModel>, response: Response<GitUserModel>) {
+                gitRepoName = response.body()!!
+                Log.d("asdasd","asdasd::::"+gitRepoName.items)
             }
 
-            override fun onFailure(call: Call<ArrayList<GitRepoModel>>, t: Throwable) {
-                Log.d("asdasd","asdasd:"+call)
+            override fun onFailure(call: Call<GitUserModel>, t: Throwable) {
+                Log.d("asdasd","failCall:     "+call)
             }
         })
 

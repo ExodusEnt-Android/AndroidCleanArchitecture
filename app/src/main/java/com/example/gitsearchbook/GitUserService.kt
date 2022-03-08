@@ -1,12 +1,13 @@
 package com.example.gitsearchbook
 
-import com.example.gitsearchbook.Model.GitRepoModel
+import com.example.gitsearchbook.Model.GitUserModel
 import retrofit2.Call
+
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 
+
 interface GitUserService {
-    @GET("https://api.github.com/search/users?q={user}&page=1&per_page=10")
-    fun getUserName(@Query("user") userName: String): Call<ArrayList<GitRepoModel>>
+    @GET("search/users")
+    fun getUserName(@Query("q") q: String, @Query("page") page: Int, @Query("per_page") per_page: Int): Call<GitUserModel>
 }
