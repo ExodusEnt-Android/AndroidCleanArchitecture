@@ -29,6 +29,7 @@ import org.techtown.presentation.model.UserModel
 import org.techtown.presentation.repository.UserRepositoryImpl
 import org.techtown.presentation.repository.UserRepository
 import org.techtown.presentation.retorfit.RetrofitBuilder
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 

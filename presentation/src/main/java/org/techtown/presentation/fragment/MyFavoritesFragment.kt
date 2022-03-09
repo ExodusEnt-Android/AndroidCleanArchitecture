@@ -22,6 +22,7 @@ import org.techtown.presentation.model.UserModel
 import org.techtown.presentation.repository.UserRepository
 import org.techtown.presentation.repository.UserRepositoryImpl
 import org.techtown.presentation.retorfit.RetrofitBuilder
+import timber.log.Timber
 
 
 class MyFavoritesFragment : Fragment(),
