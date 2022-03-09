@@ -1,32 +1,46 @@
 package com.example.gitsearchbook.Activity
 
+import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import com.example.gitsearchbook.Fragment.FavoriteFragment
 import com.example.gitsearchbook.R
 import com.example.gitsearchbook.Fragment.UserDetailFragment
+import com.example.gitsearchbook.Fragment.UserSearchFragment
+import com.example.gitsearchbook.Model.GitUserModel
+import com.example.gitsearchbook.databinding.ActivityMainBinding
 
 
 class MainActivity : AppCompatActivity(){
 
-    private lateinit var btnUser : Button
-    private lateinit var btnFavorite : Button
     private var backClickTime : Long = 0    //뒤로가기 시간 재기 위함.
 
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        btnUser = findViewById(R.id.btn_user)   //view binding으로 바꾸기(1주차) -> 2주차에 data binding
-        btnFavorite = findViewById(R.id.btn_favorite)
+        //view binding
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        btnUser.setOnClickListener {
+        val gitUserModel : GitUserModel = intent.extras?.getParcelable<GitUserModel>(PARAM_USER) as GitUserModel
+
+        val bundle = Bundle()
+        bundle.putParcelable(PARAM_USER, gitUserModel)
+
+        val fragment = UserSearchFragment()
+        fragment.arguments = bundle
+        supportFragmentManager.beginTransaction().add(R.id.ll_fragment, fragment).commit()
+
+        binding.btnUser.setOnClickListener {
             supportFragmentManager.beginTransaction().replace(R.id.ll_fragment, UserDetailFragment()).commit()
         }
-        btnFavorite.setOnClickListener {
+        binding.btnFavorite.setOnClickListener {
             supportFragmentManager.beginTransaction().replace(R.id.ll_fragment, FavoriteFragment()).commit()
         }
 
@@ -44,16 +58,18 @@ class MainActivity : AppCompatActivity(){
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
+    companion object{
+        const val PARAM_USER = "param_user"
 
-    override fun onPause() {
-        super.onPause()
-    }
+        //스플래시에서 준 데이터 받음.
+        fun createIntent(context: Context, gitUserModel: GitUserModel): Intent{
+            val intent = Intent(context, MainActivity::class.java)
+            val args = Bundle()
+            args.putParcelable(PARAM_USER, gitUserModel)
+            intent.putExtras(args)
 
-    override fun onDestroy() {
-        super.onDestroy()
+            return intent
+        }
     }
 
 }

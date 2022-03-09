@@ -19,9 +19,18 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        GitRetrofit.userService.getUserName("hello",1,10).enqueue(object : Callback<GitUserModel> {
+        GitRetrofit.userService.getUserName("mingue",1,10).enqueue(object : Callback<GitUserModel> {
             override fun onResponse(call: Call<GitUserModel>, response: Response<GitUserModel>) {
                 gitRepoName = response.body()!!
+
+//                고정 2초 후 메인 화면 진입
+                mHandler.postDelayed({
+                    startActivity(MainActivity.createIntent(this@SplashActivity, gitRepoName))
+                    val intent = Intent(this@SplashActivity, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                },2000)
+
                 Log.d("asdasd","asdasd::::"+gitRepoName.items)
             }
 
@@ -29,12 +38,5 @@ class SplashActivity : AppCompatActivity() {
                 Log.d("asdasd","failCall:     "+call)
             }
         })
-
-        //고정 2초 후 메인 화면 진입
-        mHandler.postDelayed({
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-        },2000)
     }
 }
