@@ -4,14 +4,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.*
-import org.techtown.presentation.util.Const
 import org.techtown.presentation.util.Util
 import org.techtown.presentation.databinding.ActivitySplashBinding
 import org.techtown.presentation.datasource.local.LocalDataSourceImpl
@@ -21,6 +19,8 @@ import org.techtown.presentation.model.UserModel
 import org.techtown.presentation.repository.UserRepository
 import org.techtown.presentation.repository.UserRepositoryImpl
 import org.techtown.presentation.retorfit.RetrofitBuilder
+import org.techtown.presentation.viewmodel.SplashViewModel
+import org.techtown.presentation.viewmodel.MainViewModelFactory
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
@@ -51,10 +51,20 @@ class SplashActivity : AppCompatActivity() {
         UserRepositoryImpl(remoteDataSource, localDataSource)
     }
 
+    private val splashViewModel: SplashViewModel by lazy {
+        ViewModelProvider(
+            this,
+            MainViewModelFactory(userRepository)
+        ).get(SplashViewModel::class.java)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        //데이터 Subscribe.
+        getDataFromViewModel()
 
         //타이머 시작.
         excuteTimer()
@@ -89,27 +99,22 @@ class SplashActivity : AppCompatActivity() {
 
         }.addTo(compositeDisposable)
 
-    override fun onDestroy() {
-        super.onDestroy()
-
-        //프로세스 종료시 통신작업 중단.
-        compositeDisposable.dispose()
+    private fun getDataFromViewModel() {
+        splashViewModel.searchedUserPublishSubject.subscribe({
+            Util.closeProgress()
+            isSuccess = true
+            userList = it as ArrayList<UserModel>?
+        }, {
+            isSuccess = false
+            countResponse = true
+            Toast.makeText(this, "스플래시화면에서 가져오는데 실패하셨습니다.", Toast.LENGTH_SHORT)
+                .show()
+        })
     }
 
     private fun getFirstUserInfo() {
         Util.showProgress(this@SplashActivity)
 
-        userRepository.getUserInfo(firstQuery, Const.START_PAGE, Const.PER_PAGE_LIST)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                Util.closeProgress()
-                userList = it.body()?.items
-                isSuccess = true
-            }, {
-                Util.closeProgress()
-                isSuccess = false
-                countResponse = true
-            }).addTo(compositeDisposable)
+        splashViewModel.searchUser()
     }
 }
