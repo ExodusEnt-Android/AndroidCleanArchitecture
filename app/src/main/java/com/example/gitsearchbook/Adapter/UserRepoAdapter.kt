@@ -1,6 +1,5 @@
 package com.example.gitsearchbook.Adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -8,7 +7,7 @@ import com.bumptech.glide.RequestManager
 import com.example.gitsearchbook.Model.GitRepoModel
 import com.example.gitsearchbook.databinding.UserItemBinding
 
-class UserDetailFragmentAdapter(
+class UserRepoAdapter(
     private val mGlideRequestManager: RequestManager
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>()  {
     private var gitRepoModel : ArrayList<GitRepoModel> = ArrayList()

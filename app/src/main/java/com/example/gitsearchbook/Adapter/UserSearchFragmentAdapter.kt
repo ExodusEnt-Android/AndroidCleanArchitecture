@@ -21,6 +21,7 @@ class UserSearchFragmentAdapter (
 
     interface OnItemClickListener{
         fun clickUserLike(gitUserModel: UserItemModel)
+        fun clickUserImg(gitUserModel: UserItemModel)
     }
 
     //외부에서 아이템 클릭 처리할 리스너
@@ -53,6 +54,10 @@ class UserSearchFragmentAdapter (
                     onItemClickListener?.clickUserLike(gitUserModel!!.items[position])
                 }
             }
+            //이미지 클릭시 레포 화면으로 이동되게
+            ivUser.setOnClickListener {
+                onItemClickListener?.clickUserImg(gitUserModel!!.items[position])
+            }
         }
     }
 
@@ -61,9 +66,9 @@ class UserSearchFragmentAdapter (
     }
 
     inner class UserInfoShowViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
-        private var ivUser : ImageView = itemView.findViewById(R.id.iv_user)
         private var tvUserInfo : TextView = itemView.findViewById(R.id.tv_user_info)
         private var tvLink : TextView = itemView.findViewById(R.id.tv_link)
+        var ivUser : ImageView = itemView.findViewById(R.id.iv_user)
         var ibFavorite : ImageButton = itemView.findViewById(R.id.ib_favorite)
 
         fun bind(gitUserModel: UserItemModel) {

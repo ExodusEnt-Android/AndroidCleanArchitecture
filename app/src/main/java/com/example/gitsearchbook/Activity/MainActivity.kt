@@ -4,12 +4,9 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Button
 import android.widget.Toast
 import com.example.gitsearchbook.Fragment.FavoriteFragment
 import com.example.gitsearchbook.R
-import com.example.gitsearchbook.Fragment.UserDetailFragment
 import com.example.gitsearchbook.Fragment.UserSearchFragment
 import com.example.gitsearchbook.Model.GitUserModel
 import com.example.gitsearchbook.databinding.ActivityMainBinding
@@ -37,13 +34,15 @@ class MainActivity : AppCompatActivity(){
         fragment.arguments = bundle
         supportFragmentManager.beginTransaction().add(R.id.ll_fragment, fragment).commit()
 
+        //유저 검색하는 Fragment
         binding.btnUser.setOnClickListener {
-            supportFragmentManager.beginTransaction().replace(R.id.ll_fragment, UserDetailFragment()).commit()
+            supportFragmentManager.beginTransaction().replace(R.id.ll_fragment, UserSearchFragment()).commit()
         }
+
+        //유저 즐겨찾기 보여주는 Fragment
         binding.btnFavorite.setOnClickListener {
             supportFragmentManager.beginTransaction().replace(R.id.ll_fragment, FavoriteFragment()).commit()
         }
-
     }
 
     //뒤로가기 눌렀을 경우 두번 눌러야 꺼지게 설정

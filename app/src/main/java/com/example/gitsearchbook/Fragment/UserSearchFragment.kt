@@ -1,7 +1,7 @@
 package com.example.gitsearchbook.Fragment
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +9,10 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.example.gitsearchbook.Activity.MainActivity
+import com.example.gitsearchbook.Activity.UserRepoActivity
 import com.example.gitsearchbook.Adapter.UserSearchFragmentAdapter
 import com.example.gitsearchbook.Model.GitUserModel
+import com.example.gitsearchbook.Model.UserItemModel
 import com.example.gitsearchbook.databinding.FragmentUserBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -27,7 +29,6 @@ class UserSearchFragment : Fragment(){
     private var count = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
         binding = FragmentUserBinding.inflate(inflater, container, false)
         return binding!!.root
     }
@@ -37,16 +38,27 @@ class UserSearchFragment : Fragment(){
 
         gitUserModel = arguments?.getParcelable(MainActivity.PARAM_USER)
         mGlideRequestManager = Glide.with(this)
-
-         binding?.etSearch?.setText("mingue")
         userSearchFragmentAdapter = UserSearchFragmentAdapter(mGlideRequestManager)
+
+        binding?.etSearch?.setText("mingue0605")    //디폴트값
+
         binding?.rcvUser?.apply {
             adapter = userSearchFragmentAdapter
         }
-        userSearchFragmentAdapter.setGitUser(gitUserModel!!)
 
+        if(gitUserModel!=null) {
+            userSearchFragmentAdapter.setGitUser(gitUserModel!!)
+        }
+        //검색버튼 눌렀을 경우
+        binding?.btnSearch?.setOnClickListener {
+            getUserInfo(binding?.etSearch?.text.toString())
+        }
+
+        //어댑터에서 받아온 값 클릭 이벤트
+        clickEvent()
     }
 
+    //유저 정보 찾는 API
     fun getUserInfo(userName : String): GitUserModel? {
         var gitRepoName : GitUserModel? = null
 
@@ -56,17 +68,15 @@ class UserSearchFragment : Fragment(){
                 if(gitRepoName == null){    //검색된 유저가 없을 경우
                     binding?.tvEmpty?.visibility = View.VISIBLE
                 }
-                else{                               //검색된 유저가 있을 경우
+                else{                       //검색된 유저가 있을 경우
                     binding?.tvEmpty?.visibility = View.GONE
                     userSearchFragmentAdapter.setGitUser(gitRepoName!!)
                 }
-
             }
 
             override fun onFailure(call: Call<GitUserModel>, t: Throwable) {
                 count = 1
                 getUserInfoFail(count)
-                Log.d("asdasd","failCall:     "+call)
             }
         })
         return gitRepoName
@@ -78,5 +88,22 @@ class UserSearchFragment : Fragment(){
             getUserInfo(binding?.etSearch?.text.toString())
             this.count = 0
         }
+    }
+
+    private fun clickEvent() {
+        userSearchFragmentAdapter.setOnItemClickListener(object : UserSearchFragmentAdapter.OnItemClickListener{
+
+            //즐겨찾기
+            override fun clickUserLike(gitUserModel: UserItemModel) {
+                TODO("Not yet implemented")
+            }
+
+            //유저 레포 프레그먼트 들어가기
+            override fun clickUserImg(gitUserModel: UserItemModel) {
+                startActivity(UserRepoActivity.createIntent(requireActivity(), gitUserModel))
+                val intent = Intent(context, MainActivity::class.java)
+                startActivity(intent)
+            }
+        })
     }
 }
