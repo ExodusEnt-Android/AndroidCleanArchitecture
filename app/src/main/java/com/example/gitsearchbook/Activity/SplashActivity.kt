@@ -14,7 +14,7 @@ import retrofit2.Response
 class SplashActivity : AppCompatActivity() {
 
     private var mHandler = Handler()
-    lateinit var gitRepoName : GitUserModel
+    var gitRepoName : GitUserModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,15 +23,16 @@ class SplashActivity : AppCompatActivity() {
             override fun onResponse(call: Call<GitUserModel>, response: Response<GitUserModel>) {
                 gitRepoName = response.body()!!
 
-//                고정 2초 후 메인 화면 진입
-                mHandler.postDelayed({
-                    startActivity(MainActivity.createIntent(this@SplashActivity, gitRepoName))
-                    val intent = Intent(this@SplashActivity, MainActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                },2000)
-
-                Log.d("asdasd","asdasd::::"+gitRepoName.items)
+                if(gitRepoName!=null)
+                {
+                    //고정 2초 후 메인 화면 진입
+                    mHandler.postDelayed({
+                        startActivity(MainActivity.createIntent(this@SplashActivity, gitRepoName!!))
+                        val intent = Intent(this@SplashActivity, MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    },2000)
+                }
             }
 
             override fun onFailure(call: Call<GitUserModel>, t: Throwable) {
