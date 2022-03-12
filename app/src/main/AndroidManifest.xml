@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GitSearchBook">
-        <activity android:name=".Activity.SplashActivity"
+        <activity android:name="com.example.presentation.Activity.SplashActivity"
             android:theme="@style/SplashTheme"
             android:exported="true">
             <intent-filter>
@@ -18,12 +18,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activity.MainActivity"
+            android:name="com.example.presentation.Activity.MainActivity"
             android:exported="true">
         </activity>
 
         <activity
-            android:name=".Activity.UserRepoActivity"
+            android:name="com.example.presentation.Activity.UserRepoActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">

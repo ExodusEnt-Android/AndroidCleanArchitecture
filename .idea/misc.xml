@@ -9,6 +9,7 @@
         <entry key="app/src/main/res/layout/fragment_favorite.xml" value="0.22864583333333333" />
         <entry key="app/src/main/res/layout/fragment_user.xml" value="0.2265625" />
         <entry key="app/src/main/res/layout/user_item.xml" value="0.335" />
+        <entry key="presentation/src/main/res/layout/activity_main.xml" value="0.2265625" />
       </map>
     </option>
   </component>
