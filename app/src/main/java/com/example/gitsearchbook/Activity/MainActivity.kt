@@ -59,16 +59,5 @@ class MainActivity : AppCompatActivity(){
 
     companion object{
         const val PARAM_USER = "param_user"
-
-        //스플래시에서 준 데이터 받음.
-        fun createIntent(context: Context, gitUserModel: GitUserModel): Intent{
-            val intent = Intent(context, MainActivity::class.java)
-            val args = Bundle()
-            args.putParcelable(PARAM_USER, gitUserModel)
-            intent.putExtras(args)
-
-            return intent
-        }
     }
-
 }
