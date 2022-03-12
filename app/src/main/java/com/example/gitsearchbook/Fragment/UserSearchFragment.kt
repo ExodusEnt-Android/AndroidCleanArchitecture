@@ -101,8 +101,6 @@ class UserSearchFragment : Fragment(){
             //유저 레포 프레그먼트 들어가기
             override fun clickUserImg(gitUserModel: UserItemModel) {
                 startActivity(UserRepoActivity.createIntent(requireActivity(), gitUserModel))
-                val intent = Intent(context, MainActivity::class.java)
-                startActivity(intent)
             }
         })
     }

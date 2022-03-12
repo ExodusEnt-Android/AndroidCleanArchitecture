@@ -22,17 +22,12 @@ class SplashActivity : AppCompatActivity() {
         GitRetrofit.userService.getUserName("mingue",1,10).enqueue(object : Callback<GitUserModel> {
             override fun onResponse(call: Call<GitUserModel>, response: Response<GitUserModel>) {
                 gitRepoName = response.body()!!
-
-                if(gitRepoName!=null)
-                {
-                    //고정 2초 후 메인 화면 진입
-                    mHandler.postDelayed({
-                        startActivity(MainActivity.createIntent(this@SplashActivity, gitRepoName!!))
-                        val intent = Intent(this@SplashActivity, MainActivity::class.java)
-                        startActivity(intent)
-                        finish()
-                    },2000)
-                }
+             //고정 2초 후 메인 화면 진입
+                mHandler.postDelayed({
+                    startActivity(Intent(this@SplashActivity, MainActivity::class.java).apply {
+                        this.putExtras( Bundle().apply { putParcelable(MainActivity.PARAM_USER, gitRepoName) })
+                    })
+                },2000)
             }
 
             override fun onFailure(call: Call<GitUserModel>, t: Throwable) {
