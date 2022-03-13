@@ -105,6 +105,7 @@ class SplashActivity : AppCompatActivity() {
             isSuccess = true
             userList = it as ArrayList<UserModel>?
         }, {
+            Util.closeProgress()
             isSuccess = false
             countResponse = true
             Toast.makeText(this, "스플래시화면에서 가져오는데 실패하셨습니다.", Toast.LENGTH_SHORT)
