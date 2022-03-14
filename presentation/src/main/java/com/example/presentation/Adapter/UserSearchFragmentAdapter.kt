@@ -2,22 +2,21 @@ package com.example.presentation.Adapter
 
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.example.presentation.Model.GitUserModel
 import com.example.presentation.Model.UserItemModel
 import com.example.presentation.R
+import com.example.presentation.ViewHolder.UserInfoShowViewHolder
+import com.example.presentation.databinding.UserItemBinding
 
 class UserSearchFragmentAdapter (
     private val mGlideRequestManager: RequestManager
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>()  {
     private var gitUserModel : GitUserModel? = null
     private var onItemClickListener: OnItemClickListener? = null
+    private var binding : UserItemBinding?= null
 
     interface OnItemClickListener{
         fun clickUserLike(gitUserModel: UserItemModel)
@@ -35,27 +34,27 @@ class UserSearchFragmentAdapter (
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val userInfoShow = LayoutInflater.from(parent.context).inflate(R.layout.user_item, parent, false)
-        return UserInfoShowViewHolder(userInfoShow)
+        binding = UserItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return UserInfoShowViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as UserInfoShowViewHolder).apply {
-            this.bind(gitUserModel!!.items[position])
-            ibFavorite.setOnClickListener {
-                if(ibFavorite.resources.equals(R.drawable.heart_no)){
+            this.bind(mGlideRequestManager , gitUserModel!!.items[position], binding)
+            binding?.ibFavorite?.setOnClickListener {
+                if(binding?.ibFavorite?.resources?.equals(R.drawable.heart_no) == true){
                     Log.d("click heart no","heart no")
-                    ibFavorite.setImageResource(R.drawable.heart_ok)
+                    binding?.ibFavorite?.setImageResource(R.drawable.heart_ok)
                     onItemClickListener?.clickUserLike(gitUserModel!!.items[position])
                 }
                 else {
                     Log.d("click heart no","heart yes")
-                    ibFavorite.setImageResource(R.drawable.heart_no)
+                    binding?.ibFavorite?.setImageResource(R.drawable.heart_no)
                     onItemClickListener?.clickUserLike(gitUserModel!!.items[position])
                 }
             }
             //이미지 클릭시 레포 화면으로 이동되게
-            ivUser.setOnClickListener {
+            binding?.ivUser?.setOnClickListener {
                 onItemClickListener?.clickUserImg(gitUserModel!!.items[position])
             }
         }
@@ -65,17 +64,5 @@ class UserSearchFragmentAdapter (
         return gitUserModel?.items!!.size
     }
 
-    inner class UserInfoShowViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
-        private var tvUserInfo : TextView = itemView.findViewById(R.id.tv_user_info)
-        private var tvLink : TextView = itemView.findViewById(R.id.tv_link)
-        var ivUser : ImageView = itemView.findViewById(R.id.iv_user)
-        var ibFavorite : ImageButton = itemView.findViewById(R.id.ib_favorite)
-
-        fun bind(gitUserModel: UserItemModel) {
-            mGlideRequestManager.load(gitUserModel.avatar_url).into(ivUser)
-            tvUserInfo.text = gitUserModel.login
-            tvLink.text = gitUserModel.login
-        }
-    }
 
 }

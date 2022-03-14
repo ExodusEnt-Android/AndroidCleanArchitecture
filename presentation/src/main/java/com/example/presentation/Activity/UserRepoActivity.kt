@@ -24,7 +24,7 @@ class UserRepoActivity :AppCompatActivity(){
     private lateinit var mGlideRequestManager: RequestManager
     private var userItemModel : UserItemModel? = null
 
-    private var count = 0
+    private var nowName = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -67,8 +67,7 @@ class UserRepoActivity :AppCompatActivity(){
             }
 
             override fun onFailure(call: Call<ArrayList<GitRepoModel>>, t: Throwable?) {
-                count = 1
-                getUserInfoFail(count)
+                getUserInfoFail(userName)
             }
         })
         return gitRepoName
@@ -85,10 +84,11 @@ class UserRepoActivity :AppCompatActivity(){
 
     }
 
-    private fun getUserInfoFail(count: Int){
-        if(count==1) {
+    //정보 가져오는 것 한번 실패했을 경우 1번 더 호출
+    private fun getUserInfoFail(userName : String){
+        if(nowName != userName){
+            nowName = userName
             getUserRepoInfo(binding.etSearch.text.toString())
-            this.count = 0
         }
     }
 

@@ -5,6 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.example.presentation.Model.GitRepoModel
+import com.example.presentation.ViewHolder.UserInfoShowViewHolder
+import com.example.presentation.ViewHolder.UserRepoViewHolder
 import com.example.presentation.databinding.UserItemBinding
 
 class UserRepoAdapter(
@@ -30,12 +32,12 @@ class UserRepoAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         binding = UserItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return UserInfoShowViewHolder(binding)
+        return UserRepoViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as UserInfoShowViewHolder).apply {
-            this.bind(gitRepoModel[position])
+        (holder as UserRepoViewHolder).apply {
+            this.bind(mGlideRequestManager, gitRepoModel[position], binding)
             //즐겨찾기 클릭 시 처리
             binding?.ibFavorite?.setOnClickListener {
 
@@ -47,14 +49,5 @@ class UserRepoAdapter(
         return gitRepoModel.size
     }
 
-    inner class UserInfoShowViewHolder(itemView: UserItemBinding?) : RecyclerView.ViewHolder(binding!!.root){
-
-
-        fun bind(gitRepoModel: GitRepoModel) {
-            mGlideRequestManager.load(gitRepoModel.owner.avatar_url).into(binding?.ivUser!!)
-            binding?.tvUserInfo?.text = gitRepoModel.owner.login
-            binding?.tvLink?.text = gitRepoModel.owner.html_url
-        }
-    }
 
 }
