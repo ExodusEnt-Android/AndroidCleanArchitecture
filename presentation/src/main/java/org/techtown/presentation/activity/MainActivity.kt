@@ -2,20 +2,27 @@ package org.techtown.presentation.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.Subject
+import org.techtown.presentation.R
 import org.techtown.presentation.fragment.MyFavoritesFragment
 import org.techtown.presentation.fragment.UserFragment
 import org.techtown.presentation.databinding.ActivityMainBinding
 import org.techtown.presentation.model.UserModel
 import java.util.concurrent.TimeUnit
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
     //유저화면, 즐겨찾기 화면.
     private lateinit var userFragment: UserFragment
@@ -40,20 +47,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initSet()
-        initClick()
-    }
-
-    //클릭 리스너 등록.
-    private fun initClick() {
-        binding.btnUser.setOnClickListener {
-            supportFragmentManager.beginTransaction().replace(binding.liContainer.id, userFragment)
-                .commit()
-        }
-
-        binding.btnFavorites.setOnClickListener {
-            supportFragmentManager.beginTransaction()
-                .replace(binding.liContainer.id, myFavoritesFragment).commit()
-        }
     }
 
     //초기 설정.
@@ -74,9 +67,16 @@ class MainActivity : AppCompatActivity() {
 
         myFavoritesFragment = MyFavoritesFragment()
 
-        //처음엔 유저 화면 보여줌.
-        supportFragmentManager.beginTransaction().replace(binding.liContainer.id, userFragment)
-            .commit()
+        binding.vpMain.adapter = MainViewpagerAdapter(this)
+
+        binding.vpMain.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                binding.btnMain.menu.getItem(position).isChecked = true
+            }
+        })
+
+        binding.btnMain.setOnNavigationItemSelectedListener(this)
 
         backButtonSubject.toFlowable(BackpressureStrategy.BUFFER)
             .observeOn(AndroidSchedulers.mainThread())
@@ -94,5 +94,38 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         backButtonSubject.onNext(System.currentTimeMillis())
+    }
+
+
+    inner class MainViewpagerAdapter(fragment: FragmentActivity) : FragmentStateAdapter(fragment) {
+        override fun getItemCount(): Int = 2
+
+        override fun createFragment(position: Int): Fragment {
+            return when (position) {
+                0 -> {
+                    userFragment
+                }
+                else -> {
+                    myFavoritesFragment
+                }
+            }
+
+        }
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.item_user_frag -> {
+                binding.vpMain.currentItem = 0
+                true
+            }
+            R.id.item_fav_frag -> {
+                binding.vpMain.currentItem = 1
+                true
+            }
+            else -> {
+                false
+            }
+        }
     }
 }

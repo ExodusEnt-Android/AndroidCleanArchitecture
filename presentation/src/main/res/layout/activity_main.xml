@@ -8,45 +8,23 @@
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/li_container"
-        android:layout_width="0dp"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp_main"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/li_bottom"/>
+        app:layout_constraintBottom_toTopOf="@+id/btn_main"/>
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/li_bottom"
-        android:layout_width="0dp"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/btn_main"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:minHeight="50dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_user"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:text="유저"/>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_favorites"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:text="즐겨찾기"/>
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:menu="@menu/bottom_menu"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
