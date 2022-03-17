@@ -1,7 +1,6 @@
 package com.example.presentation.Fragment
 
-import com.example.presentation.GitRepoService
-import com.example.presentation.GitUserService
+import com.example.presentation.ApiService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -11,6 +10,6 @@ object GitRetrofit {
         .addConverterFactory(GsonConverterFactory.create()) //통신이 완료된 후, 어떤 Converter를 이용하여 데이터를 파싱할 것인지에 대한 설정
         .build()
 
-    val repoService: GitRepoService = retrofit.create(GitRepoService::class.java)
-    val userService : GitUserService = retrofit.create(GitUserService::class.java)
+    val repoService: ApiService = retrofit.create(ApiService::class.java)
+    val userService : ApiService = retrofit.create(ApiService::class.java)
 }
