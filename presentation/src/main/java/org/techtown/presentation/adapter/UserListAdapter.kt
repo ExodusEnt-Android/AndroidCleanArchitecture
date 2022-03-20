@@ -1,7 +1,5 @@
 package org.techtown.presentation.adapter
 
-import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,7 +35,6 @@ class UserListAdapter(
     }
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
-        Log.d("Response", "바인딩되었음")
         holder.apply {
             bind(getItem(position), position)
             itemView.setOnClickListener { v ->
