@@ -6,6 +6,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -19,7 +20,15 @@ import org.techtown.presentation.R
 import org.techtown.presentation.fragment.MyFavoritesFragment
 import org.techtown.presentation.fragment.UserFragment
 import org.techtown.presentation.databinding.ActivityMainBinding
+import org.techtown.presentation.datasource.local.LocalDataSourceImpl
+import org.techtown.presentation.datasource.remote.RemoteDataSourceImpl
+import org.techtown.presentation.db.UserDatabase
 import org.techtown.presentation.model.UserModel
+import org.techtown.presentation.repository.UserRepository
+import org.techtown.presentation.repository.UserRepositoryImpl
+import org.techtown.presentation.retorfit.RetrofitBuilder
+import org.techtown.presentation.viewmodel.MainViewModelFactory
+import org.techtown.presentation.viewmodel.UserViewModel
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
@@ -34,7 +43,17 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     //os gc가발동할떄 프로세스가 죽어버리니까 single객체 가로채야됨.
     private var compositeDisposable = CompositeDisposable()
 
-    private val backButtonSubject: Subject<Long> = BehaviorSubject.createDefault(0L).toSerialized()
+    //repository setting
+    private val userRepository: UserRepository by lazy {
+        //remote 데이터 세팅.
+        val remoteDataSource = RemoteDataSourceImpl(api = RetrofitBuilder.api)
+        val localDataSource = LocalDataSourceImpl(userDatabase = UserDatabase.getInstance(this))
+        UserRepositoryImpl(remoteDataSource, localDataSource)
+    }
+
+    private val userViewModel: UserViewModel by lazy {
+        ViewModelProvider(this, MainViewModelFactory(userRepository)).get(UserViewModel::class.java)
+    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -47,6 +66,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         setContentView(binding.root)
 
         initSet()
+        dataFromViewModel()
+        userViewModel.clickBackButton()
     }
 
     //초기 설정.
@@ -69,7 +90,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
         binding.vpMain.adapter = MainViewpagerAdapter(this)
 
-        binding.vpMain.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
+        binding.vpMain.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 binding.btnMain.menu.getItem(position).isChecked = true
@@ -77,23 +98,23 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         })
 
         binding.btnMain.setOnNavigationItemSelectedListener(this)
+    }
 
-        backButtonSubject.toFlowable(BackpressureStrategy.BUFFER)
-            .observeOn(AndroidSchedulers.mainThread())
-            .buffer(2, 1)
-            .map { Pair(it[0], it[1]) }
-            .map { it.second - it.first < TimeUnit.SECONDS.toMillis(2) }
-            .subscribe { isFinish ->
-                if (isFinish) {
-                    finish()
-                } else {
-                    Toast.makeText(this, "한번더 눌러주세요.", Toast.LENGTH_SHORT).show()
-                }
-            }.addTo(compositeDisposable)
+    private fun dataFromViewModel() {
+        userViewModel.mainBackPressPublishSubject.subscribe({ isBackPressPossible ->
+            if (isBackPressPossible) {
+                super.onBackPressed()
+            } else {
+                Toast.makeText(this, "한번더 눌러주세요.", Toast.LENGTH_SHORT).show()
+            }
+
+        }, {
+            Toast.makeText(this, it.message.toString(), Toast.LENGTH_SHORT).show()
+        }).addTo(compositeDisposable)
     }
 
     override fun onBackPressed() {
-        backButtonSubject.onNext(System.currentTimeMillis())
+        userViewModel.behaviorSubject.onNext(System.currentTimeMillis())
     }
 
 
