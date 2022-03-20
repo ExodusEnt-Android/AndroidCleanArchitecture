@@ -56,4 +56,6 @@ dependencies {
 
     //로그 Timber.
     implementation "com.jakewharton.timber:timber:4.7.1"
+
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 }
