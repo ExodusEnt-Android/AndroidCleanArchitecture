@@ -9,3 +9,4 @@ dependencyResolutionManagement {
 rootProject.name = "MyMvvmTest"
 include ':app'
 include ':presentation'
+include ':data'
