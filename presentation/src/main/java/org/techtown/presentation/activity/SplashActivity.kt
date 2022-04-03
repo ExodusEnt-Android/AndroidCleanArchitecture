@@ -5,23 +5,17 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.addTo
 import kotlinx.coroutines.*
-import org.techtown.presentation.util.Util
 import org.techtown.presentation.databinding.ActivitySplashBinding
-import org.techtown.presentation.datasource.local.LocalDataSourceImpl
-import org.techtown.presentation.datasource.remote.RemoteDataSourceImpl
-import org.techtown.presentation.db.UserDatabase
-import org.techtown.presentation.model.UserModel
-import org.techtown.presentation.repository.UserRepository
-import org.techtown.presentation.repository.UserRepositoryImpl
-import org.techtown.presentation.retorfit.RetrofitBuilder
+import org.techtown.data.datasource.local.LocalDataSourceImpl
+import org.techtown.data.datasource.remote.RemoteDataSourceImpl
+import org.techtown.data.room.UserDatabase
+import org.techtown.presentation.model.PresentationUserModel
+import org.techtown.data.repository.UserRepository
+import org.techtown.data.repository.UserRepositoryImpl
+import org.techtown.data.retrofit.RetrofitBuilder
 import org.techtown.presentation.viewmodel.SplashViewModel
 import org.techtown.presentation.viewmodel.MainViewModelFactory
-import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 class SplashActivity : AppCompatActivity() {
@@ -58,7 +52,7 @@ class SplashActivity : AppCompatActivity() {
 
     private fun getDataFromViewModel() {
         splashViewModel.searchedUserPublishSubject.subscribe({
-            goMainActivity(it as ArrayList<UserModel>?)
+            goMainActivity(it as ArrayList<PresentationUserModel>?)
         }, {
             Toast.makeText(this, it.message.toString(), Toast.LENGTH_SHORT)
                 .show()
@@ -66,7 +60,7 @@ class SplashActivity : AppCompatActivity() {
         })
     }
 
-    private fun goMainActivity(searchUsers: ArrayList<UserModel>?){
+    private fun goMainActivity(searchUsers: ArrayList<PresentationUserModel>?){
         val intent = Intent(this@SplashActivity, MainActivity::class.java)
         intent.putParcelableArrayListExtra(PARAM_USER_LIST, searchUsers)
         intent.putExtra(PARAM_FIRST_QUERY, firstQuery)

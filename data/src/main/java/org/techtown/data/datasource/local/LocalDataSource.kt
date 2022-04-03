@@ -13,5 +13,5 @@ interface LocalDataSource {
     fun setFavUserInfo(userModel: UserModel): Completable?
 
     //즐겨찾기 유저 목록 삭제.
-    fun deleteFavUserInfo(id: Int): Completable?
+    fun deleteFavUserInfo(model: UserModel): Completable?
 }

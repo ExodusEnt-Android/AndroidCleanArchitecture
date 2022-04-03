@@ -2,7 +2,7 @@ package org.techtown.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import org.techtown.presentation.repository.UserRepository
+import org.techtown.data.repository.UserRepository
 
 class MainViewModelFactory(private val userRepository: UserRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

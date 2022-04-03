@@ -13,6 +13,6 @@ class LocalDataSourceImpl(private val userDatabase: UserDatabase?) : LocalDataSo
     override fun setFavUserInfo(userModel: UserModel): Completable? =
         userDatabase?.userDao()?.setFavUserInfo(userModel)
 
-    override fun deleteFavUserInfo(id: Int): Completable? =
-        userDatabase?.userDao()?.deleteFavUserInfo(id)
+    override fun deleteFavUserInfo(model: UserModel): Completable? =
+        userDatabase?.userDao()?.deleteFavUserInfo(model.id)
 }

@@ -4,14 +4,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import org.techtown.presentation.R
 import org.techtown.presentation.databinding.ItemUserBinding
-import org.techtown.presentation.model.UserModel
+import org.techtown.presentation.model.PresentationUserModel
 
 class UserViewHolder(
     val binding: ItemUserBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
 
-    fun bind(item: UserModel, position: Int) {
+    fun bind(item: PresentationUserModel, position: Int) {
         //간단하게 유저 이미지 및 닉네임 넣어주기.
         Glide.with(itemView.context)
             .load(item.avatar_url)

@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.techtown.presentation.adapter.UserListAdapter
 import org.techtown.presentation.databinding.FragmentMyFavoritesBinding
-import org.techtown.presentation.model.UserModel
+import org.techtown.presentation.model.PresentationUserModel
 import org.techtown.presentation.viewmodel.UserViewModel
 
 
@@ -50,7 +50,7 @@ class MyFavoritesFragment : Fragment(),
 
         userListAdapter = UserListAdapter(
             null
-        ) { userModel: UserModel, view: View, i: Int ->
+        ) { userModel: PresentationUserModel, view: View, i: Int ->
             onFavClick(userModel, view, i)
         }
 
@@ -87,7 +87,7 @@ class MyFavoritesFragment : Fragment(),
             }
     }
 
-    override fun onFavClick(model: UserModel, v: View, position: Int) {
+    override fun onFavClick(model: PresentationUserModel, v: View, position: Int) {
         userViewModel.deleteFavUser(model)
     }
 }

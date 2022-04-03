@@ -10,26 +10,21 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.subjects.BehaviorSubject
-import io.reactivex.rxjava3.subjects.Subject
 import org.techtown.presentation.R
 import org.techtown.presentation.fragment.MyFavoritesFragment
 import org.techtown.presentation.fragment.UserFragment
 import org.techtown.presentation.databinding.ActivityMainBinding
-import org.techtown.presentation.datasource.local.LocalDataSourceImpl
-import org.techtown.presentation.datasource.remote.RemoteDataSourceImpl
-import org.techtown.presentation.db.UserDatabase
-import org.techtown.presentation.model.UserModel
-import org.techtown.presentation.repository.UserRepository
-import org.techtown.presentation.repository.UserRepositoryImpl
-import org.techtown.presentation.retorfit.RetrofitBuilder
+import org.techtown.data.datasource.local.LocalDataSourceImpl
+import org.techtown.data.datasource.remote.RemoteDataSourceImpl
+import org.techtown.data.room.UserDatabase
+import org.techtown.data.model.UserModel
+import org.techtown.data.repository.UserRepository
+import org.techtown.data.repository.UserRepositoryImpl
+import org.techtown.data.retrofit.RetrofitBuilder
 import org.techtown.presentation.viewmodel.MainViewModelFactory
 import org.techtown.presentation.viewmodel.UserViewModel
-import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 

@@ -9,8 +9,10 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.techtown.presentation.base.BaseViewModel
-import org.techtown.presentation.model.UserModel
-import org.techtown.presentation.repository.UserRepository
+import org.techtown.data.repository.UserRepository
+import org.techtown.presentation.model.PresentationUserModel
+import org.techtown.presentation.model.PresentationUserModel.Companion.toDataModel
+import org.techtown.presentation.model.PresentationUserModel.Companion.toPresentationModel
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -20,11 +22,11 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
 
     val mainBackPressPublishSubject: PublishSubject<Boolean> = PublishSubject.create()
 
-    val userFragmentUpdateUserList: PublishSubject<List<UserModel>> = PublishSubject.create()
-    var searchedUserList: MutableList<UserModel> = mutableListOf()
+    val userFragmentUpdateUserList: PublishSubject<List<PresentationUserModel>> = PublishSubject.create()
+    var searchedUserList: MutableList<PresentationUserModel> = mutableListOf()
 
-    val favoritesFragmentUpdateUserList: PublishSubject<List<UserModel>> = PublishSubject.create()
-    val favoriteUserList: MutableList<UserModel> = mutableListOf()
+    val favoritesFragmentUpdateUserList: PublishSubject<List<PresentationUserModel>> = PublishSubject.create()
+    val favoriteUserList: MutableList<PresentationUserModel> = mutableListOf()
 
     fun clickBackButton() {
         behaviorSubject.toFlowable(BackpressureStrategy.BUFFER)
@@ -41,8 +43,8 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
             }.addTo(compositeDisposable)
     }
 
-    fun setSearchUserList(searchedUserList: List<UserModel>) {
-        this.searchedUserList = searchedUserList as MutableList<UserModel>
+    fun setSearchUserList(searchedUserList: List<PresentationUserModel>) {
+        this.searchedUserList = searchedUserList as MutableList<PresentationUserModel>
     }
 
     fun searchUser(query: String?, currentPage: Int, perPage: Int, isSearch: Boolean) {
@@ -66,7 +68,8 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
 
                 remote.body()?.items.let { dataModelSearchUserList ->
                     if (!dataModelSearchUserList.isNullOrEmpty()) {
-                        searchedUserList.addAll(dataModelSearchUserList)
+                        val presentationSearchUserList = dataModelSearchUserList.map { toPresentationModel(it) }
+                        searchedUserList.addAll(presentationSearchUserList)
                     }
 
                     searchedUserList.map { searchedUser ->
@@ -100,7 +103,7 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
                         dataModelFavoriteUsers.any { it.id == searchedUserList.id }
                 }
 
-                favoriteUserList.addAll(dataModelFavoriteUsers)
+                favoriteUserList.addAll(dataModelFavoriteUsers.map { toPresentationModel(it) })
                 return@map newList
             }
             ?.observeOn(AndroidSchedulers.mainThread())
@@ -111,9 +114,9 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
             })?.addTo(compositeDisposable)
     }
 
-    fun setFavUser(model: UserModel) {
+    fun setFavUser(model: PresentationUserModel) {
         //즐겨찾기 추가.
-        userRepository.setFavUserInfo(model)
+        userRepository.setFavUserInfo(toDataModel(model))
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.doOnError {
@@ -132,8 +135,8 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
             ?.subscribe()?.addTo(compositeDisposable)
     }
 
-    fun deleteFavUser(model: UserModel) {
-        userRepository.deleteFavUserInfo(model.id)
+    fun deleteFavUser(model: PresentationUserModel) {
+        userRepository.deleteFavUserInfo(toDataModel(model))
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.doOnError {

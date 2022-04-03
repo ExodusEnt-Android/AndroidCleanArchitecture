@@ -6,20 +6,20 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import org.techtown.presentation.databinding.ItemUserBinding
-import org.techtown.presentation.model.UserModel
+import org.techtown.presentation.model.PresentationUserModel
 
 
 class UserListAdapter(
-    private val userClick: ((UserModel, View, Int) -> Unit?)?,
-    private val favClick: (UserModel, View, Int) -> Unit
-) : ListAdapter<UserModel, UserViewHolder>(diffUtil) {
+    private val userClick: ((PresentationUserModel, View, Int) -> Unit?)?,
+    private val favClick: (PresentationUserModel, View, Int) -> Unit
+) : ListAdapter<PresentationUserModel, UserViewHolder>(diffUtil) {
 
     interface onUserClickListener {
-        fun onUserClick(model: UserModel, v: View, position: Int)
+        fun onUserClick(model: PresentationUserModel, v: View, position: Int)
     }
 
     interface onFavClickListener {
-        fun onFavClick(model: UserModel, v: View, position: Int)
+        fun onFavClick(model: PresentationUserModel, v: View, position: Int)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
@@ -47,16 +47,16 @@ class UserListAdapter(
         }
     }
 
-    override fun submitList(list: List<UserModel>?) {
+    override fun submitList(list: List<PresentationUserModel>?) {
         super.submitList(list?.let { ArrayList(it) })
     }
 
     companion object {
-        val diffUtil = object : DiffUtil.ItemCallback<UserModel>() {
-            override fun areItemsTheSame(oldItem: UserModel, newItem: UserModel) =
+        val diffUtil = object : DiffUtil.ItemCallback<PresentationUserModel>() {
+            override fun areItemsTheSame(oldItem: PresentationUserModel, newItem: PresentationUserModel) =
                 oldItem.id == newItem.id
 
-            override fun areContentsTheSame(oldItem: UserModel, newItem: UserModel) =
+            override fun areContentsTheSame(oldItem: PresentationUserModel, newItem: PresentationUserModel) =
                 oldItem == newItem
 
         }

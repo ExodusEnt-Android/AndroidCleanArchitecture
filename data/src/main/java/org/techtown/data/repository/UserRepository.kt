@@ -13,5 +13,5 @@ interface UserRepository {
 
     fun setFavUserInfo(userModel: UserModel): Completable?
 
-    fun deleteFavUserInfo(id: Int): Completable?
+    fun deleteFavUserInfo(model: UserModel): Completable?
 }

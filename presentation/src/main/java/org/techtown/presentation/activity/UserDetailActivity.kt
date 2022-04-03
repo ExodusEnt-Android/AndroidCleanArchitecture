@@ -4,12 +4,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.bumptech.glide.Glide
 import org.techtown.presentation.databinding.ActivityUserDetailBinding
-import org.techtown.presentation.model.UserModel
+import org.techtown.presentation.model.PresentationUserModel
 
 class UserDetailActivity : AppCompatActivity() {
 
     //인텐트로 가져온 유저 모델.
-    private lateinit var user: UserModel
+    private lateinit var user: PresentationUserModel
 
     //뷰바인딩.
     private lateinit var bindnig : ActivityUserDetailBinding
@@ -23,7 +23,7 @@ class UserDetailActivity : AppCompatActivity() {
     }
 
     private fun initSet() {
-        user = intent.getParcelableExtra<UserModel>("user_model") as UserModel
+        user = intent.getParcelableExtra<PresentationUserModel>("user_model") as PresentationUserModel
 
 
         //이름 , 스코어만 가져와줌.

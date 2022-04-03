@@ -17,7 +17,7 @@ import org.techtown.presentation.util.Util
 import org.techtown.presentation.activity.UserDetailActivity
 import org.techtown.presentation.adapter.UserListAdapter
 import org.techtown.presentation.databinding.FragmentUserBinding
-import org.techtown.presentation.model.UserModel
+import org.techtown.presentation.model.PresentationUserModel
 import org.techtown.presentation.viewmodel.UserViewModel
 
 
@@ -35,7 +35,7 @@ class UserFragment : Fragment(),
     private lateinit var userListAdapter: UserListAdapter
 
     //받아온 유저 리스트.
-    private lateinit var userList: ArrayList<UserModel>
+    private lateinit var userList: ArrayList<PresentationUserModel>
 
     //현재 검색 쿼리.
     private var currentQuery = ""
@@ -100,9 +100,9 @@ class UserFragment : Fragment(),
         //어댑터 연결부분.
         userListAdapter =
             UserListAdapter(
-                { userModel: UserModel, view: View, i: Int ->
+                { userModel: PresentationUserModel, view: View, i: Int ->
                     onUserClick(userModel, view, i)
-                }) { userModel: UserModel, view: View, i: Int ->
+                }) { userModel: PresentationUserModel, view: View, i: Int ->
                 onFavClick(userModel, view, i)
             }
         binding.rvUser.apply {
@@ -116,7 +116,7 @@ class UserFragment : Fragment(),
     }
 
     private fun splashDataSetting() {
-        userList = arguments?.getParcelableArrayList<UserModel>("user_list") as ArrayList<UserModel>
+        userList = arguments?.getParcelableArrayList<PresentationUserModel>("user_list") as ArrayList<PresentationUserModel>
 
         if (!userList.isNullOrEmpty()) {
             userViewModel.setSearchUserList(userList.map { it.copy() })
@@ -190,13 +190,13 @@ class UserFragment : Fragment(),
             }
     }
 
-    override fun onUserClick(model: UserModel, v: View, position: Int) {
+    override fun onUserClick(model: PresentationUserModel, v: View, position: Int) {
         val intent = Intent(activity, UserDetailActivity::class.java)
         intent.putExtra("user_model", model)
         startActivity(intent)
     }
 
-    override fun onFavClick(model: UserModel, v: View, position: Int) {
+    override fun onFavClick(model: PresentationUserModel, v: View, position: Int) {
         if (!model.is_favorite) {
             (v as AppCompatImageView).setBackgroundResource(R.drawable.star_selected_36)
             model.is_favorite = true

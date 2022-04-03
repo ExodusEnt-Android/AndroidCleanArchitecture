@@ -19,7 +19,7 @@ data class PresentationUserRootModel(
         ): UserRootModel {
             return UserRootModel(
                 incomplete_results = presentationUserRootModel.incomplete_results,
-                items = presentationUserRootModel.items.map { PresentationUserModel.toDataModel(it) } as ArrayList<PresentationUserModel>,
+                items = presentationUserRootModel.items.map { PresentationUserModel.toDataModel(it) } as ArrayList<UserModel>,
                 total_count = presentationUserRootModel.total_count
             )
         }

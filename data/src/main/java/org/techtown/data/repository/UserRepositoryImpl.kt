@@ -22,6 +22,6 @@ class UserRepositoryImpl(
     override fun setFavUserInfo(userModel: UserModel): Completable? =
         localDataSource.setFavUserInfo(userModel)
 
-    override fun deleteFavUserInfo(id: Int): Completable? =
-        localDataSource.deleteFavUserInfo(id)
+    override fun deleteFavUserInfo(model: UserModel): Completable? =
+        localDataSource.deleteFavUserInfo(model)
 }
