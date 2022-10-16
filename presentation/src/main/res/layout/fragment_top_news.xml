@@ -1,0 +1,18 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Home" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:id="@+id/navigate_to_home_detail_button"
+        android:text="Navigate to Home detail fragment"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
