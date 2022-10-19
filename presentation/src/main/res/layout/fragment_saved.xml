@@ -11,7 +11,7 @@
         android:layout_height="match_parent">
         <include
             android:id="@+id/toolbar"
-            layout="@layout/toolbar_main" />
+            layout="@layout/toolbar_title" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
