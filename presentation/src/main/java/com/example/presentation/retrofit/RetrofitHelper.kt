@@ -2,6 +2,7 @@ package com.example.presentation.retrofit
 
 import ApiService
 import com.example.presentation.BuildConfig
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -14,18 +15,29 @@ object RetrofitHelper{
     private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(ServerIp.BaseUrl)
+            .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
-
     private val okHttpClient: OkHttpClient by lazy {
         OkHttpClient.Builder()
-            .addInterceptor(httpLogCheck())
+            .addInterceptor(networkInterceptor())
+            .addInterceptor(httpLogInterceptor())
             .build()
     }
 
-    private fun httpLogCheck() :HttpLoggingInterceptor{
+
+    //헤더에 api key 추가
+    private fun networkInterceptor(): Interceptor = Interceptor { chain ->
+        val requestWithHeader = chain.request().newBuilder().addHeader("X-Api-Key", BuildConfig.API_KEY)
+        chain.proceed(requestWithHeader.build())
+    }
+
+
+
+    //http 통신 로그 intercept해서 보여줌. -> 디버깅용
+    private fun httpLogInterceptor() :HttpLoggingInterceptor{
         val loggingInterceptor =  HttpLoggingInterceptor()
         return loggingInterceptor.setLevel(if(BuildConfig.DEBUG){
             HttpLoggingInterceptor.Level.BODY

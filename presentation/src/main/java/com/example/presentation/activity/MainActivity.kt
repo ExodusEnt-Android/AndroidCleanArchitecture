@@ -7,7 +7,6 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.presentation.R
 import com.example.presentation.base.BaseActivity
 import com.example.presentation.databinding.ActivityMainBinding
-import timber.log.Timber
 
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
