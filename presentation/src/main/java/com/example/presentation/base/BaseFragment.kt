@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -22,6 +23,11 @@ open class BaseFragment<VDB:ViewDataBinding>(@LayoutRes val layoutRes: Int):Frag
         binding.onCreateView()
         return binding.root
     }
-
     open fun VDB.onCreateView() = Unit
+
+    //토스트 보여주기
+    fun showToast(msg:String){
+        Toast.makeText(requireActivity(),msg,Toast.LENGTH_SHORT).show()
+    }
+
 }
