@@ -1,5 +1,10 @@
 package com.example.presentation.util
 
+import android.os.Bundle
+import androidx.navigation.NavController
+import androidx.navigation.NavOptions
+import com.example.presentation.R
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -13,12 +18,24 @@ object Util {
 
         val diff = (Date().time - date.time) / 1000
         return when (diff) {
-            in 0 until 10 -> "방금 전"
-            in 10 until 60 -> "$diff 초 전"
-            in 60 until 60 * 60 -> "${diff/60} 분 전"
-            in 60 * 60 until 60 * 60 * 24 -> "${diff/3600} 시간 전"
-            else -> this.toString()
+            in 0 until 10 -> "now"
+            in 10 until 60 -> "$diff seconds ago"
+            in 60 until 60 * 60 -> "${diff/60} minutes ago"
+            in 60 * 60 until 60 * 60 * 24 -> "${diff/3600} hours ago"
+            else -> DateFormat.getDateInstance(DateFormat.SHORT).format(date).toString()
         }
     }
+
+    //애니메이션 주면서 bundle 값 과 같이  navigation 이동할때 사용
+    fun NavController.navigateWithAnim(destinationId: Int, bundle: Bundle){
+        val options = NavOptions.Builder()
+            .setEnterAnim(R.anim.slide_from_right)
+            .setExitAnim(R.anim.stationary)
+            .setPopEnterAnim(R.anim.stationary)
+            .setPopExitAnim(R.anim.slide_to_right)
+            .build()
+        this.navigate(destinationId,bundle,options)
+    }
+
 
 }

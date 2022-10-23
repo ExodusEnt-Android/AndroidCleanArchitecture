@@ -16,8 +16,8 @@ class TopNewArticleViewHolder(
             .load(article.urlToImage)
             .into(binding.ivNewsThumbnail)
 
-        binding.tvAuthor.text = article.author?:"작자 미상"
-        binding.tvNewsTitle.text = article.title?:"기사 제목 없음"
-        binding.tvPublishTime.text = article.publishedAt.checkTimePassed()
+        binding.tvAuthor.text = article.author?:"unknown writer"
+        binding.tvNewsTitle.text = article.title?:"no title"
+        binding.tvPublishTime.text = article.publishedAt?.checkTimePassed()
     }
 }

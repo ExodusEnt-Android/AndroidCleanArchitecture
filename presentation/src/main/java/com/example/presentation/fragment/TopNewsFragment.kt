@@ -1,6 +1,10 @@
 package com.example.presentation.fragment
 
+import android.os.Bundle
 import android.os.Parcelable
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.presentation.R
@@ -11,9 +15,11 @@ import com.example.presentation.databinding.FragmentTopNewsBinding
 import com.example.presentation.model.Article
 import com.example.presentation.model.BaseDataModel
 import com.example.presentation.retrofit.RetrofitHelper
+import com.example.presentation.util.Util.navigateWithAnim
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import timber.log.Timber
 
 class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_top_news) {
 
@@ -24,6 +30,10 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
     private var isAlreadyInitialized = false
     private val topNewsList = mutableListOf<Article>()
 
+    //네비게이션 컨트롤러
+    private lateinit var navController: NavController
+    private lateinit var navHost: NavHostFragment
+
     override fun FragmentTopNewsBinding.onCreateView() {
         initSet()
         setListenerEvent()
@@ -31,6 +41,11 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
     }
 
     private fun initSet() {
+
+        navHost =
+            requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHost.findNavController()
+
         topNewsListAdapter = TopNewsListAdapter()
         binding.rvTopNewsList.apply {
             adapter = topNewsListAdapter
@@ -51,8 +66,9 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
         topNewsListAdapter.setOnTopNewsItemClickListener(object :
             TopNewsListAdapter.ItemClickListener {
             override fun onTopNewItemClick(article: Article) {
-
-                showToast(article.title)
+                navController.navigateWithAnim(R.id.articleDetailFragment, Bundle().apply {
+                    putParcelable(Const.PARAM_ARTICLE_MODEL,article)//닉네임 보냄
+                })
             }
         })
 
