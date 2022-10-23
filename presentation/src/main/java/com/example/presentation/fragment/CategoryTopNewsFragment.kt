@@ -34,6 +34,7 @@ class CategoryTopNewsFragment:BaseFragment<FragmentTopNewsBinding>(R.layout.frag
     lateinit var topNewsListAdapter: TopNewsListAdapter
     private val topNewsList = mutableListOf<Article>()
     private var isAlreadyInitialized = false
+    private var categoryString  = ""
 
 
     override fun FragmentTopNewsBinding.onCreateView() {
@@ -98,10 +99,12 @@ class CategoryTopNewsFragment:BaseFragment<FragmentTopNewsBinding>(R.layout.frag
     private fun setToolbar(){
         binding.toolbar.root.visibility = View.INVISIBLE
         binding.toolbarBack.root.visibility = View.VISIBLE
-        binding.toolbarBack.tvTitle.text = "Category - "+arguments?.getString(Const.PARAM_ARTICLE_CATEGORY)?:""
+        binding.toolbarBack.tvTitle.text = "Category - $categoryString"
     }
 
     private fun initSet(){
+
+        categoryString = arguments?.getString(Const.PARAM_ARTICLE_CATEGORY)?:""
 
         setToolbar()
 
@@ -152,7 +155,7 @@ class CategoryTopNewsFragment:BaseFragment<FragmentTopNewsBinding>(R.layout.frag
             return
         }
 
-        RetrofitHelper.apiService.getTopHeadLines(page = page, pageSize = Const.PageSize)
+        RetrofitHelper.apiService.getTopHeadLines(page = page, pageSize = Const.PageSize, category = categoryString)
             .enqueue(object : Callback<BaseDataModel<Article>> {
                 override fun onResponse(
                     call: Call<BaseDataModel<Article>>,
