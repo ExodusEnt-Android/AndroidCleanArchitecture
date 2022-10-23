@@ -14,7 +14,14 @@
 
         <include
             android:id="@+id/toolbar"
+            android:visibility="visible"
             layout="@layout/toolbar_title" />
+
+        <include
+            android:id="@+id/toolbar_back"
+            android:visibility="gone"
+            layout="@layout/toolbar_back" />
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_top_news_list"

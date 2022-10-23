@@ -2,6 +2,7 @@ package com.example.presentation.fragment
 
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.navigation.NavController
@@ -86,9 +87,23 @@ class CategoryTopNewsFragment:BaseFragment<FragmentTopNewsBinding>(R.layout.frag
                 }
             }
         })
+
+        //뒤로가기 버튼 클릭시
+        binding.toolbarBack.ivBackArrow.setOnClickListener {
+            navController.popBackStack()
+        }
+    }
+
+    //툴바 세팅
+    private fun setToolbar(){
+        binding.toolbar.root.visibility = View.INVISIBLE
+        binding.toolbarBack.root.visibility = View.VISIBLE
+        binding.toolbarBack.tvTitle.text = "Category - "+arguments?.getString(Const.PARAM_ARTICLE_CATEGORY)?:""
     }
 
     private fun initSet(){
+
+        setToolbar()
 
         navHost =
             requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
