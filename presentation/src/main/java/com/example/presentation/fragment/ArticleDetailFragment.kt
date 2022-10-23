@@ -11,8 +11,8 @@ import com.example.presentation.base.BaseFragment
 import com.example.presentation.const.Const
 import com.example.presentation.databinding.FragmentArticleDetailBinding
 import com.example.presentation.model.Article
+import com.example.presentation.room.LocalDataBase
 import com.example.presentation.util.Util.checkTimePassed
-import timber.log.Timber
 
 class ArticleDetailFragment:BaseFragment<FragmentArticleDetailBinding>(R.layout.fragment_article_detail) {
 
