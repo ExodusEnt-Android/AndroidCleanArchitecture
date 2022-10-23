@@ -30,10 +30,10 @@ class ArticleDetailFragment:BaseFragment<FragmentArticleDetailBinding>(R.layout.
     //그외에는 stationay를 주어 enteranimation을 없애준다.-> 계속 메인 탭 이동시  이미 navigate된 fragment가 기존 설정한
     //enter animation을 실행하여서  이렇게 예외처리 해줌.
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
-        return if ((enter && arguments?.getBoolean(Const.PARAM_ARTICLE_TITLE,false) == true)) {
+        return if ((enter && arguments?.getBoolean(Const.PARAM_SCREEN_INITIALIZED,false) == true)) {
             AnimationUtils.loadAnimation(context, R.anim.stationary)
         } else {
-            arguments?.putBoolean(Const.PARAM_ARTICLE_TITLE,true)
+            arguments?.putBoolean(Const.PARAM_SCREEN_INITIALIZED,true)
             null
         }
     }
