@@ -12,6 +12,8 @@ interface ApiService {
     fun getTopHeadLines(
         @Query("country") country: String = "kr",//한국으로 고정
         @Query("category") category: String? = null,//optional
+        @Query("page") page:Int,
+        @Query("pageSize")pageSize:Int
     ): Call<BaseDataModel<Article>>
 
 }

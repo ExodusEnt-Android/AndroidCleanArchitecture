@@ -53,7 +53,7 @@ class TopNewsListAdapter:ListAdapter<Article, TopNewArticleViewHolder>(diffUtil)
                 oldItem: Article,
                 newItem: Article
             ): Boolean {
-                return oldItem.hashCode() == newItem.hashCode()
+                return oldItem == newItem
             }
 
             override fun areContentsTheSame(
