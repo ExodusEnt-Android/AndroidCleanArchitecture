@@ -14,6 +14,7 @@ interface NewsArticleDao {
     @Query("SELECT * FROM newsArticleTable")
     fun loadSavedNewsArticles():List<Article>
 
-    @Query("DELETE FROM newsArticleTable WHERE uid = :uid")
-    fun deleteSavedArticle(uid:Long)
+
+    @Query("DELETE FROM newsArticleTable WHERE publishedAt = :publishedAt AND title = :title AND url = :url")
+    fun deleteSavedArticle(publishedAt:String,title:String,url:String)
 }

@@ -1,5 +1,6 @@
 package com.example.presentation.fragment
 
+import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.navigation.NavController
@@ -13,6 +14,9 @@ import com.example.presentation.databinding.FragmentArticleDetailBinding
 import com.example.presentation.model.Article
 import com.example.presentation.room.LocalDataBase
 import com.example.presentation.util.Util.checkTimePassed
+import com.example.presentation.util.Util.getSavedNewsArticleList
+import com.example.presentation.util.Util.removeSavedNewsArticle
+import com.example.presentation.util.Util.saveArticle
 
 class ArticleDetailFragment:BaseFragment<FragmentArticleDetailBinding>(R.layout.fragment_article_detail) {
 
@@ -47,6 +51,16 @@ class ArticleDetailFragment:BaseFragment<FragmentArticleDetailBinding>(R.layout.
             requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHost.findNavController()
 
+
+        //저장 여부 체크
+        requireActivity().getSavedNewsArticleList { list,error->
+            if(list != null){
+                setSaveIconVisible(isSaveStatus = list.any { it.title == article?.title && it.publishedAt == article?.publishedAt && it.url == article?.url })
+            }else{
+                showToast(error?.message.toString())
+            }
+        }
+
         //뷰에 값 세팅
         if (article != null) {
 
@@ -63,18 +77,40 @@ class ArticleDetailFragment:BaseFragment<FragmentArticleDetailBinding>(R.layout.
         }
     }
 
+    //save 뷰 상태 체크
+    private fun setSaveIconVisible(isSaveStatus:Boolean){
+        if(isSaveStatus){
+            binding.ivIconSaved.visibility = View.VISIBLE
+            binding.ivIconNotSaved.visibility = View.GONE
+        }else{
+            binding.ivIconSaved.visibility = View.GONE
+            binding.ivIconNotSaved.visibility = View.VISIBLE
+        }
+    }
 
     //리스너 이벤트 모음
     private fun setListenerEvent(){
 
         //save 취소
         binding.ivIconSaved.setOnClickListener {
-            showToast("save 취소")
+           if(article == null){
+               return@setOnClickListener
+           }
+            requireActivity().removeSavedNewsArticle(article!!){
+                setSaveIconVisible(isSaveStatus = false)
+            }
         }
 
         //save 하기
         binding.ivIconNotSaved.setOnClickListener {
-            showToast("save 하기")
+
+            if(article == null){
+                return@setOnClickListener
+            }
+
+            requireActivity().saveArticle(article!!){
+               setSaveIconVisible(isSaveStatus = true)
+            }
         }
 
         //뒤로가기

@@ -8,21 +8,28 @@ import com.example.presentation.model.Article
 
 @Database(
     entities = [Article::class],
-    version = 1,
+    version = 4,
     exportSchema = false
 )
 abstract class LocalDataBase : RoomDatabase() {
     abstract fun getNewsArticleDao(): NewsArticleDao
+
     companion object {
-        fun getInstance(context: Context): LocalDataBase {
-            synchronized(LocalDataBase::class.java) {
-                return Room.databaseBuilder(
-                    context.applicationContext,
-                    LocalDataBase::class.java, "local-database.db"
-                ).fallbackToDestructiveMigration()
-                    .allowMainThreadQueries()
-                    .build()
+        private var instance: LocalDataBase? = null
+
+        @Synchronized
+        fun getInstance(context: Context): LocalDataBase? {
+
+            if (instance == null) {
+                synchronized(LocalDataBase::class.java) {
+                    instance = Room.databaseBuilder(
+                        context.applicationContext,
+                        LocalDataBase::class.java, "local-database.db"
+                    ).fallbackToDestructiveMigration()
+                        .build()
+                }
             }
+            return instance
         }
     }
 }
