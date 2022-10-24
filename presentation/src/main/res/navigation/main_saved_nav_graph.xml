@@ -10,4 +10,10 @@
         android:name="com.example.presentation.fragment.SavedFragment"
         android:label="SavedFragment"
         tools:layout="@layout/fragment_saved" />
+
+    <fragment
+        android:id="@+id/articleDetailFragment"
+        android:name="com.example.presentation.fragment.ArticleDetailFragment"
+        android:label="ArticleDetailFragment"
+        tools:layout="@layout/fragment_article_detail" />
 </navigation>
