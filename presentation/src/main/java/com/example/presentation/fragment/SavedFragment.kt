@@ -5,7 +5,6 @@ import android.os.Parcelable
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.presentation.R
 import com.example.presentation.adapter.TopNewsListAdapter
@@ -24,9 +23,13 @@ class SavedFragment:BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved) 
 
     private var rcyScrollLState: Parcelable? = null
     lateinit var topNewsListAdapter: TopNewsListAdapter
-    private val topNewsList = mutableListOf<Article>()
-    private var isAlreadyInitialized = false
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        //스크롤 state 다시 넣어줌.
+        rcyScrollLState = savedInstanceState?.getParcelable(PARAM_RCY_SCROLL_STATE)
+    }
 
     override fun FragmentSavedBinding.onCreateView() {
         initSet()
@@ -71,21 +74,20 @@ class SavedFragment:BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved) 
         })
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        //햔제 스크롤 포지션 저장
+        outState.putParcelable(PARAM_RCY_SCROLL_STATE,rcyScrollLState)
+    }
+
     private fun getSavedNewsList(){
 
         //저장 여부 체크
         requireActivity().getSavedNewsArticleList { list,error->
             if(list != null){
-                topNewsList.clear()
-                topNewsList.addAll(list)
-                topNewsListAdapter.currentList.clear()
-                topNewsListAdapter.submitList(topNewsList)
-
-                //기존  스크롤  위치 정보 캐싱되어있으면 다시 적용 해줌.
-                if (rcyScrollLState != null) {
-                    binding.rvSavedNewsList.layoutManager?.onRestoreInstanceState(rcyScrollLState)
-                }
-
+                topNewsListAdapter.submitList(list)
+                binding.rvSavedNewsList.layoutManager?.onRestoreInstanceState(rcyScrollLState)
             }else{
                 showToast(error?.message.toString())
             }
@@ -97,5 +99,9 @@ class SavedFragment:BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved) 
     //toolbar setting
     private fun setToolbar(){
         binding.toolbar.tvTitle.text = getString(R.string.saved)
+    }
+
+    companion object{
+        const val PARAM_RCY_SCROLL_STATE = "param_rcy_scroll_state"
     }
 }

@@ -22,6 +22,7 @@ import com.example.presentation.util.Util.navigateWithAnim
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import timber.log.Timber
 
 class CategoryTopNewsFragment:BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_top_news) {
 
