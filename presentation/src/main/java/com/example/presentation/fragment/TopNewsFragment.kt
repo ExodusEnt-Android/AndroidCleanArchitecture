@@ -1,5 +1,6 @@
 package com.example.presentation.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.navigation.NavController
@@ -8,6 +9,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.presentation.R
+import com.example.presentation.activity.LoginActivity
+import com.example.presentation.activity.SplashActivity
 import com.example.presentation.adapter.TopNewsListAdapter
 import com.example.presentation.base.BaseFragment
 import com.example.presentation.const.Const
@@ -15,6 +18,8 @@ import com.example.presentation.databinding.FragmentTopNewsBinding
 import com.example.presentation.model.Article
 import com.example.presentation.model.BaseDataModel
 import com.example.presentation.retrofit.RetrofitHelper
+import com.example.presentation.room.LocalDataBase
+import com.example.presentation.util.PreferenceManager
 import com.example.presentation.util.Util.navigateWithAnim
 import retrofit2.Call
 import retrofit2.Callback
@@ -94,7 +99,21 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
                 }
             }
         })
+
+        //toolbar title top news 누르면 로그아웃 처리해줌.
+        binding.toolbar.tvTitle.setOnClickListener {
+            logout()
+        }
     }
+
+    //로그아웃 처리
+    private fun logout(){
+        LocalDataBase.destroyInstance()
+        PreferenceManager.removeAllPreference(requireActivity())//로그인 체크 값 다 지워줌.
+        startActivity(Intent(requireActivity(), SplashActivity::class.java))
+        requireActivity().finish()
+    }
+
 
     //toolbar setting
     private fun setToolbar() {
