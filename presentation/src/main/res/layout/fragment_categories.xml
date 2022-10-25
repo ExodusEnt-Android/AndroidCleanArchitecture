@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar_title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_category_select_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:text="Choose a category to\nstart reading"
+            android:textColor="@color/black"
+            android:textSize="27sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_business"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/all_line_stroke"
+            android:padding="10dp"
+            android:text="business"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/tv_entertain"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_category_select_title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_entertain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/all_line_stroke"
+            android:padding="10dp"
+            android:text="entertain"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/tv_general"
+            app:layout_constraintStart_toEndOf="@+id/tv_business"
+            app:layout_constraintTop_toBottomOf="@id/tv_category_select_title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_general"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/all_line_stroke"
+            android:padding="10dp"
+            android:text="general"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_entertain"
+            app:layout_constraintTop_toBottomOf="@id/tv_category_select_title" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_health"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/all_line_stroke"
+            android:padding="10dp"
+            android:text="health"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/tv_entertain"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_business" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_science"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/all_line_stroke"
+            android:padding="10dp"
+            android:text="science"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/tv_general"
+            app:layout_constraintStart_toEndOf="@+id/tv_business"
+            app:layout_constraintTop_toBottomOf="@id/tv_entertain" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_sports"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/all_line_stroke"
+            android:padding="10dp"
+            android:text="sports"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_entertain"
+            app:layout_constraintTop_toBottomOf="@id/tv_general" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_technology"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/all_line_stroke"
+            android:padding="10dp"
+            android:text="technology"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/tv_entertain"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_health" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
