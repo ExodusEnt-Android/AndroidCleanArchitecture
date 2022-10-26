@@ -10,8 +10,4 @@ class GlobalApplication: Application() {
         super.onCreate()
         Timber.plant(TimberCustomTree())
     }
-
-    override fun onTerminate() {
-        super.onTerminate()
-    }
 }
