@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/My_Application.iml" filepath="$PROJECT_DIR$/.idea/modules/My_Application.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/My_Application.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/My_Application.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/My_Application.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/My_Application.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/My_Application.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/My_Application.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/My_Application.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/My_Application.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/presentation/My_Application.presentation.iml" filepath="$PROJECT_DIR$/.idea/modules/presentation/My_Application.presentation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/presentation/My_Application.presentation.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/presentation/My_Application.presentation.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/presentation/My_Application.presentation.main.iml" filepath="$PROJECT_DIR$/.idea/modules/presentation/My_Application.presentation.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/presentation/My_Application.presentation.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/presentation/My_Application.presentation.unitTest.iml" />
+    </modules>
+  </component>
+</project>

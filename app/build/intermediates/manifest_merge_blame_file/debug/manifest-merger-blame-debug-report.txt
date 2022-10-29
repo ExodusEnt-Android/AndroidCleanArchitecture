@@ -1,0 +1,129 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.myapplication"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="26"
+8-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml
+9        android:targetSdkVersion="32" />
+9-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:6:5-66
+11-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:6:22-64
+12
+13    <application
+13-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:7:5-42:19
+14        android:name="com.example.myapplication.application.GlobalApplication"
+14-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:8:9-54
+15        android:allowBackup="true"
+15-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:9:9-35
+16        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+16-->[androidx.core:core:1.8.0] /Users/idonghun/.gradle/caches/transforms-3/8d94b2d4c968cccf93c023125f36ce07/transformed/core-1.8.0/AndroidManifest.xml:24:18-86
+17        android:debuggable="true"
+18        android:extractNativeLibs="false"
+19        android:fullBackupOnly="false"
+19-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:12:9-39
+20        android:icon="@mipmap/ic_launcher"
+20-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:10:9-43
+21        android:label="@string/app_name"
+21-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:11:9-41
+22        android:roundIcon="@mipmap/ic_launcher_round"
+22-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:14:9-54
+23        android:supportsRtl="true"
+23-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:15:9-35
+24        android:testOnly="true"
+25        android:theme="@style/Theme.MyApplication"
+25-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:16:9-51
+26        android:usesCleartextTraffic="true" >
+26-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:13:9-44
+27        <activity
+27-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:19:9-28:20
+28            android:name="com.example.presentation.activity.SplashActivity"
+28-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:19:19-82
+29            android:configChanges="uiMode"
+29-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:20:13-43
+30            android:exported="true"
+30-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:22:13-36
+31            android:screenOrientation="portrait" >
+31-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:21:13-49
+32            <intent-filter>
+32-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:23:13-27:29
+33                <action android:name="android.intent.action.MAIN" />
+33-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:24:17-69
+33-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:24:25-66
+34
+35                <category android:name="android.intent.category.LAUNCHER" />
+35-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:26:17-77
+35-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:26:27-74
+36            </intent-filter>
+37        </activity>
+38        <activity
+38-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:30:9-34:38
+39            android:name="com.example.presentation.activity.MainActivity"
+39-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:31:13-74
+40            android:configChanges="uiMode"
+40-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:32:13-43
+41            android:exported="true"
+41-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:34:13-36
+42            android:screenOrientation="portrait" />
+42-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:33:13-49
+43        <activity
+43-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:37:9-40:38
+44            android:name="com.example.presentation.activity.LoginActivity"
+44-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:37:19-81
+45            android:configChanges="uiMode"
+45-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:38:13-43
+46            android:exported="true"
+46-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:40:13-36
+47            android:screenOrientation="portrait" />
+47-->/Users/idonghun/Desktop/내 코드 모음/cleanarcitecture연습 - 원티드 온보딩 과제/Android_architecture_studying/app/src/main/AndroidManifest.xml:39:13-49
+48
+49        <uses-library
+49-->[androidx.window:window:1.0.0] /Users/idonghun/.gradle/caches/transforms-3/e072ed3a26cc6cfdf078ef45fd271749/transformed/window-1.0.0/AndroidManifest.xml:25:9-27:40
+50            android:name="androidx.window.extensions"
+50-->[androidx.window:window:1.0.0] /Users/idonghun/.gradle/caches/transforms-3/e072ed3a26cc6cfdf078ef45fd271749/transformed/window-1.0.0/AndroidManifest.xml:26:13-54
+51            android:required="false" />
+51-->[androidx.window:window:1.0.0] /Users/idonghun/.gradle/caches/transforms-3/e072ed3a26cc6cfdf078ef45fd271749/transformed/window-1.0.0/AndroidManifest.xml:27:13-37
+52        <uses-library
+52-->[androidx.window:window:1.0.0] /Users/idonghun/.gradle/caches/transforms-3/e072ed3a26cc6cfdf078ef45fd271749/transformed/window-1.0.0/AndroidManifest.xml:28:9-30:40
+53            android:name="androidx.window.sidecar"
+53-->[androidx.window:window:1.0.0] /Users/idonghun/.gradle/caches/transforms-3/e072ed3a26cc6cfdf078ef45fd271749/transformed/window-1.0.0/AndroidManifest.xml:29:13-51
+54            android:required="false" />
+54-->[androidx.window:window:1.0.0] /Users/idonghun/.gradle/caches/transforms-3/e072ed3a26cc6cfdf078ef45fd271749/transformed/window-1.0.0/AndroidManifest.xml:30:13-37
+55
+56        <provider
+56-->[androidx.emoji2:emoji2:1.2.0] /Users/idonghun/.gradle/caches/transforms-3/9b425293985808c0d59d3497ece9d0a8/transformed/emoji2-1.2.0/AndroidManifest.xml:24:9-32:20
+57            android:name="androidx.startup.InitializationProvider"
+57-->[androidx.emoji2:emoji2:1.2.0] /Users/idonghun/.gradle/caches/transforms-3/9b425293985808c0d59d3497ece9d0a8/transformed/emoji2-1.2.0/AndroidManifest.xml:25:13-67
+58            android:authorities="com.example.myapplication.androidx-startup"
+58-->[androidx.emoji2:emoji2:1.2.0] /Users/idonghun/.gradle/caches/transforms-3/9b425293985808c0d59d3497ece9d0a8/transformed/emoji2-1.2.0/AndroidManifest.xml:26:13-68
+59            android:exported="false" >
+59-->[androidx.emoji2:emoji2:1.2.0] /Users/idonghun/.gradle/caches/transforms-3/9b425293985808c0d59d3497ece9d0a8/transformed/emoji2-1.2.0/AndroidManifest.xml:27:13-37
+60            <meta-data
+60-->[androidx.emoji2:emoji2:1.2.0] /Users/idonghun/.gradle/caches/transforms-3/9b425293985808c0d59d3497ece9d0a8/transformed/emoji2-1.2.0/AndroidManifest.xml:29:13-31:52
+61                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+61-->[androidx.emoji2:emoji2:1.2.0] /Users/idonghun/.gradle/caches/transforms-3/9b425293985808c0d59d3497ece9d0a8/transformed/emoji2-1.2.0/AndroidManifest.xml:30:17-75
+62                android:value="androidx.startup" />
+62-->[androidx.emoji2:emoji2:1.2.0] /Users/idonghun/.gradle/caches/transforms-3/9b425293985808c0d59d3497ece9d0a8/transformed/emoji2-1.2.0/AndroidManifest.xml:31:17-49
+63            <meta-data
+63-->[androidx.lifecycle:lifecycle-process:2.4.1] /Users/idonghun/.gradle/caches/transforms-3/399f00721873908e1418511feeb3a729/transformed/lifecycle-process-2.4.1/AndroidManifest.xml:31:13-33:52
+64                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+64-->[androidx.lifecycle:lifecycle-process:2.4.1] /Users/idonghun/.gradle/caches/transforms-3/399f00721873908e1418511feeb3a729/transformed/lifecycle-process-2.4.1/AndroidManifest.xml:32:17-78
+65                android:value="androidx.startup" />
+65-->[androidx.lifecycle:lifecycle-process:2.4.1] /Users/idonghun/.gradle/caches/transforms-3/399f00721873908e1418511feeb3a729/transformed/lifecycle-process-2.4.1/AndroidManifest.xml:33:17-49
+66        </provider>
+67
+68        <service
+68-->[androidx.room:room-runtime:2.4.3] /Users/idonghun/.gradle/caches/transforms-3/636c3702a3891ad7445fe399a8861968/transformed/room-runtime-2.4.3/AndroidManifest.xml:25:9-28:40
+69            android:name="androidx.room.MultiInstanceInvalidationService"
+69-->[androidx.room:room-runtime:2.4.3] /Users/idonghun/.gradle/caches/transforms-3/636c3702a3891ad7445fe399a8861968/transformed/room-runtime-2.4.3/AndroidManifest.xml:26:13-74
+70            android:directBootAware="true"
+70-->[androidx.room:room-runtime:2.4.3] /Users/idonghun/.gradle/caches/transforms-3/636c3702a3891ad7445fe399a8861968/transformed/room-runtime-2.4.3/AndroidManifest.xml:27:13-43
+71            android:exported="false" />
+71-->[androidx.room:room-runtime:2.4.3] /Users/idonghun/.gradle/caches/transforms-3/636c3702a3891ad7445fe399a8861968/transformed/room-runtime-2.4.3/AndroidManifest.xml:28:13-37
+72    </application>
+73
+74</manifest>

@@ -1,0 +1,26 @@
+[
+  {
+    "name": "main_categories_nav_graph",
+    "navigationXmlIds": [],
+    "deepLinks": []
+  },
+  {
+    "name": "main_top_news_nav_graph",
+    "navigationXmlIds": [],
+    "deepLinks": []
+  },
+  {
+    "name": "main_nav_graph",
+    "navigationXmlIds": [
+      "main_top_news_nav_graph",
+      "main_categories_nav_graph",
+      "main_saved_nav_graph"
+    ],
+    "deepLinks": []
+  },
+  {
+    "name": "main_saved_nav_graph",
+    "navigationXmlIds": [],
+    "deepLinks": []
+  }
+]
