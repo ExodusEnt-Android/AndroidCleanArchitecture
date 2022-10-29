@@ -16,7 +16,7 @@ class TopNewsRemoteDataSourceImpl(private val retrofitHelper:RetrofitHelper):Top
         page: Int,
         pageSize: Int
     ): Call<BaseDataModel<Article>> {
-      return  retrofitHelper.apiService.getTopHeadLines(page = page, pageSize = Const.PageSize)
+      return  retrofitHelper.apiService.getTopHeadLines(page = page, category = category ,pageSize = Const.PageSize)
     }
 
 }

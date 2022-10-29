@@ -17,7 +17,10 @@ import com.example.presentation.const.Const
 import com.example.presentation.databinding.FragmentTopNewsBinding
 import com.example.presentation.model.Article
 import com.example.presentation.model.BaseDataModel
+import com.example.presentation.repository.TopNewsRepository
+import com.example.presentation.repository.TopNewsRepositoryImpl
 import com.example.presentation.retrofit.RetrofitHelper
+import com.example.presentation.source.remote.TopNewsRemoteDataSourceImpl
 import com.example.presentation.util.Util.navigateWithAnim
 import retrofit2.Call
 import retrofit2.Callback
@@ -37,6 +40,11 @@ class CategoryTopNewsFragment:BaseFragment<FragmentTopNewsBinding>(R.layout.frag
     private var isAlreadyInitialized = false
     private var categoryString  = ""
 
+    //reposotory 구성 해줌.
+    private val topNewsRepository: TopNewsRepository by lazy{
+        val topNewsRemoteDataSource = TopNewsRemoteDataSourceImpl(RetrofitHelper)
+        TopNewsRepositoryImpl(topNewsRemoteDataSource)
+    }
 
     override fun FragmentTopNewsBinding.onCreateView() {
         initSet()
@@ -156,7 +164,7 @@ class CategoryTopNewsFragment:BaseFragment<FragmentTopNewsBinding>(R.layout.frag
             return
         }
 
-        RetrofitHelper.apiService.getTopHeadLines(page = page, pageSize = Const.PageSize, category = categoryString)
+        topNewsRepository.getTopHeadLines(page = page, pageSize = Const.PageSize, category = categoryString)
             .enqueue(object : Callback<BaseDataModel<Article>> {
                 override fun onResponse(
                     call: Call<BaseDataModel<Article>>,
