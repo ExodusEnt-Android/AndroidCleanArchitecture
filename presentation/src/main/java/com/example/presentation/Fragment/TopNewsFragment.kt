@@ -5,11 +5,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.presentation.*
-import com.example.presentation.Adapter.TopNewsAdapter
-import com.example.presentation.databinding.ActivityMainBinding
+import com.example.presentation.Adapter.NewsListAdapter
 import com.example.presentation.databinding.FragmentTopNewsBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -17,10 +18,10 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class TopNewsFragment : Fragment(R.layout.fragment_top_news) {
+class TopNewsFragment : Fragment(R.layout.fragment_top_news), NewsListAdapter.OnClickListener{
 
     private lateinit var mBinding : FragmentTopNewsBinding
-    private var topNewsAdapter : TopNewsAdapter? = null
+    private var topNewsAdapter : NewsListAdapter? = null
     private lateinit var models : ArrayList<Items>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +38,7 @@ class TopNewsFragment : Fragment(R.layout.fragment_top_news) {
         super.onViewCreated(view, savedInstanceState)
 
         mBinding.rvTopNews.layoutManager = LinearLayoutManagerWrapper(requireContext(), LinearLayoutManager.VERTICAL, false)
-        topNewsAdapter = context?.let { TopNewsAdapter(it) }
+        topNewsAdapter = context?.let { NewsListAdapter(it, this) }
         mBinding.rvTopNews.adapter = topNewsAdapter
         topNews()
     }
@@ -72,6 +73,14 @@ class TopNewsFragment : Fragment(R.layout.fragment_top_news) {
                 Log.d("YMC", "onFailure 에러: " + t.message.toString());
             }
         })
+    }
+    override fun onItemClicked(item: Items, view: View) {
+        when(view.id){
+            R.id.tv_author, R.id.tv_title, R.id.iv_photo -> {
+                val bundle = bundleOf("title" to item.title, "author" to item.author, "desc" to item.description , "image" to item.urlToImage)
+                findNavController().navigate(R.id.action_category_detail, bundle)
+            }
+        }
     }
 
 }

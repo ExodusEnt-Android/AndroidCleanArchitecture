@@ -7,11 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.presentation.*
-import com.example.presentation.Adapter.CategoryAdapter
+import com.example.presentation.Adapter.NewsListAdapter
 import com.example.presentation.databinding.FragmentCategoryNewsBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -19,10 +18,10 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class CategoryNewsFragment : Fragment(R.layout.fragment_category_news), CategoryAdapter.OnClickListener{
+class CategoryNewsFragment : Fragment(R.layout.fragment_category_news), NewsListAdapter.OnClickListener{
 
     private lateinit var mBinding : FragmentCategoryNewsBinding
-    private var categoryAdapter : CategoryAdapter? = null
+    private var categoryAdapter : NewsListAdapter? = null
     private lateinit var models : ArrayList<Items>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +36,7 @@ class CategoryNewsFragment : Fragment(R.layout.fragment_category_news), Category
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mBinding.rvCategory.layoutManager = LinearLayoutManagerWrapper(requireContext(), LinearLayoutManager.VERTICAL, false)
-        categoryAdapter = context?.let { CategoryAdapter(it, this) }
+        categoryAdapter = context?.let { NewsListAdapter(it, this) }
         mBinding.rvCategory.adapter = categoryAdapter
 
         val category = arguments?.getString("category")
@@ -79,11 +78,7 @@ class CategoryNewsFragment : Fragment(R.layout.fragment_category_news), Category
 
     override fun onItemClicked(item: Items, view: View) {
         when(view.id){
-            R.id.tv_author -> {
-                val bundle = bundleOf("title" to item.title, "author" to item.author, "desc" to item.description , "image" to item.urlToImage)
-                findNavController().navigate(R.id.action_category_detail, bundle)
-            }
-            R.id.tv_title -> {
+            R.id.tv_author, R.id.tv_title, R.id.iv_photo -> {
                 val bundle = bundleOf("title" to item.title, "author" to item.author, "desc" to item.description , "image" to item.urlToImage)
                 findNavController().navigate(R.id.action_category_detail, bundle)
             }

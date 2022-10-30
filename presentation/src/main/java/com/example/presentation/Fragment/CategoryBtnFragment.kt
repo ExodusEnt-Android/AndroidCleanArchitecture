@@ -1,16 +1,13 @@
 package com.example.presentation.Fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.navArgs
 import com.example.presentation.*
-import com.example.presentation.Adapter.CategoryAdapter
 import com.example.presentation.databinding.FragmentCategoryBtnBinding
 
 class CategoryBtnFragment : Fragment(R.layout.fragment_category_btn) , View.OnClickListener{

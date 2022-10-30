@@ -1,7 +1,6 @@
 package com.example.presentation.Adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +13,15 @@ import com.example.presentation.Items
 import com.example.presentation.R
 import java.util.ArrayList
 
-class TopNewsAdapter (private val context: Context)  : RecyclerView.Adapter<TopNewsAdapter.ViewHolder>() {
+class NewsListAdapter (
+    private val context: Context,
+    private var onClickListener: OnClickListener
+)  : RecyclerView.Adapter<NewsListAdapter.ViewHolder>() {
     private var newsData = ArrayList<Items>()
+
+    interface OnClickListener{
+        fun onItemClicked(item : Items, view: View)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.news_item,parent,false)
@@ -37,21 +43,22 @@ class TopNewsAdapter (private val context: Context)  : RecyclerView.Adapter<TopN
 
     inner class ViewHolder(view:View) : RecyclerView.ViewHolder(view){
 
-        private val ivNews : AppCompatImageView = itemView.findViewById(R.id.iv_news)
+        private val ivPhoto : AppCompatImageView = itemView.findViewById(R.id.iv_photo)
         private val tvTitle : AppCompatTextView = itemView.findViewById(R.id.tv_title)
         private val tvAuthor : AppCompatTextView = itemView.findViewById(R.id.tv_author)
         private val ivSaved : AppCompatImageView = itemView.findViewById(R.id.iv_saved)
 
         fun bind(item : Items){
-
-            Log.d("mingue ", "adapter")
-
-            Glide.with(itemView).load(item.urlToImage).into(ivNews)
+            Glide.with(itemView).load(item.urlToImage).into(ivPhoto)
             tvTitle.text = item.title
             tvAuthor.text = item.author
 
-//            bookTitle.text = item.bookTitle
-//            bookDetail.text = item.bookDetail
+            val listener = View.OnClickListener { view ->
+                onClickListener.onItemClicked(item, view) }
+
+            tvTitle.setOnClickListener(listener)
+            tvAuthor.setOnClickListener(listener)
+            ivPhoto.setOnClickListener(listener)
         }
     }
 }
