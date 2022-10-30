@@ -19,7 +19,6 @@ import com.example.presentation.room.LocalDataBase
 import com.example.presentation.source.local.SavedNewsLocalDataSourceImpl
 import com.example.presentation.source.remote.TopNewsRemoteDataSourceImpl
 import com.example.presentation.util.Util.checkTimePassed
-import com.example.presentation.util.Util.getSavedNewsArticleList
 import com.example.presentation.util.Util.removeSavedNewsArticle
 import com.example.presentation.util.Util.saveArticle
 
