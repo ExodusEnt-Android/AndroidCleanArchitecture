@@ -58,25 +58,6 @@ object Util {
     }
 
 
-    //뉴스게시글 리스트 가져오기
-    fun Activity.getSavedNewsArticleList(callback:(List<Article>?, Throwable?)->Unit){
-        val r = Runnable {
-            LocalDataBase.getInstance(this.applicationContext)?.runInTransaction {
-                val list =  LocalDataBase.getInstance(this.applicationContext)?.getNewsArticleDao()?.loadSavedNewsArticles()
-                this.runOnUiThread {
-                    if (list != null) {
-                        callback.invoke(list,null)
-                    }else{
-                        callback.invoke(null,Throwable("save 체크하는데 문제가 생김"))
-                    }
-                }
-            }
-        }
-        val thread = Thread(r)
-        thread.start()
-    }
-
-
     //저장한 뉴스 게시글 삭제
     fun Activity.removeSavedNewsArticle(article: Article, callback:()->Unit){
         val r = Runnable {
