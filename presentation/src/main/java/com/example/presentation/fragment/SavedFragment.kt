@@ -12,8 +12,15 @@ import com.example.presentation.base.BaseFragment
 import com.example.presentation.const.Const
 import com.example.presentation.databinding.FragmentSavedBinding
 import com.example.presentation.model.Article
+import com.example.presentation.repository.TopNewsRepository
+import com.example.presentation.repository.TopNewsRepositoryImpl
+import com.example.presentation.retrofit.RetrofitHelper
+import com.example.presentation.room.LocalDataBase
+import com.example.presentation.source.local.SavedNewsLocalDataSourceImpl
+import com.example.presentation.source.remote.TopNewsRemoteDataSourceImpl
 import com.example.presentation.util.Util.getSavedNewsArticleList
 import com.example.presentation.util.Util.navigateWithAnim
+import timber.log.Timber
 
 class SavedFragment:BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved) {
 
@@ -23,6 +30,13 @@ class SavedFragment:BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved) 
 
     private var rcyScrollLState: Parcelable? = null
     lateinit var topNewsListAdapter: TopNewsListAdapter
+
+    //respository 가져옴
+    private val topNewsRepository: TopNewsRepository by lazy{
+        val topNewsRemoteDataSource = TopNewsRemoteDataSourceImpl(RetrofitHelper)
+        val savedNewsLocalDataSource = SavedNewsLocalDataSourceImpl(LocalDataBase.getInstance(requireActivity()),requireActivity())
+        TopNewsRepositoryImpl(topNewsRemoteDataSource,savedNewsLocalDataSource)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,17 +96,15 @@ class SavedFragment:BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved) 
     }
 
     private fun getSavedNewsList(){
-
         //저장 여부 체크
-        requireActivity().getSavedNewsArticleList { list,error->
-            if(list != null){
-                topNewsListAdapter.submitList(list)
+        topNewsRepository.getSavedArticleList { articles, error ->
+            if(articles != null){
+                topNewsListAdapter.submitList(articles)
                 binding.rvSavedNewsList.layoutManager?.onRestoreInstanceState(rcyScrollLState)
             }else{
                 showToast(error?.message.toString())
             }
         }
-
     }
 
 

@@ -20,7 +20,7 @@ abstract class LocalDataBase : RoomDatabase() {
         private var instance: LocalDataBase? = null
 
         @Synchronized
-        fun getInstance(context: Context): LocalDataBase? {
+        fun getInstance(context: Context): LocalDataBase {
 
             if (instance == null) {
                 synchronized(LocalDataBase::class.java) {
@@ -38,10 +38,10 @@ abstract class LocalDataBase : RoomDatabase() {
                         .build()
                 }
             }
-            return instance
+            return instance!!
         }
 
-        fun destroyInstance(){
+        fun destroyInstance() {
             instance = null
         }
     }
