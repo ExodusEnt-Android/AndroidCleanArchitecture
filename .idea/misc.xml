@@ -4,14 +4,25 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable/splash.xml" value="0.24270833333333333" />
+        <entry key="presentation/src/main/res/drawable/category_border.xml" value="0.23958333333333334" />
+        <entry key="presentation/src/main/res/drawable/login_border.xml" value="0.23958333333333334" />
+        <entry key="presentation/src/main/res/drawable/round_border.xml" value="0.23958333333333334" />
+        <entry key="presentation/src/main/res/drawable/splash.xml" value="0.26296296296296295" />
         <entry key="presentation/src/main/res/layout/activity_login.xml" value="0.39791666666666664" />
         <entry key="presentation/src/main/res/layout/activity_main.xml" value="0.2265625" />
+        <entry key="presentation/src/main/res/layout/category_item.xml" value="0.2234375" />
         <entry key="presentation/src/main/res/layout/fragment_category.xml" value="0.2265625" />
+        <entry key="presentation/src/main/res/layout/fragment_category_btn.xml" value="0.1921875" />
+        <entry key="presentation/src/main/res/layout/fragment_category_news.xml" value="0.1921875" />
+        <entry key="presentation/src/main/res/layout/fragment_news_detail.xml" value="0.335" />
         <entry key="presentation/src/main/res/layout/fragment_saved.xml" value="0.2265625" />
         <entry key="presentation/src/main/res/layout/fragment_top_news.xml" value="0.2265625" />
+        <entry key="presentation/src/main/res/layout/news_detail_item.xml" value="0.22708333333333333" />
+        <entry key="presentation/src/main/res/layout/news_item.xml" value="0.2234375" />
         <entry key="presentation/src/main/res/menu/bottom_menu.xml" value="0.2265625" />
         <entry key="presentation/src/main/res/menu/bottom_nav.xml" value="0.2265625" />
         <entry key="presentation/src/main/res/menu/nav_menu.xml" value="0.2265625" />
+        <entry key="presentation/src/main/res/xml/network.xml" value="0.2234375" />
       </map>
     </option>
   </component>

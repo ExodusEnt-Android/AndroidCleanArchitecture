@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.newsproject2">
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.NewsProject2">
-        <activity android:name="com.example.presentation.SplashActivity"
+        android:theme="@style/Theme.NewsProject2"
+        android:usesCleartextTraffic="true">
+        <activity android:name="com.example.presentation.Activity.SplashActivity"
             android:theme="@style/SplashTheme"
             android:exported="true">
             <intent-filter>
@@ -19,14 +21,14 @@
         </activity>
 
         <activity
-            android:name="com.example.presentation.LoginActivity"
+            android:name="com.example.presentation.Activity.LoginActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
         </activity>
 
         <activity
-            android:name="com.example.presentation.MainActivity"
+            android:name="com.example.presentation.Activity.MainActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">

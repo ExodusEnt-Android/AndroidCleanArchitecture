@@ -2,10 +2,10 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/category"
-    app:startDestination="@id/categoryFragment">
+    app:startDestination="@id/categoryBtnFragment">
 
     <fragment
-        android:id="@+id/categoryFragment"
-        android:name="com.example.presentation.Fragment.CategoryFragment"
-        android:label="CategoryFragment" />
+    android:id="@+id/categoryBtnFragment"
+    android:name="com.example.presentation.Fragment.CategoryBtnFragment"
+    android:label="CategoryBtnFragment" />
 </navigation>

@@ -4,15 +4,8 @@
     android:gravity="center_vertical"
     android:orientation="vertical">
 
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_top_news"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Home" />
-
-    <Button
-        android:layout_width="match_parent"
-        android:id="@+id/navigate_to_home_detail_button"
-        android:text="Navigate to Home detail fragment"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"/>
 </LinearLayout>

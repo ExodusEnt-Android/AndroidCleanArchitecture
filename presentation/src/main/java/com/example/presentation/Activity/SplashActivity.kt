@@ -1,9 +1,8 @@
-package com.example.presentation
+package com.example.presentation.Activity
 
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.presentation.Room.UserDB
 import com.example.presentation.Room.UserModel
@@ -17,11 +16,11 @@ class SplashActivity : AppCompatActivity(){
 
         mHandler.postDelayed({
             startActivity(Intent(this@SplashActivity, LoginActivity::class.java)).apply {
-                val newUser = UserModel("mingue0605@naver.com","alsrb123")
+                val newUser = UserModel(email = "mingue0605@naver.com", password = "alsrb123")
                 val db = UserDB.getInstance(this@SplashActivity)
                 db?.userDao()?.insert(newUser)
 
-//                Log.d("mingue123 -> ", db?.userDao()?.getAll().toString())
+//                launchScreen
             }
         },2000)
     }
