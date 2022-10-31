@@ -14,14 +14,6 @@ class SplashActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mHandler.postDelayed({
-            startActivity(Intent(this@SplashActivity, LoginActivity::class.java)).apply {
-                val newUser = UserModel(email = "mingue0605@naver.com", password = "alsrb123")
-                val db = UserDB.getInstance(this@SplashActivity)
-                db?.userDao()?.insert(newUser)
-
-//                launchScreen
-            }
-        },2000)
+        startActivity(Intent(this@SplashActivity, LoginActivity::class.java))
     }
 }

@@ -2,21 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/topNews"
+        android:id="@+id/navigation_top_news"
         android:icon="@drawable/heart_ok"
-        android:menuCategory="secondary"
         android:title="Top News" />
 
     <item
-        android:id="@+id/categoryBtn"
+        android:id="@+id/navigation_category_btn"
         android:icon="@drawable/heart_ok"
-        android:menuCategory="secondary"
         android:title="Categories" />
 
     <item
-        android:id="@+id/saved"
+        android:id="@+id/navigation_saved"
         android:icon="@drawable/heart_ok"
-        android:menuCategory="secondary"
         android:title="Saved" />
 
 </menu>

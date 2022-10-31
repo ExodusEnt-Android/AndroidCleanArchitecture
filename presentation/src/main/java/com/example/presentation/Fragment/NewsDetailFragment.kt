@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import com.bumptech.glide.Glide
 import com.example.presentation.R
 import com.example.presentation.databinding.FragmentNewsDetailBinding
@@ -13,6 +15,8 @@ import com.example.presentation.databinding.FragmentNewsDetailBinding
 class NewsDetailFragment : Fragment(R.layout.fragment_news_detail) {
 
     private lateinit var mBinding : FragmentNewsDetailBinding
+    lateinit var navHostFragment: NavHostFragment
+    lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +24,9 @@ class NewsDetailFragment : Fragment(R.layout.fragment_news_detail) {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mBinding = FragmentNewsDetailBinding.inflate(inflater, container, false)
+        navHostFragment =requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
+
         return mBinding.root
     }
 
