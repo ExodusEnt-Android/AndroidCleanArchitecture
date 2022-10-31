@@ -1,52 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:startDestination="@id/topNews"
+    app:startDestination="@id/navigation_top_news"
     android:id="@+id/main_nav_graph">
 
-    <fragment
-        android:id="@+id/topNews"
-        android:name="com.example.presentation.Fragment.TopNewsFragment"
-        android:label="TopNews" >
-
-        <action
-            android:id="@+id/action_category_detail"
-            app:destination="@id/newsDetail"
-            app:launchSingleTop="true"/>
-
-    </fragment>
-
-    <fragment
-        android:id="@+id/categoryBtn"
-        android:name="com.example.presentation.Fragment.CategoryBtnFragment"
-        android:label="CategoryBtn" >
-
-        <action
-            android:id="@+id/action_category_news"
-            app:destination="@+id/categoryNews"
-            app:launchSingleTop="true"/>
-    </fragment>
-
-    <fragment
-        android:id="@+id/saved"
-        android:name="com.example.presentation.Fragment.SavedFragment"
-        android:label="Saved" />
-
-    <fragment
-        android:id="@+id/categoryNews"
-        android:name="com.example.presentation.Fragment.CategoryNewsFragment"
-        android:label="CategoryNews">
-
-        <action
-            android:id="@+id/action_category_detail"
-            app:destination="@id/newsDetail"
-            app:launchSingleTop="true"/>
-
-    </fragment>
-
-    <fragment
-        android:id="@+id/newsDetail"
-        android:name="com.example.presentation.Fragment.NewsDetailFragment"
-        android:label="NewsDetail" />
+    <include app:graph="@navigation/navigation_top_news"/>
+    <include app:graph="@navigation/navigation_category_btn"/>
+    <include app:graph="@navigation/navigation_saved"/>
 
 </navigation>

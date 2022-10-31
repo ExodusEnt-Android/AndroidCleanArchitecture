@@ -39,31 +39,31 @@ class CategoryBtnFragment : Fragment(R.layout.fragment_category_btn) , View.OnCl
         when(v?.id){
             R.id.btn_business -> {
                 val item = bundleOf("category" to "business")
-                mBinding.btnBusiness.findNavController().navigate(R.id.action_category_news, item)
+                mBinding.btnBusiness.findNavController().navigate(R.id.categoryNewsFragment, item)
             }
             R.id.btn_entertain -> {
                 val item = bundleOf("category" to "business")
-                mBinding.btnBusiness.findNavController().navigate(R.id.action_category_news, item)
+                mBinding.btnBusiness.findNavController().navigate(R.id.categoryNewsFragment, item)
             }
             R.id.btn_general -> {
                 val item = bundleOf("category" to "general")
-                mBinding.btnBusiness.findNavController().navigate(R.id.action_category_news, item)
+                mBinding.btnBusiness.findNavController().navigate(R.id.categoryNewsFragment, item)
             }
             R.id.btn_health -> {
                 val item = bundleOf("category" to "health")
-                mBinding.btnBusiness.findNavController().navigate(R.id.action_category_news, item)
+                mBinding.btnBusiness.findNavController().navigate(R.id.categoryNewsFragment, item)
             }
             R.id.btn_science -> {
                 val item = bundleOf("category" to "science")
-                mBinding.btnBusiness.findNavController().navigate(R.id.action_category_news, item)
+                mBinding.btnBusiness.findNavController().navigate(R.id.categoryNewsFragment, item)
             }
             R.id.btn_sports -> {
                 val item = bundleOf("category" to "sports")
-                mBinding.btnBusiness.findNavController().navigate(R.id.action_category_news, item)
+                mBinding.btnBusiness.findNavController().navigate(R.id.categoryNewsFragment, item)
             }
             R.id.btn_tech -> {
                 val item = bundleOf("category" to "technology")
-                mBinding.btnBusiness.findNavController().navigate(R.id.action_category_news, item)
+                mBinding.btnBusiness.findNavController().navigate(R.id.categoryNewsFragment, item)
             }
         }
     }

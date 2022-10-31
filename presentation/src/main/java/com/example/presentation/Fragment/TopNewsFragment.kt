@@ -78,7 +78,7 @@ class TopNewsFragment : Fragment(R.layout.fragment_top_news), NewsListAdapter.On
         when(view.id){
             R.id.tv_author, R.id.tv_title, R.id.iv_photo -> {
                 val bundle = bundleOf("title" to item.title, "author" to item.author, "desc" to item.description , "image" to item.urlToImage)
-                findNavController().navigate(R.id.action_category_detail, bundle)
+                findNavController().navigate(R.id.newsDetailFragment, bundle)
             }
         }
     }

@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/topNews"
+    android:id="@+id/navigation_top_news"
     app:startDestination="@id/topNewsFragment">
+
 
     <fragment
         android:id="@+id/topNewsFragment"
         android:name="com.example.presentation.Fragment.TopNewsFragment"
-        android:label="TopNewsFragment" />
+        android:label="TopNewsFragment"/>
+
+    <fragment
+        android:id="@+id/newsDetailFragment"
+        android:name="com.example.presentation.Fragment.NewsDetailFragment"
+        android:label="NewsDetailFragment"/>
 </navigation>
