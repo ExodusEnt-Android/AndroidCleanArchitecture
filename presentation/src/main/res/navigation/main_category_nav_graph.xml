@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_category_nav_graph"
+    app:startDestination="@id/category">
+
+    <fragment
+        android:id="@+id/category"
+        android:name="org.techtown.presentation.SecondFragment"
+        android:label="category"
+        tools:layout="@layout/fragment_second"/>
+
+    <fragment
+        android:id="@+id/category_detail"
+        android:name="org.techtown.presentation.CategoryDetailFragment"
+        android:label="categoryDetail"
+        tools:layout="@layout/fragment_category_detail"/>
+
+    <fragment
+        android:id="@+id/topNews_detail"
+        android:name="org.techtown.presentation.TopNewsDetailFragment"
+        android:label="topNewsDetail"
+        tools:layout="@layout/fragment_top_news_detail"/>
+
+</navigation>
