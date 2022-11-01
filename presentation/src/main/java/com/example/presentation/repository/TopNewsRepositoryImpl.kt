@@ -19,4 +19,8 @@ class TopNewsRepositoryImpl(private val topNewsRemoteDataSource: TopNewsRemoteDa
     override fun getSavedArticleList(callback: (List<Article>?, Throwable?) -> Unit) {
        return savedNewsLocalDataSource.getSavedArticleList(callback)
     }
+
+    override fun saveArticle(article: Article, callback: () -> Unit) {
+        return savedNewsLocalDataSource.saveArticle(article,callback)
+    }
 }

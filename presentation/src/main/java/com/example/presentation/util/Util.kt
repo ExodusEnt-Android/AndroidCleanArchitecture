@@ -41,23 +41,6 @@ object Util {
         this.navigate(destinationId,bundle,options)
     }
 
-    //뉴스게시글 저장
-    fun Activity.saveArticle(article: Article, callback:()->Unit){
-
-        val r = Runnable {
-            LocalDataBase.getInstance(this.applicationContext)?.runInTransaction {
-                LocalDataBase.getInstance(this.applicationContext)?.getNewsArticleDao()?.setSavedArticle(article)
-                this.runOnUiThread {
-                    callback.invoke()
-                }
-            }
-        }
-
-        val thread = Thread(r)
-        thread.start()
-    }
-
-
     //저장한 뉴스 게시글 삭제
     fun Activity.removeSavedNewsArticle(article: Article, callback:()->Unit){
         val r = Runnable {

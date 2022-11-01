@@ -122,14 +122,12 @@ class ArticleDetailFragment:BaseFragment<FragmentArticleDetailBinding>(R.layout.
 
         //save 하기
         binding.ivIconNotSaved.setOnClickListener {
-
             if(article == null){
                 return@setOnClickListener
             }
-
-            requireActivity().saveArticle(article!!){
-               setSaveIconVisible(isSaveStatus = true)
-            }
+            topNewsRepository.saveArticle(article!!, callback =  {
+                setSaveIconVisible(isSaveStatus = true)
+            })
         }
 
         //뒤로가기

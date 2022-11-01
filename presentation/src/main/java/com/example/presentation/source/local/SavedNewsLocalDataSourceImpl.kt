@@ -3,6 +3,7 @@ package com.example.presentation.source.local
 import android.app.Activity
 import com.example.presentation.model.Article
 import com.example.presentation.room.LocalDataBase
+import com.example.presentation.util.Util.saveArticle
 
 /**
  * Date: 2022/10/30
@@ -26,6 +27,19 @@ class SavedNewsLocalDataSourceImpl(
                     }catch (e:java.lang.Exception){
                        callback.invoke(null,e)
                     }
+                }
+            }
+        }
+        val thread = Thread(r)
+        thread.start()
+    }
+
+    override fun saveArticle(article: Article, callback: () -> Unit) {
+        val r = Runnable {
+            localDataBase.runInTransaction {
+                localDataBase.getNewsArticleDao().setSavedArticle(article)
+                activity.runOnUiThread {
+                    callback.invoke()
                 }
             }
         }
