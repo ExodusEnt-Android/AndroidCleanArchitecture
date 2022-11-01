@@ -19,8 +19,6 @@ import com.example.presentation.room.LocalDataBase
 import com.example.presentation.source.local.SavedNewsLocalDataSourceImpl
 import com.example.presentation.source.remote.TopNewsRemoteDataSourceImpl
 import com.example.presentation.util.Util.checkTimePassed
-import com.example.presentation.util.Util.removeSavedNewsArticle
-import com.example.presentation.util.Util.saveArticle
 
 class ArticleDetailFragment:BaseFragment<FragmentArticleDetailBinding>(R.layout.fragment_article_detail) {
 
@@ -115,9 +113,9 @@ class ArticleDetailFragment:BaseFragment<FragmentArticleDetailBinding>(R.layout.
            if(article == null){
                return@setOnClickListener
            }
-            requireActivity().removeSavedNewsArticle(article!!){
+            topNewsRepository.removeArticle(article = article!!, callback = {
                 setSaveIconVisible(isSaveStatus = false)
-            }
+            })
         }
 
         //save 하기
@@ -125,7 +123,7 @@ class ArticleDetailFragment:BaseFragment<FragmentArticleDetailBinding>(R.layout.
             if(article == null){
                 return@setOnClickListener
             }
-            topNewsRepository.saveArticle(article!!, callback =  {
+            topNewsRepository.saveArticle(article = article!!, callback =  {
                 setSaveIconVisible(isSaveStatus = true)
             })
         }

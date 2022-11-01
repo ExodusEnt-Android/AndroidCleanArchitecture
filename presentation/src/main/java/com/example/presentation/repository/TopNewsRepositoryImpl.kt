@@ -23,4 +23,8 @@ class TopNewsRepositoryImpl(private val topNewsRemoteDataSource: TopNewsRemoteDa
     override fun saveArticle(article: Article, callback: () -> Unit) {
         return savedNewsLocalDataSource.saveArticle(article,callback)
     }
+
+    override fun removeArticle(article: Article, callback: () -> Unit) {
+        return savedNewsLocalDataSource.removeArticle(article, callback)
+    }
 }
