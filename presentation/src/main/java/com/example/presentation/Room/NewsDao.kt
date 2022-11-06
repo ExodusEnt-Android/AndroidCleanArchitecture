@@ -14,7 +14,7 @@ interface NewsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(newsModel : NewsModel)
 
-    @Query("DELETE FROM newsModel WHERE newsId = :newsId")
-    fun deleteData(newsId: Long)
+    @Query("DELETE FROM newsModel WHERE id = :id")
+    fun deleteData(id: Long)
 
 }

@@ -11,6 +11,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.bumptech.glide.Glide
 import com.example.presentation.R
+import com.example.presentation.Room.NewsDB
 import com.example.presentation.databinding.FragmentNewsDetailBinding
 
 class NewsDetailFragment : Fragment(R.layout.fragment_news_detail), View.OnClickListener {
@@ -19,6 +20,7 @@ class NewsDetailFragment : Fragment(R.layout.fragment_news_detail), View.OnClick
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController
     private var ivSaved : Boolean = false
+    private lateinit var newsDB : NewsDB
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +30,8 @@ class NewsDetailFragment : Fragment(R.layout.fragment_news_detail), View.OnClick
         mBinding = FragmentNewsDetailBinding.inflate(inflater, container, false)
         navHostFragment =requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
+
+        newsDB = context?.let { NewsDB.getInstance(it) }!!
 
         return mBinding.root
     }

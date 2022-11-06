@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.presentation.Items
 import com.example.presentation.R
+import com.example.presentation.Room.NewsModel
 import java.util.ArrayList
 
 class NewsListAdapter (
@@ -37,9 +38,7 @@ class NewsListAdapter (
     fun setItems(@NonNull items: ArrayList<Items>) {
         newsData.clear()
         newsData.addAll(items)
-//		mItems = items
     }
-
 
     inner class ViewHolder(view:View) : RecyclerView.ViewHolder(view){
 
