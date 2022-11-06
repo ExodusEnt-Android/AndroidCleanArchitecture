@@ -46,7 +46,6 @@ class NewsListAdapter (
         private val ivPhoto : AppCompatImageView = itemView.findViewById(R.id.iv_photo)
         private val tvTitle : AppCompatTextView = itemView.findViewById(R.id.tv_title)
         private val tvAuthor : AppCompatTextView = itemView.findViewById(R.id.tv_author)
-        private val ivSaved : AppCompatImageView = itemView.findViewById(R.id.iv_saved)
 
         fun bind(item : Items){
             Glide.with(itemView).load(item.urlToImage).into(ivPhoto)
