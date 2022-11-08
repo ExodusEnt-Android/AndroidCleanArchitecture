@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.presentation.Items
 import com.example.presentation.R
-import com.example.presentation.Room.NewsModel
 import java.util.ArrayList
 
 class NewsListAdapter (
@@ -35,7 +34,7 @@ class NewsListAdapter (
 
     override fun getItemCount(): Int = newsData.size
 
-    fun setItems(@NonNull items: ArrayList<Items>) {
+    fun setItems(@NonNull items: List<Items>) {
         newsData.clear()
         newsData.addAll(items)
     }

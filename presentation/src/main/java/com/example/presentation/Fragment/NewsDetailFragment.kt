@@ -1,6 +1,7 @@
 package com.example.presentation.Fragment
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,9 +11,13 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.bumptech.glide.Glide
+import com.example.presentation.Items
 import com.example.presentation.R
 import com.example.presentation.Room.NewsDB
 import com.example.presentation.databinding.FragmentNewsDetailBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class NewsDetailFragment : Fragment(R.layout.fragment_news_detail), View.OnClickListener {
 
@@ -21,6 +26,8 @@ class NewsDetailFragment : Fragment(R.layout.fragment_news_detail), View.OnClick
     lateinit var navController: NavController
     private var ivSaved : Boolean = false
     private lateinit var newsDB : NewsDB
+
+    var articles: Items? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,12 +45,21 @@ class NewsDetailFragment : Fragment(R.layout.fragment_news_detail), View.OnClick
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mBinding.tvTitle.text = arguments?.getString("title")
-        mBinding.tvAuthor.text = arguments?.getString("author")
-        mBinding.tvDetail.text = arguments?.getString("desc")
-        Glide.with(this).load(arguments?.getString("image")).into(mBinding.ivPhoto)
-        Toast.makeText(context, "click", Toast.LENGTH_SHORT).show()
+        articles = arguments?.getParcelable("items")
+        Log.d("asdasd", articles.toString())
+        mBinding.tvTitle.text = articles?.title
+        mBinding.tvAuthor.text = articles?.author
+        mBinding.tvDetail.text = articles?.description
+        Glide.with(this).load(articles?.urlToImage).into(mBinding.ivPhoto)
         mBinding.ivSaved.setOnClickListener(this)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            if(newsDB.newsDao().getAll().any { items -> items.url == articles!!.url  }){    //같은 url이 있을 경우, 즐겨찾기를 해놨단 이야기이므로
+                mBinding.ivSaved.setImageResource(R.drawable.star_ok)
+            }else{
+                mBinding.ivSaved.setImageResource(R.drawable.star_no)
+            }
+        }
     }
 
     override fun onClick(view: View) {
@@ -51,11 +67,16 @@ class NewsDetailFragment : Fragment(R.layout.fragment_news_detail), View.OnClick
             mBinding.ivSaved -> {
                 if(ivSaved){
                     ivSaved = false
-                    mBinding.ivSaved.setImageResource(R.drawable.star_no)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        mBinding.ivSaved.setImageResource(R.drawable.star_no)
+                        articles?.let { newsDB.newsDao().deleteArticle(articles!!.url) }   //DB delete
+                    }
                 }else{
                     ivSaved = true
-                    mBinding.ivSaved.setImageResource(R.drawable.star_ok)
-
+                    CoroutineScope(Dispatchers.IO).launch {
+                        mBinding.ivSaved.setImageResource(R.drawable.star_ok)
+                        articles?.let { newsDB.newsDao().insert(it) }   //DB에 INSERT
+                    }
                 }
             }
         }

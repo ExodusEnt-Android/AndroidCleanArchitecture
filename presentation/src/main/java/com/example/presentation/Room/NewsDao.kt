@@ -4,17 +4,18 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.presentation.Items
 
 @Dao
 interface NewsDao {
 
-    @Query("SELECT * FROM newsModel")
-    fun getAll(): List<NewsModel>
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(newsModel : NewsModel)
+    fun insert(items : Items)
 
-    @Query("DELETE FROM newsModel WHERE id = :id")
-    fun deleteData(id: Long)
+    @Query("SELECT * FROM articles")
+    fun getAll() : List<Items>
+
+    @Query("DELETE FROM articles WHERE url =:url")
+    fun deleteArticle(url : String)
 
 }

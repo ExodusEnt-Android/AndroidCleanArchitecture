@@ -1,6 +1,7 @@
 package com.example.presentation.Fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,15 +14,18 @@ import com.example.presentation.*
 import com.example.presentation.Adapter.NewsListAdapter
 import com.example.presentation.Room.NewsDB
 import com.example.presentation.databinding.FragmentSavedBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class SavedFragment : Fragment(R.layout.fragment_saved) , NewsListAdapter.OnClickListener{
 
     private lateinit var mBinding : FragmentSavedBinding
     private var saveNewsAdapter : NewsListAdapter? = null
-    private lateinit var models : ArrayList<Items>
+    private lateinit var models : List<Items>
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController
-    val newsDB = context?.let { NewsDB.getInstance(it) }
+    private lateinit var newsDB : NewsDB
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +35,7 @@ class SavedFragment : Fragment(R.layout.fragment_saved) , NewsListAdapter.OnClic
         mBinding = FragmentSavedBinding.inflate(inflater, container, false)
         navHostFragment =requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
+        newsDB = context?.let { NewsDB.getInstance(it) }!!
 
         return mBinding.root
     }
@@ -41,23 +46,24 @@ class SavedFragment : Fragment(R.layout.fragment_saved) , NewsListAdapter.OnClic
         saveNewsAdapter = context?.let { NewsListAdapter(it, this) }
         mBinding.rvTopNews.adapter = saveNewsAdapter
 
-        newsSource("bbc-news")
+        newsSource()
     }
 
     //저장된 뉴스 id를 통해 보여주기
-    private fun newsSource(primaryKey : String) {
-        Thread{
-            val newsList = newsDB?.newsDao()?.getAll()
-            saveNewsAdapter?.setItems(newsList)
+    private fun newsSource() {
+        CoroutineScope(Dispatchers.IO).launch {
+            models = newsDB.newsDao().getAll()
+            saveNewsAdapter?.setItems(models)
+            Log.d("asdasdasd,",models.toString())
         }
-
+        saveNewsAdapter?.notifyDataSetChanged() //여기다 선언하면 데이터 셋 되기전에 호출해서 바로 안뜸.
     }
-
     override fun onItemClicked(item: Items, view: View) {
         when(view.id){
             R.id.tv_author, R.id.tv_title, R.id.iv_photo -> {
-                val bundle = bundleOf("title" to item.title, "author" to item.author, "desc" to item.description , "image" to item.urlToImage)
-                navController.navigate(R.id.newsDetailFragment, bundle)
+                navController.navigate(R.id.newsDetailFragment,  Bundle().apply {
+                    putParcelable("items", item)
+                })
             }
         }
     }
