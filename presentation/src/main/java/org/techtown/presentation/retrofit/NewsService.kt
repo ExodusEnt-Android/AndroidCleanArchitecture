@@ -38,13 +38,4 @@ interface NewsService {
         }
     }
 
-//    @GET("v2/top-headlines/sources")
-//    fun getCategoryArticles(
-//        @Query("country") country : String,
-//        @Query("apiKey") apiKey : String,
-//        @Query("category") category: String,
-//        @Query("pageSize") pageSize: Int,
-//        @Query("page") offset : Int
-//    ) : Call<CategoryModel>
-
 }
