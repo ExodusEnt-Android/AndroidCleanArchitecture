@@ -105,7 +105,7 @@ class TopNewsAdapter :
 
         val diffUtil = object : DiffUtil.ItemCallback<Articles>() {
             override fun areItemsTheSame(oldItem: Articles, newItem: Articles): Boolean {
-                return oldItem == newItem
+                return oldItem.url  == newItem.url
             }
 
             override fun areContentsTheSame(
