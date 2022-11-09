@@ -112,7 +112,7 @@ class TopNewsAdapter :
                 oldItem: Articles,
                 newItem: Articles
             ): Boolean {
-                return oldItem.source?.id == newItem.source?.id
+                return oldItem == newItem
             }
         }
     }
