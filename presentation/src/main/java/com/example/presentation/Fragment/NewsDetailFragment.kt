@@ -1,19 +1,17 @@
 package com.example.presentation.Fragment
 
 import android.os.Bundle
-import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.bumptech.glide.Glide
-import com.example.presentation.Items
+import com.example.presentation.Articles
 import com.example.presentation.R
-import com.example.presentation.Room.NewsDB
+import com.example.presentation.Room.AppDB
 import com.example.presentation.databinding.FragmentNewsDetailBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,9 +23,9 @@ class NewsDetailFragment : Fragment(R.layout.fragment_news_detail), View.OnClick
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController
     private var ivSaved : Boolean = false
-    private lateinit var newsDB : NewsDB
+    private lateinit var newsDB : AppDB
 
-    var articles: Items? = null
+    var articles: Articles? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +36,7 @@ class NewsDetailFragment : Fragment(R.layout.fragment_news_detail), View.OnClick
         navHostFragment =requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
-        newsDB = context?.let { NewsDB.getInstance(it) }!!
+        newsDB = context?.let { AppDB.getInstance(it) }!!
 
         return mBinding.root
     }

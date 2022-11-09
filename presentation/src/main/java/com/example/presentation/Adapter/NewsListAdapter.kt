@@ -9,7 +9,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.presentation.Items
+import com.example.presentation.Articles
 import com.example.presentation.R
 import java.util.ArrayList
 
@@ -17,10 +17,10 @@ class NewsListAdapter (
     private val context: Context,
     private var onClickListener: OnClickListener
 )  : RecyclerView.Adapter<NewsListAdapter.ViewHolder>() {
-    private var newsData = ArrayList<Items>()
+    private var newsData = ArrayList<Articles>()
 
     interface OnClickListener{
-        fun onItemClicked(item : Items, view: View)
+        fun onItemClicked(item : Articles, view: View)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -34,7 +34,7 @@ class NewsListAdapter (
 
     override fun getItemCount(): Int = newsData.size
 
-    fun setItems(@NonNull items: List<Items>) {
+    fun setItems(@NonNull items: List<Articles>) {
         newsData.clear()
         newsData.addAll(items)
     }
@@ -45,7 +45,7 @@ class NewsListAdapter (
         private val tvTitle : AppCompatTextView = itemView.findViewById(R.id.tv_title)
         private val tvAuthor : AppCompatTextView = itemView.findViewById(R.id.tv_author)
 
-        fun bind(item : Items){
+        fun bind(item : Articles){
             Glide.with(itemView).load(item.urlToImage).into(ivPhoto)
             tvTitle.text = item.title
             tvAuthor.text = item.author

@@ -7,16 +7,13 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
-@Entity
 data class NewsData(
-    @SerializedName("articles") var articles: ArrayList<Items> = arrayListOf()
+    @SerializedName("articles") var articles: ArrayList<Articles> = arrayListOf()
 )
 
-@Entity(
-    tableName = "articles"
-)
+@Entity(tableName = "articles")
 @Parcelize
-data class Items(
+data class Articles(
     @PrimaryKey @ColumnInfo(name = "url") @SerializedName("url") var url: String,
     @ColumnInfo(name = "author") @SerializedName("author") var author: String? = null,
     @ColumnInfo(name = "title") @SerializedName("title") var title: String,

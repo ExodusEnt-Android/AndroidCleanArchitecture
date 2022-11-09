@@ -5,14 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.presentation.*
 import com.example.presentation.Adapter.NewsListAdapter
-import com.example.presentation.Room.NewsDB
+import com.example.presentation.Room.AppDB
 import com.example.presentation.databinding.FragmentSavedBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,10 +21,10 @@ class SavedFragment : Fragment(R.layout.fragment_saved) , NewsListAdapter.OnClic
 
     private lateinit var mBinding : FragmentSavedBinding
     private var saveNewsAdapter : NewsListAdapter? = null
-    private lateinit var models : List<Items>
+    private lateinit var models : List<Articles>
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController
-    private lateinit var newsDB : NewsDB
+    private lateinit var newsDB : AppDB
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +34,7 @@ class SavedFragment : Fragment(R.layout.fragment_saved) , NewsListAdapter.OnClic
         mBinding = FragmentSavedBinding.inflate(inflater, container, false)
         navHostFragment =requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
-        newsDB = context?.let { NewsDB.getInstance(it) }!!
+        newsDB = context?.let { AppDB.getInstance(it) }!!
 
         return mBinding.root
     }
@@ -58,11 +57,11 @@ class SavedFragment : Fragment(R.layout.fragment_saved) , NewsListAdapter.OnClic
         }
         saveNewsAdapter?.notifyDataSetChanged() //여기다 선언하면 데이터 셋 되기전에 호출해서 바로 안뜸.
     }
-    override fun onItemClicked(item: Items, view: View) {
+    override fun onItemClicked(articles: Articles, view: View) {
         when(view.id){
             R.id.tv_author, R.id.tv_title, R.id.iv_photo -> {
                 navController.navigate(R.id.newsDetailFragment,  Bundle().apply {
-                    putParcelable("items", item)
+                    putParcelable("items", articles)
                 })
             }
         }

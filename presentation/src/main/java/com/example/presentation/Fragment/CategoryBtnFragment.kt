@@ -11,6 +11,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.presentation.*
+import com.example.presentation.Base.BaseFragment
 import com.example.presentation.databinding.FragmentCategoryBtnBinding
 
 class CategoryBtnFragment : Fragment(R.layout.fragment_category_btn) , View.OnClickListener{

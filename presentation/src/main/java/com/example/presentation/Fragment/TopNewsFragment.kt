@@ -23,7 +23,7 @@ class TopNewsFragment : Fragment(R.layout.fragment_top_news), NewsListAdapter.On
 
     private lateinit var mBinding : FragmentTopNewsBinding
     private var topNewsAdapter : NewsListAdapter? = null
-    private lateinit var models : ArrayList<Items>
+    private lateinit var models : ArrayList<Articles>
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController
 
@@ -79,11 +79,11 @@ class TopNewsFragment : Fragment(R.layout.fragment_top_news), NewsListAdapter.On
             }
         })
     }
-    override fun onItemClicked(item: Items, view: View) {
+    override fun onItemClicked(articles: Articles, view: View) {
         when(view.id){
             R.id.tv_author, R.id.tv_title, R.id.iv_photo -> {
                 navController.navigate(R.id.newsDetailFragment, Bundle().apply {
-                    putParcelable("items", item)
+                    putParcelable("items", articles)
                 })
             }
         }

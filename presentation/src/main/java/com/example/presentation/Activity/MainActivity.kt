@@ -6,13 +6,14 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.presentation.Base.BaseActivity
 import com.example.presentation.Fragment.CategoryBtnFragment
 import com.example.presentation.Fragment.SavedFragment
 import com.example.presentation.Fragment.TopNewsFragment
 import com.example.presentation.R
 import com.example.presentation.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private lateinit var mBinding : ActivityMainBinding
 
