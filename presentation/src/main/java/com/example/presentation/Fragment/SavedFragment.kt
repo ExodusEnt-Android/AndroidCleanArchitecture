@@ -52,10 +52,11 @@ class SavedFragment : Fragment(R.layout.fragment_saved) , NewsListAdapter.OnClic
     private fun newsSource() {
         CoroutineScope(Dispatchers.IO).launch {
             models = newsDB.newsDao().getAll()
-            saveNewsAdapter?.setItems(models)
-            Log.d("asdasdasd,",models.toString())
+            CoroutineScope(Dispatchers.Main).launch {
+                saveNewsAdapter?.setItems(models)
+            }
         }
-        saveNewsAdapter?.notifyDataSetChanged() //여기다 선언하면 데이터 셋 되기전에 호출해서 바로 안뜸.
+//        saveNewsAdapter?.notifyDataSetChanged() //여기다 선언하면 데이터 셋 되기전에 호출해서 바로 안뜸.
     }
     override fun onItemClicked(articles: Articles, view: View) {
         when(view.id){

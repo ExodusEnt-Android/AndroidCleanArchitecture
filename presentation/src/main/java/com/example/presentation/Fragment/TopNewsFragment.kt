@@ -67,7 +67,6 @@ class TopNewsFragment : Fragment(R.layout.fragment_top_news), NewsListAdapter.On
                     }
 
                     topNewsAdapter?.setItems(models)
-                    topNewsAdapter?.notifyDataSetChanged()
                 }else{
                     // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
                     Log.d("mingue ", "onResponse 실패$response")

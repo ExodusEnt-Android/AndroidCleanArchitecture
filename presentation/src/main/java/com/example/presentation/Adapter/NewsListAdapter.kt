@@ -37,6 +37,7 @@ class NewsListAdapter (
     fun setItems(@NonNull items: List<Articles>) {
         newsData.clear()
         newsData.addAll(items)
+        notifyDataSetChanged()
     }
 
     inner class ViewHolder(view:View) : RecyclerView.ViewHolder(view){

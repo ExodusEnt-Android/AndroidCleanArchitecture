@@ -69,7 +69,6 @@ class CategoryNewsFragment : Fragment(R.layout.fragment_category_news), NewsList
                     }
 
                     categoryAdapter?.setItems(models)
-                    categoryAdapter?.notifyDataSetChanged()
                 }else{
                     // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
                     Log.d("mingue ", "onResponse 실패$response")
