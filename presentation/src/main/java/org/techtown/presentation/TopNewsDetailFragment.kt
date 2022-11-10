@@ -51,7 +51,7 @@ class TopNewsDetailFragment :
 
         CoroutineScope(Dispatchers.IO).launch {
             val isSelected = database.articleDao().getAllArticles().any { it.url == articles.url }
-            CoroutineScope((Dispatchers.Default)).launch {
+            CoroutineScope((Dispatchers.Main)).launch {
                 setSavedItemListenerEvent(isSelected)
             }
 
