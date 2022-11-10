@@ -1,13 +1,9 @@
 package com.example.presentation.util
 
-import android.app.Activity
 import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import com.example.presentation.R
-import com.example.presentation.model.Article
-import com.example.presentation.room.LocalDataBase
-import com.example.presentation.util.Util.saveArticle
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -39,60 +35,6 @@ object Util {
             .setPopExitAnim(R.anim.slide_to_right)
             .build()
         this.navigate(destinationId,bundle,options)
-    }
-
-    //뉴스게시글 저장
-    fun Activity.saveArticle(article: Article, callback:()->Unit){
-
-        val r = Runnable {
-            LocalDataBase.getInstance(this.applicationContext)?.runInTransaction {
-                LocalDataBase.getInstance(this.applicationContext)?.getNewsArticleDao()?.setSavedArticle(article)
-                this.runOnUiThread {
-                    callback.invoke()
-                }
-            }
-        }
-
-        val thread = Thread(r)
-        thread.start()
-    }
-
-
-    //뉴스게시글 리스트 가져오기
-    fun Activity.getSavedNewsArticleList(callback:(List<Article>?, Throwable?)->Unit){
-        val r = Runnable {
-            LocalDataBase.getInstance(this.applicationContext)?.runInTransaction {
-                val list =  LocalDataBase.getInstance(this.applicationContext)?.getNewsArticleDao()?.loadSavedNewsArticles()
-                this.runOnUiThread {
-                    if (list != null) {
-                        callback.invoke(list,null)
-                    }else{
-                        callback.invoke(null,Throwable("save 체크하는데 문제가 생김"))
-                    }
-                }
-            }
-        }
-        val thread = Thread(r)
-        thread.start()
-    }
-
-
-    //저장한 뉴스 게시글 삭제
-    fun Activity.removeSavedNewsArticle(article: Article, callback:()->Unit){
-        val r = Runnable {
-            LocalDataBase.getInstance(this.applicationContext)?.runInTransaction {
-                LocalDataBase.getInstance(this.applicationContext)?.getNewsArticleDao()?.deleteSavedArticle(
-                    publishedAt = article.publishedAt.toString(),
-                    title = article.title.toString(),
-                    url = article.url.toString()
-                )
-                this.runOnUiThread {
-                    callback.invoke()
-                }
-            }
-        }
-        val thread = Thread(r)
-        thread.start()
     }
 
 }

@@ -12,11 +12,13 @@ import com.example.presentation.base.BaseFragment
 import com.example.presentation.const.Const
 import com.example.presentation.databinding.FragmentArticleDetailBinding
 import com.example.presentation.model.Article
+import com.example.presentation.repository.TopNewsRepository
+import com.example.presentation.repository.TopNewsRepositoryImpl
+import com.example.presentation.retrofit.RetrofitHelper
 import com.example.presentation.room.LocalDataBase
+import com.example.presentation.source.local.SavedNewsLocalDataSourceImpl
+import com.example.presentation.source.remote.TopNewsRemoteDataSourceImpl
 import com.example.presentation.util.Util.checkTimePassed
-import com.example.presentation.util.Util.getSavedNewsArticleList
-import com.example.presentation.util.Util.removeSavedNewsArticle
-import com.example.presentation.util.Util.saveArticle
 
 class ArticleDetailFragment:BaseFragment<FragmentArticleDetailBinding>(R.layout.fragment_article_detail) {
 
@@ -28,6 +30,13 @@ class ArticleDetailFragment:BaseFragment<FragmentArticleDetailBinding>(R.layout.
     override fun FragmentArticleDetailBinding.onCreateView() {
         initSet()
         setListenerEvent()
+    }
+
+    //respository 가져옴
+    private val topNewsRepository: TopNewsRepository by lazy{
+        val topNewsRemoteDataSource = TopNewsRemoteDataSourceImpl(RetrofitHelper)
+        val savedNewsLocalDataSource = SavedNewsLocalDataSourceImpl(LocalDataBase.getInstance(requireActivity()),requireActivity())
+        TopNewsRepositoryImpl(topNewsRemoteDataSource,savedNewsLocalDataSource)
     }
 
     //화면실행시 맨처음에는 navigation 실행시 option으로 줬던  enter 애니메이션을 시작하고,
@@ -53,13 +62,7 @@ class ArticleDetailFragment:BaseFragment<FragmentArticleDetailBinding>(R.layout.
 
 
         //저장 여부 체크
-        requireActivity().getSavedNewsArticleList { list,error->
-            if(list != null){
-                setSaveIconVisible(isSaveStatus = list.any { it.title == article?.title && it.publishedAt == article?.publishedAt && it.url == article?.url })
-            }else{
-                showToast(error?.message.toString())
-            }
-        }
+        checkSavedArticle()
 
         //뷰에 값 세팅
         if (article != null) {
@@ -76,6 +79,20 @@ class ArticleDetailFragment:BaseFragment<FragmentArticleDetailBinding>(R.layout.
                 .into(binding.ivNewsThumbnail)
         }
     }
+
+
+    //저장한 article 인지 여부를 체크 한다.
+    private fun checkSavedArticle(){
+        //저장 여부 체크
+        topNewsRepository.getSavedArticleList { articles, error ->
+            if(articles != null){
+                setSaveIconVisible(isSaveStatus = articles.any { it.title == article?.title && it.publishedAt == article?.publishedAt && it.url == article?.url })
+            }else{
+                showToast(error?.message.toString())
+            }
+        }
+    }
+
 
     //save 뷰 상태 체크
     private fun setSaveIconVisible(isSaveStatus:Boolean){
@@ -96,21 +113,19 @@ class ArticleDetailFragment:BaseFragment<FragmentArticleDetailBinding>(R.layout.
            if(article == null){
                return@setOnClickListener
            }
-            requireActivity().removeSavedNewsArticle(article!!){
+            topNewsRepository.removeArticle(article = article!!, callback = {
                 setSaveIconVisible(isSaveStatus = false)
-            }
+            })
         }
 
         //save 하기
         binding.ivIconNotSaved.setOnClickListener {
-
             if(article == null){
                 return@setOnClickListener
             }
-
-            requireActivity().saveArticle(article!!){
-               setSaveIconVisible(isSaveStatus = true)
-            }
+            topNewsRepository.saveArticle(article = article!!, callback =  {
+                setSaveIconVisible(isSaveStatus = true)
+            })
         }
 
         //뒤로가기

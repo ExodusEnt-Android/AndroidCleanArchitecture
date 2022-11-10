@@ -9,7 +9,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.presentation.R
-import com.example.presentation.activity.LoginActivity
 import com.example.presentation.activity.SplashActivity
 import com.example.presentation.adapter.TopNewsListAdapter
 import com.example.presentation.base.BaseFragment
@@ -17,14 +16,17 @@ import com.example.presentation.const.Const
 import com.example.presentation.databinding.FragmentTopNewsBinding
 import com.example.presentation.model.Article
 import com.example.presentation.model.BaseDataModel
+import com.example.presentation.repository.TopNewsRepository
+import com.example.presentation.repository.TopNewsRepositoryImpl
 import com.example.presentation.retrofit.RetrofitHelper
 import com.example.presentation.room.LocalDataBase
+import com.example.presentation.source.local.SavedNewsLocalDataSourceImpl
+import com.example.presentation.source.remote.TopNewsRemoteDataSourceImpl
 import com.example.presentation.util.PreferenceManager
 import com.example.presentation.util.Util.navigateWithAnim
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import timber.log.Timber
 
 class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_top_news) {
 
@@ -38,6 +40,16 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
     //네비게이션 컨트롤러
     private lateinit var navController: NavController
     private lateinit var navHost: NavHostFragment
+
+    //reposotory 구성 해줌.
+    private val topNewsRepository: TopNewsRepository by lazy {
+        val topNewsRemoteDataSource = TopNewsRemoteDataSourceImpl(RetrofitHelper)
+        val topNewsLocalDataSource = SavedNewsLocalDataSourceImpl(
+            LocalDataBase.getInstance(requireActivity().applicationContext),
+            requireActivity()
+        )
+        TopNewsRepositoryImpl(topNewsRemoteDataSource, topNewsLocalDataSource)
+    }
 
     override fun FragmentTopNewsBinding.onCreateView() {
         initSet()
@@ -128,7 +140,7 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
             return
         }
 
-        RetrofitHelper.apiService.getTopHeadLines(page = page, pageSize = Const.PageSize)
+        topNewsRepository.getTopHeadLines(page = page, pageSize = Const.PageSize)
             .enqueue(object : Callback<BaseDataModel<Article>> {
                 override fun onResponse(
                     call: Call<BaseDataModel<Article>>,
