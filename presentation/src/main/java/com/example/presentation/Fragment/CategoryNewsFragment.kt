@@ -83,9 +83,10 @@ class CategoryNewsFragment : Fragment(R.layout.fragment_category_news), NewsList
 
     override fun onItemClicked(articles: Articles, view: View) {
         when(view.id){
-            R.id.tv_author, R.id.tv_title, R.id.iv_photo -> {
-                val bundle = bundleOf("title" to articles.title, "author" to articles.author, "desc" to articles.description , "image" to articles.urlToImage)
-                navController.navigate(R.id.newsDetailFragment, bundle)
+            R.id.cl_article -> {
+                navController.navigate(R.id.newsDetailFragment, Bundle().apply {
+                    putParcelable("items", articles)
+                })
             }
         }
     }

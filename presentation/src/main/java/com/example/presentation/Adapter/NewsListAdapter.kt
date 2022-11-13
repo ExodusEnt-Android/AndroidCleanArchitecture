@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.annotation.NonNull
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.presentation.Articles
@@ -45,6 +46,7 @@ class NewsListAdapter (
         private val ivPhoto : AppCompatImageView = itemView.findViewById(R.id.iv_photo)
         private val tvTitle : AppCompatTextView = itemView.findViewById(R.id.tv_title)
         private val tvAuthor : AppCompatTextView = itemView.findViewById(R.id.tv_author)
+        private val clArticle : ConstraintLayout = itemView.findViewById(R.id.cl_article)
 
         fun bind(item : Articles){
             Glide.with(itemView).load(item.urlToImage).into(ivPhoto)
@@ -53,10 +55,7 @@ class NewsListAdapter (
 
             val listener = View.OnClickListener { view ->
                 onClickListener.onItemClicked(item, view) }
-
-            tvTitle.setOnClickListener(listener)
-            tvAuthor.setOnClickListener(listener)
-            ivPhoto.setOnClickListener(listener)
+            clArticle.setOnClickListener(listener)
         }
     }
 }

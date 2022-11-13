@@ -80,7 +80,7 @@ class TopNewsFragment : Fragment(R.layout.fragment_top_news), NewsListAdapter.On
     }
     override fun onItemClicked(articles: Articles, view: View) {
         when(view.id){
-            R.id.tv_author, R.id.tv_title, R.id.iv_photo -> {
+            R.id.cl_article -> {
                 navController.navigate(R.id.newsDetailFragment, Bundle().apply {
                     putParcelable("items", articles)
                 })
