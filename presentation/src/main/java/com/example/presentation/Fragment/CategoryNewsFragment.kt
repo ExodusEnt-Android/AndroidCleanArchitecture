@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -13,11 +12,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.presentation.*
 import com.example.presentation.Adapter.NewsListAdapter
 import com.example.presentation.databinding.FragmentCategoryNewsBinding
+import com.example.presentation.repository.NewsRepository
+import com.example.presentation.repository.NewsRepositoryImpl
+import com.example.presentation.source.remote.NewsRemoteDataSourceImpl
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class CategoryNewsFragment : Fragment(R.layout.fragment_category_news), NewsListAdapter.OnClickListener{
 
@@ -26,6 +26,13 @@ class CategoryNewsFragment : Fragment(R.layout.fragment_category_news), NewsList
     private lateinit var models : ArrayList<Articles>
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController
+
+    //reposotory 구성 해줌.
+    private val topNewsRepository: NewsRepository by lazy {
+        val topNewsRemoteDataSource = NewsRemoteDataSourceImpl()
+
+        NewsRepositoryImpl(topNewsRemoteDataSource)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,11 +59,8 @@ class CategoryNewsFragment : Fragment(R.layout.fragment_category_news), NewsList
     }
 
     private fun newsCategory(category : String) {
-        val retrofit = Retrofit.Builder().baseUrl("https://newsapi.org/v2/")
-            .addConverterFactory(GsonConverterFactory.create()).build();
-        val service = retrofit.create(ApiService::class.java)
 
-        service.requestCategoryNews(category).enqueue(object : Callback<NewsData> {
+        topNewsRepository.getNews(category).enqueue(object : Callback<NewsData> {
             override fun onResponse(call: Call<NewsData>, response: Response<NewsData>) {
                 if(response.isSuccessful){
                     // 정상적으로 통신이 성공된 경우
