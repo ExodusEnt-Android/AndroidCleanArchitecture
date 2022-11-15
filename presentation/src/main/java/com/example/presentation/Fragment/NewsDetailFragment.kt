@@ -13,6 +13,10 @@ import com.example.presentation.Articles
 import com.example.presentation.R
 import com.example.presentation.Room.AppDB
 import com.example.presentation.databinding.FragmentNewsDetailBinding
+import com.example.presentation.repository.NewsRepository
+import com.example.presentation.repository.NewsRepositoryImpl
+import com.example.presentation.source.local.SavedNewsLocalDataSourceImpl
+import com.example.presentation.source.remote.NewsRemoteDataSourceImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,6 +30,12 @@ class NewsDetailFragment : Fragment(R.layout.fragment_news_detail), View.OnClick
     private lateinit var newsDB : AppDB
 
     var articles: Articles? = null
+
+    private val savedNewsRepository : NewsRepository by lazy {
+        val newsRemoteDataSourceImpl = NewsRemoteDataSourceImpl()
+        val savedNewsLocalDataSourceImpl = SavedNewsLocalDataSourceImpl(requireActivity())
+        NewsRepositoryImpl(newsRemoteDataSourceImpl, savedNewsLocalDataSourceImpl)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,15 +75,13 @@ class NewsDetailFragment : Fragment(R.layout.fragment_news_detail), View.OnClick
             mBinding.ivSaved -> {
                 if(ivSaved){
                     ivSaved = false
-                    CoroutineScope(Dispatchers.IO).launch {
+                    savedNewsRepository.deleteNews(articles!!.url){
                         mBinding.ivSaved.setImageResource(R.drawable.star_no)
-                        articles?.let { newsDB.newsDao().deleteArticle(articles!!.url) }   //DB delete
                     }
                 }else{
                     ivSaved = true
-                    CoroutineScope(Dispatchers.IO).launch {
+                    savedNewsRepository.saveNews(articles!!){
                         mBinding.ivSaved.setImageResource(R.drawable.star_ok)
-                        articles?.let { newsDB.newsDao().insert(it) }   //DB에 INSERT
                     }
                 }
             }

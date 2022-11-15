@@ -14,6 +14,7 @@ import com.example.presentation.Adapter.NewsListAdapter
 import com.example.presentation.databinding.FragmentTopNewsBinding
 import com.example.presentation.repository.NewsRepository
 import com.example.presentation.repository.NewsRepositoryImpl
+import com.example.presentation.source.local.SavedNewsLocalDataSourceImpl
 import com.example.presentation.source.remote.NewsRemoteDataSourceImpl
 import retrofit2.Call
 import retrofit2.Callback
@@ -29,9 +30,10 @@ class TopNewsFragment : Fragment(R.layout.fragment_top_news), NewsListAdapter.On
 
     //reposotory 구성 해줌.
     private val topNewsRepository: NewsRepository by lazy {
-        val topNewsRemoteDataSource = NewsRemoteDataSourceImpl()
+        val newsRemoteDataSourceImpl = NewsRemoteDataSourceImpl()
+        val saveNewsLocalDataSourceImpl = SavedNewsLocalDataSourceImpl(requireActivity())
 
-        NewsRepositoryImpl(topNewsRemoteDataSource)
+        NewsRepositoryImpl(newsRemoteDataSourceImpl, saveNewsLocalDataSourceImpl)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
