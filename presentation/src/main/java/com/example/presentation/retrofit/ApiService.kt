@@ -1,7 +1,6 @@
-import com.example.presentation.BuildConfig
 import com.example.presentation.model.Article
 import com.example.presentation.model.BaseDataModel
-import retrofit2.Call
+import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -14,6 +13,6 @@ interface ApiService {
         @Query("category") category: String? = null,//optional
         @Query("page") page:Int,
         @Query("pageSize")pageSize:Int
-    ): Call<BaseDataModel<Article>>
+    ): Single<BaseDataModel<Article>>
 
 }

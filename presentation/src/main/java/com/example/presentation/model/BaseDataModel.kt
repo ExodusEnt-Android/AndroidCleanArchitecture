@@ -8,5 +8,6 @@ import kotlinx.parcelize.RawValue
 data class BaseDataModel<T>(
   val status: String,
   val totalResults: Int = 0,
-  val articles: @RawValue List<T>? = null
+  val articles: @RawValue List<T>? = null,
+  val message:String?=null//에러 메세지
 ) : Parcelable

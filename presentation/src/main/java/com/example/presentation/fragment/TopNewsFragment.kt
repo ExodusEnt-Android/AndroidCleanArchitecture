@@ -14,6 +14,7 @@ import com.example.presentation.adapter.TopNewsListAdapter
 import com.example.presentation.base.BaseFragment
 import com.example.presentation.const.Const
 import com.example.presentation.databinding.FragmentTopNewsBinding
+import com.example.presentation.fragment.CategoryTopNewsFragment.Companion.DEFAULT_LIST_SIZE
 import com.example.presentation.model.Article
 import com.example.presentation.model.BaseDataModel
 import com.example.presentation.repository.TopNewsRepository
@@ -24,6 +25,8 @@ import com.example.presentation.source.local.SavedNewsLocalDataSourceImpl
 import com.example.presentation.source.remote.TopNewsRemoteDataSourceImpl
 import com.example.presentation.util.PreferenceManager
 import com.example.presentation.util.Util.navigateWithAnim
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -141,34 +144,23 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
         }
 
         topNewsRepository.getTopHeadLines(page = page, pageSize = Const.PageSize)
-            .enqueue(object : Callback<BaseDataModel<Article>> {
-                override fun onResponse(
-                    call: Call<BaseDataModel<Article>>,
-                    response: Response<BaseDataModel<Article>>
-                ) {
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                val newTopNewsArticleList = it
 
-                    val result = response.body()
+                topNewsList.addAll(newTopNewsArticleList)
 
-                    //새 뉴스 게시글리스트
-                    totalResult = result?.totalResults ?: 0
-                    val newTopNewsArticleList = result?.articles
+                page++
+                topNewsListAdapter.submitList(topNewsList)
 
-                    if (newTopNewsArticleList != null) {
-                        topNewsList.addAll(newTopNewsArticleList)
-                    }
-
-                    page++
-                    topNewsListAdapter.submitList(topNewsList)
-
-                    //기존  스크롤  위치 정보 캐싱되어있으면 다시 적용 해줌.
-                    if (rcyScrollLState != null) {
-                        binding.rvTopNewsList.layoutManager?.onRestoreInstanceState(rcyScrollLState)
-                    }
+                //기존  스크롤  위치 정보 캐싱되어있으면 다시 적용 해줌.
+                if (rcyScrollLState != null) {
+                    binding.rvTopNewsList.layoutManager?.onRestoreInstanceState(rcyScrollLState)
                 }
 
-                override fun onFailure(call: Call<BaseDataModel<Article>>, t: Throwable) {
-                    showToast(t.message.toString())
-                }
+            },{
+                showToast(it.message.toString())
             })
     }
 

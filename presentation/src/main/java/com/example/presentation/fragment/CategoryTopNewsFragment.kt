@@ -24,6 +24,8 @@ import com.example.presentation.room.LocalDataBase
 import com.example.presentation.source.local.SavedNewsLocalDataSourceImpl
 import com.example.presentation.source.remote.TopNewsRemoteDataSourceImpl
 import com.example.presentation.util.Util.navigateWithAnim
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -166,42 +168,32 @@ class CategoryTopNewsFragment:BaseFragment<FragmentTopNewsBinding>(R.layout.frag
         if (totalResult != TopNewsFragment.DEFAULT_LIST_SIZE && totalResult <= topNewsListAdapter.currentList.size) {
             return
         }
-
         topNewsRepository.getTopHeadLines(page = page, pageSize = Const.PageSize, category = categoryString)
-            .enqueue(object : Callback<BaseDataModel<Article>> {
-                override fun onResponse(
-                    call: Call<BaseDataModel<Article>>,
-                    response: Response<BaseDataModel<Article>>
-                ) {
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
 
-                    val result = response.body()
+                val newTopNewsArticleList = it
 
-                    //새 뉴스 게시글리스트
-                    totalResult = result?.totalResults ?: 0
-                    val newTopNewsArticleList = result?.articles
+                topNewsList.addAll(newTopNewsArticleList)
 
-                    if (newTopNewsArticleList != null) {
-                        topNewsList.addAll(newTopNewsArticleList)
-                    }
+                page++
 
-                    page++
+                arguments?.putParcelableArrayList(ARTICLE_LIST,topNewsList as ArrayList)
+                arguments?.putInt(PAGE,page)
+                arguments?.putInt(TOTAL_RESULT,totalResult)
 
-                    arguments?.putParcelableArrayList(ARTICLE_LIST,topNewsList as ArrayList)
-                    arguments?.putInt(PAGE,page)
-                    arguments?.putInt(TOTAL_RESULT,totalResult)
+                topNewsListAdapter.submitList(topNewsList)
 
-                    topNewsListAdapter.submitList(topNewsList)
-
-                    //기존  스크롤  위치 정보 캐싱되어있으면 다시 적용 해줌.
-                    if (rcyScrollLState != null) {
-                        binding.rvTopNewsList.layoutManager?.onRestoreInstanceState(rcyScrollLState)
-                    }
+                //기존  스크롤  위치 정보 캐싱되어있으면 다시 적용 해줌.
+                if (rcyScrollLState != null) {
+                    binding.rvTopNewsList.layoutManager?.onRestoreInstanceState(rcyScrollLState)
                 }
-
-                override fun onFailure(call: Call<BaseDataModel<Article>>, t: Throwable) {
-                    showToast(t.message.toString())
-                }
+            },{
+                showToast(it.message.toString())
             })
+
+
     }
 
 
