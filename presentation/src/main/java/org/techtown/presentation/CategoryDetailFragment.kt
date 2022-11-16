@@ -2,7 +2,6 @@ package org.techtown.presentation
 
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.navigation.NavController
@@ -12,10 +11,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.techtown.presentation.adapter.TopNewsAdapter
 import org.techtown.presentation.base.BaseFragment
+import org.techtown.presentation.database.database.AppDatabase
 import org.techtown.presentation.databinding.FragmentCategoryDetailBinding
+import org.techtown.presentation.datasource.local.NewsLocalDatasourceImpl
+import org.techtown.presentation.datasource.remote.NewsRemoteDatasourceImpl
 import org.techtown.presentation.ext.navigateWithAnim
 import org.techtown.presentation.model.Articles
 import org.techtown.presentation.model.NewsRootModel
+import org.techtown.presentation.repository.NewsRepository
+import org.techtown.presentation.repository.NewsRepositoryImpl
 import org.techtown.presentation.retrofit.NewsService
 import retrofit2.Call
 import retrofit2.Callback
@@ -38,6 +42,17 @@ class CategoryDetailFragment :
     var recyclerViewScrollState: Parcelable? = null
 
     private lateinit var category: String
+
+    //db setting
+    private val database: AppDatabase by lazy {
+        AppDatabase.getInstance(requireActivity().applicationContext)
+    }
+
+    private val newsRepository : NewsRepository by lazy {
+        val newsRemoteDatasource = NewsRemoteDatasourceImpl(NewsService)
+        val newsLocalDatasource = NewsLocalDatasourceImpl(database)
+        NewsRepositoryImpl(newsRemoteDatasource, newsLocalDatasource)
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -131,9 +146,8 @@ class CategoryDetailFragment :
             }
         }
 
-        NewsService.create().getArticles(
+        newsRepository.getTopHeadlinesArticles(
             "us",
-            "d8bea525326543899b50f67bf0a8c2f1",
             category = category,
             limit,
             offset
