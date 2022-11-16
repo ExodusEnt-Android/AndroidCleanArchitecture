@@ -47,7 +47,7 @@ class CategoryTopNewsFragment:BaseFragment<FragmentTopNewsBinding>(R.layout.frag
     //reposotory 구성 해줌.
     private val topNewsRepository: TopNewsRepository by lazy{
         val topNewsRemoteDataSource = TopNewsRemoteDataSourceImpl(RetrofitHelper)
-        val savedNewsLocalDataSource = SavedNewsLocalDataSourceImpl(LocalDataBase.getInstance(requireActivity()),requireActivity())
+        val savedNewsLocalDataSource = SavedNewsLocalDataSourceImpl(LocalDataBase.getInstance(requireActivity()))
         TopNewsRepositoryImpl(topNewsRemoteDataSource,savedNewsLocalDataSource)
     }
 

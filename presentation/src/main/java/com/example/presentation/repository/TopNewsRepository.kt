@@ -1,6 +1,7 @@
 package com.example.presentation.repository
 
 import com.example.presentation.model.Article
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 
 /**
@@ -21,8 +22,8 @@ interface TopNewsRepository {
         pageSize:Int
     ): Single<List<Article>>
 
-    fun getSavedArticleList(callback:(List<Article>?, Throwable?)->Unit)
+    fun getSavedArticleList():Single<List<Article>>
 
-    fun saveArticle(article: Article, callback:()->Unit)
-    fun removeArticle(article: Article, callback:()->Unit)
+    fun saveArticle(article: Article):Completable
+    fun removeArticle(article: Article):Completable
 }

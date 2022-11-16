@@ -1,6 +1,8 @@
 package com.example.presentation.source.local
 
 import com.example.presentation.model.Article
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Single
 
 /**
  * Date: 2022/10/30
@@ -14,7 +16,7 @@ import com.example.presentation.model.Article
  *
  * **/
 interface SavedNewsLocalDataSource {
-    fun getSavedArticleList(callback: (List<Article>?, Throwable?) -> Unit)
-    fun saveArticle(article: Article, callback:()->Unit)
-    fun removeArticle(article: Article, callback:()->Unit)
+    fun getSavedArticleList(): Single<List<Article>>
+    fun saveArticle(article: Article):Completable
+    fun removeArticle(article: Article):Completable
 }

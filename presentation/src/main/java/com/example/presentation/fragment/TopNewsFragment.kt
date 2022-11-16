@@ -48,9 +48,7 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
     private val topNewsRepository: TopNewsRepository by lazy {
         val topNewsRemoteDataSource = TopNewsRemoteDataSourceImpl(RetrofitHelper)
         val topNewsLocalDataSource = SavedNewsLocalDataSourceImpl(
-            LocalDataBase.getInstance(requireActivity().applicationContext),
-            requireActivity()
-        )
+            LocalDataBase.getInstance(requireActivity().applicationContext))
         TopNewsRepositoryImpl(topNewsRemoteDataSource, topNewsLocalDataSource)
     }
 

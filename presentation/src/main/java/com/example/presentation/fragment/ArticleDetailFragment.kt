@@ -19,10 +19,14 @@ import com.example.presentation.room.LocalDataBase
 import com.example.presentation.source.local.SavedNewsLocalDataSourceImpl
 import com.example.presentation.source.remote.TopNewsRemoteDataSourceImpl
 import com.example.presentation.util.Util.checkTimePassed
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 
-class ArticleDetailFragment:BaseFragment<FragmentArticleDetailBinding>(R.layout.fragment_article_detail) {
+class ArticleDetailFragment :
+    BaseFragment<FragmentArticleDetailBinding>(R.layout.fragment_article_detail) {
 
-    private var article:Article? = null
+    private var article: Article? = null
+
     //네비게이션 컨트롤러
     private lateinit var navController: NavController
     private lateinit var navHost: NavHostFragment
@@ -33,25 +37,30 @@ class ArticleDetailFragment:BaseFragment<FragmentArticleDetailBinding>(R.layout.
     }
 
     //respository 가져옴
-    private val topNewsRepository: TopNewsRepository by lazy{
+    private val topNewsRepository: TopNewsRepository by lazy {
         val topNewsRemoteDataSource = TopNewsRemoteDataSourceImpl(RetrofitHelper)
-        val savedNewsLocalDataSource = SavedNewsLocalDataSourceImpl(LocalDataBase.getInstance(requireActivity()),requireActivity())
-        TopNewsRepositoryImpl(topNewsRemoteDataSource,savedNewsLocalDataSource)
+        val savedNewsLocalDataSource =
+            SavedNewsLocalDataSourceImpl(LocalDataBase.getInstance(requireActivity()))
+        TopNewsRepositoryImpl(topNewsRemoteDataSource, savedNewsLocalDataSource)
     }
 
     //화면실행시 맨처음에는 navigation 실행시 option으로 줬던  enter 애니메이션을 시작하고,
     //그외에는 stationay를 주어 enteranimation을 없애준다.-> 계속 메인 탭 이동시  이미 navigate된 fragment가 기존 설정한
     //enter animation을 실행하여서  이렇게 예외처리 해줌.
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
-        return if ((enter && arguments?.getBoolean(Const.PARAM_SCREEN_INITIALIZED,false) == true)) {
+        return if ((enter && arguments?.getBoolean(
+                Const.PARAM_SCREEN_INITIALIZED,
+                false
+            ) == true)
+        ) {
             AnimationUtils.loadAnimation(context, R.anim.stationary)
         } else {
-            arguments?.putBoolean(Const.PARAM_SCREEN_INITIALIZED,true)
+            arguments?.putBoolean(Const.PARAM_SCREEN_INITIALIZED, true)
             null
         }
     }
 
-    private fun initSet(){
+    private fun initSet() {
 
         //article 데이터 넘겨 받음.
         article = arguments?.getParcelable(Const.PARAM_ARTICLE_MODEL)
@@ -67,10 +76,10 @@ class ArticleDetailFragment:BaseFragment<FragmentArticleDetailBinding>(R.layout.
         //뷰에 값 세팅
         if (article != null) {
 
-            binding.toolbar.tvTitle.text = article?.title?:""
+            binding.toolbar.tvTitle.text = article?.title ?: ""
             binding.tvAuthor.text = article?.author ?: "unknown writer"
-            binding.tvNewsTitle.text = article?.title?:""
-            binding.tvNewsContent.text = article?.content?:""
+            binding.tvNewsTitle.text = article?.title ?: ""
+            binding.tvNewsContent.text = article?.content ?: ""
             binding.tvPublishTime.text = article?.publishedAt?.checkTimePassed()
 
             //썸네일 이미지 적용
@@ -82,50 +91,64 @@ class ArticleDetailFragment:BaseFragment<FragmentArticleDetailBinding>(R.layout.
 
 
     //저장한 article 인지 여부를 체크 한다.
-    private fun checkSavedArticle(){
+    private fun checkSavedArticle() {
+
         //저장 여부 체크
-        topNewsRepository.getSavedArticleList { articles, error ->
-            if(articles != null){
+        topNewsRepository.getSavedArticleList()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ articles ->
                 setSaveIconVisible(isSaveStatus = articles.any { it.title == article?.title && it.publishedAt == article?.publishedAt && it.url == article?.url })
-            }else{
-                showToast(error?.message.toString())
-            }
-        }
+            }, {
+                showToast(it.message.toString())
+            })
     }
 
 
     //save 뷰 상태 체크
-    private fun setSaveIconVisible(isSaveStatus:Boolean){
-        if(isSaveStatus){
+    private fun setSaveIconVisible(isSaveStatus: Boolean) {
+        if (isSaveStatus) {
             binding.ivIconSaved.visibility = View.VISIBLE
             binding.ivIconNotSaved.visibility = View.GONE
-        }else{
+        } else {
             binding.ivIconSaved.visibility = View.GONE
             binding.ivIconNotSaved.visibility = View.VISIBLE
         }
     }
 
     //리스너 이벤트 모음
-    private fun setListenerEvent(){
+    private fun setListenerEvent() {
 
         //save 취소
         binding.ivIconSaved.setOnClickListener {
-           if(article == null){
-               return@setOnClickListener
-           }
-            topNewsRepository.removeArticle(article = article!!, callback = {
-                setSaveIconVisible(isSaveStatus = false)
-            })
+            if (article == null) {
+                return@setOnClickListener
+            }
+
+            topNewsRepository.removeArticle(article = article!!)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    setSaveIconVisible(isSaveStatus = false)
+                }, {
+                    showToast(it.message.toString())
+                })
         }
 
         //save 하기
         binding.ivIconNotSaved.setOnClickListener {
-            if(article == null){
+            if (article == null) {
                 return@setOnClickListener
             }
-            topNewsRepository.saveArticle(article = article!!, callback =  {
-                setSaveIconVisible(isSaveStatus = true)
-            })
+
+            topNewsRepository.saveArticle(article = article!!)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    setSaveIconVisible(isSaveStatus = true)
+                }, {
+                    showToast(it.message.toString())
+                })
         }
 
         //뒤로가기

@@ -19,6 +19,8 @@ import com.example.presentation.room.LocalDataBase
 import com.example.presentation.source.local.SavedNewsLocalDataSourceImpl
 import com.example.presentation.source.remote.TopNewsRemoteDataSourceImpl
 import com.example.presentation.util.Util.navigateWithAnim
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import timber.log.Timber
 
 class SavedFragment:BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved) {
@@ -33,7 +35,7 @@ class SavedFragment:BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved) 
     //respository 가져옴
     private val topNewsRepository: TopNewsRepository by lazy{
         val topNewsRemoteDataSource = TopNewsRemoteDataSourceImpl(RetrofitHelper)
-        val savedNewsLocalDataSource = SavedNewsLocalDataSourceImpl(LocalDataBase.getInstance(requireActivity()),requireActivity())
+        val savedNewsLocalDataSource = SavedNewsLocalDataSourceImpl(LocalDataBase.getInstance(requireActivity()))
         TopNewsRepositoryImpl(topNewsRemoteDataSource,savedNewsLocalDataSource)
     }
 
@@ -96,14 +98,16 @@ class SavedFragment:BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved) 
 
     private fun getSavedNewsList(){
         //저장 여부 체크
-        topNewsRepository.getSavedArticleList { articles, error ->
-            if(articles != null){
+        topNewsRepository.getSavedArticleList()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ articles ->
                 topNewsListAdapter.submitList(articles)
                 binding.rvSavedNewsList.layoutManager?.onRestoreInstanceState(rcyScrollLState)
-            }else{
-                showToast(error?.message.toString())
-            }
-        }
+            }, {
+                Timber.v("asasadadasd ->"+it.message)
+                showToast(it.message.toString())
+            })
     }
 
 
