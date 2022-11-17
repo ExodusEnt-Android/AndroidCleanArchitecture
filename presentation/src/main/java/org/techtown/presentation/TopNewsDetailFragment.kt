@@ -76,7 +76,9 @@ class TopNewsDetailFragment :
             binding.ivSaved.setOnClickListener {
                 CoroutineScope(Dispatchers.IO).launch {
                     newsRepository.deleteArticle(articles.url) {
-                        binding.ivSaved.setImageResource(R.drawable.star_inactive)
+                        CoroutineScope(Dispatchers.Main).launch {
+                            binding.ivSaved.setImageResource(R.drawable.star_inactive)
+                        }
                     }
                 }
             }
@@ -86,7 +88,9 @@ class TopNewsDetailFragment :
             binding.ivSaved.setOnClickListener {
                 CoroutineScope(Dispatchers.IO).launch {
                     newsRepository.insertArticle(articles) {
-                        binding.ivSaved.setImageResource(R.drawable.star_active)
+                        CoroutineScope(Dispatchers.Main).launch {
+                            binding.ivSaved.setImageResource(R.drawable.star_active)
+                        }
                     }
                 }
             }
