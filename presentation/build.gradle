@@ -99,6 +99,9 @@ dependencies {
     // For control over item selection of both touch and mouse driven selection
     implementation "androidx.recyclerview:recyclerview-selection:1.1.0"
 
+    def okhttp_version = "4.9.3"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
+
     //Rxjava 추가
     implementation "io.reactivex.rxjava3:rxjava:3.1.2"
     implementation "io.reactivex.rxjava3:rxkotlin:3.0.1"

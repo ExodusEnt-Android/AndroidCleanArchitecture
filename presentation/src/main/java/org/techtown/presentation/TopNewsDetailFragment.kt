@@ -9,7 +9,12 @@ import kotlinx.coroutines.launch
 import org.techtown.presentation.base.BaseFragment
 import org.techtown.presentation.database.database.AppDatabase
 import org.techtown.presentation.databinding.FragmentTopNewsDetailBinding
+import org.techtown.presentation.datasource.local.NewsLocalDatasourceImpl
+import org.techtown.presentation.datasource.remote.NewsRemoteDatasourceImpl
 import org.techtown.presentation.model.Articles
+import org.techtown.presentation.repository.NewsRepository
+import org.techtown.presentation.repository.NewsRepositoryImpl
+import org.techtown.presentation.retrofit.NewsService
 
 
 class TopNewsDetailFragment :
@@ -19,7 +24,17 @@ class TopNewsDetailFragment :
 
     private var articleId: String = ""
 
-    private lateinit var database: AppDatabase
+    //db setting
+    private val database: AppDatabase by lazy {
+        AppDatabase.getInstance(requireActivity().applicationContext)
+    }
+
+    private val newsRepository : NewsRepository by lazy {
+        val newsRemoteDatasource = NewsRemoteDatasourceImpl(NewsService)
+        val newsLocalDatasource = NewsLocalDatasourceImpl(database)
+        NewsRepositoryImpl(newsRemoteDatasource, newsLocalDatasource)
+    }
+
 
     override fun FragmentTopNewsDetailBinding.onCreateView() {
         initSet()
@@ -45,12 +60,8 @@ class TopNewsDetailFragment :
             }
         }
 
-        //db setting
-        database = AppDatabase.getInstance(requireActivity().applicationContext)
-
-
         CoroutineScope(Dispatchers.IO).launch {
-            val isSelected = database.articleDao().getAllArticles().any { it.url == articles.url }
+            val isSelected = newsRepository.getAllSavedArticles().any { it.url == articles.url }
             CoroutineScope((Dispatchers.Main)).launch {
                 setSavedItemListenerEvent(isSelected)
             }
@@ -64,8 +75,11 @@ class TopNewsDetailFragment :
 
             binding.ivSaved.setOnClickListener {
                 CoroutineScope(Dispatchers.IO).launch {
-                    database.articleDao().deleteArticle(articles.url)
-                    binding.ivSaved.setImageResource(R.drawable.star_inactive)
+                    newsRepository.deleteArticle(articles.url) {
+                        CoroutineScope(Dispatchers.Main).launch {
+                            binding.ivSaved.setImageResource(R.drawable.star_inactive)
+                        }
+                    }
                 }
             }
         } else {
@@ -73,8 +87,11 @@ class TopNewsDetailFragment :
 
             binding.ivSaved.setOnClickListener {
                 CoroutineScope(Dispatchers.IO).launch {
-                    database.articleDao().insertArticle(articles)
-                    binding.ivSaved.setImageResource(R.drawable.star_active)
+                    newsRepository.insertArticle(articles) {
+                        CoroutineScope(Dispatchers.Main).launch {
+                            binding.ivSaved.setImageResource(R.drawable.star_active)
+                        }
+                    }
                 }
             }
         }

@@ -12,10 +12,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.techtown.presentation.adapter.TopNewsAdapter
 import org.techtown.presentation.base.BaseFragment
+import org.techtown.presentation.database.database.AppDatabase
 import org.techtown.presentation.databinding.FragmentFirstBinding
+import org.techtown.presentation.datasource.local.NewsLocalDatasource
+import org.techtown.presentation.datasource.local.NewsLocalDatasourceImpl
+import org.techtown.presentation.datasource.remote.NewsRemoteDatasourceImpl
 import org.techtown.presentation.ext.navigateWithAnim
 import org.techtown.presentation.model.Articles
 import org.techtown.presentation.model.NewsRootModel
+import org.techtown.presentation.repository.NewsRepository
+import org.techtown.presentation.repository.NewsRepositoryImpl
 import org.techtown.presentation.retrofit.NewsService
 import retrofit2.Call
 import retrofit2.Callback
@@ -37,6 +43,16 @@ class FirstFragment : BaseFragment<FragmentFirstBinding>(R.layout.fragment_first
 
     private var tempArticleList: ArrayList<Articles> = arrayListOf()
     var recyclerViewScrollState: Parcelable? = null
+
+    private val database: AppDatabase by lazy {
+        AppDatabase.getInstance(requireActivity().applicationContext)
+    }
+
+    private val newsRepository : NewsRepository by lazy {
+        val newsRemoteDatasource = NewsRemoteDatasourceImpl(NewsService)
+        val newsLocalDatasource = NewsLocalDatasourceImpl(database)
+        NewsRepositoryImpl(newsRemoteDatasource, newsLocalDatasource)
+    }
 
     override fun FragmentFirstBinding.onCreateView() {
 
@@ -113,9 +129,8 @@ class FirstFragment : BaseFragment<FragmentFirstBinding>(R.layout.fragment_first
             }
         }
 
-        NewsService.create().getArticles(
+        newsRepository.getTopHeadlinesArticles(
             country = "us",
-            apiKey = "d8bea525326543899b50f67bf0a8c2f1",
             pageSize = limit,
             offset = offset,
             category = null
