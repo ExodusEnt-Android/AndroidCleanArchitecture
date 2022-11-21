@@ -10,6 +10,6 @@ import kotlinx.android.parcel.Parcelize
 @Entity(tableName = "login")
 @Parcelize
 data class LoginData (
-    @PrimaryKey @ColumnInfo(name = "email") @SerializedName("email") var email: String,
+    @PrimaryKey @ColumnInfo(name = "email") var email: String,
     @ColumnInfo(name = "pwd") @SerializedName("pwd") var pwd: String
 ):Parcelable

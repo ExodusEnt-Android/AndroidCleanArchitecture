@@ -14,7 +14,7 @@ data class NewsData(
 @Entity(tableName = "articles")
 @Parcelize
 data class Articles(
-    @PrimaryKey @ColumnInfo(name = "url") @SerializedName("url") var url: String,
+    @PrimaryKey @ColumnInfo(name = "url") var url: String,
     @ColumnInfo(name = "author") @SerializedName("author") var author: String? = null,
     @ColumnInfo(name = "title") @SerializedName("title") var title: String,
     @ColumnInfo(name = "description") @SerializedName("description") var description: String? = null,
