@@ -63,7 +63,7 @@ class CategoryNewsFragment : Fragment(R.layout.fragment_category_news), NewsList
 
     private fun newsCategory(category : String) {
 
-        topNewsRepository.getNews(category).enqueue(object : Callback<NewsData> {
+        topNewsRepository.getNewsCategory(category).enqueue(object : Callback<NewsData> {
             override fun onResponse(call: Call<NewsData>, response: Response<NewsData>) {
                 if(response.isSuccessful){
                     // 정상적으로 통신이 성공된 경우

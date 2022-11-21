@@ -5,8 +5,10 @@ import com.example.presentation.NewsData
 import retrofit2.Call
 
 interface NewsRepository {
-    fun getNews(
-        category: String? = null
+    fun getNews(): Call<NewsData>
+
+    fun getNewsCategory(
+        category: String
     ): Call<NewsData>
 
     fun getSavedNews(callback: (List<Articles>?, Throwable?) -> Unit)

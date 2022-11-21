@@ -4,7 +4,9 @@ import com.example.presentation.NewsData
 import retrofit2.Call
 
 interface NewsRemoteDataSource {
-    fun getNews(
-        category: String? = null
-    ): Call<NewsData>
+    fun getNews(): Call<NewsData>
+
+    fun getNewsCategory(
+        category: String
+    ) : Call<NewsData>
 }

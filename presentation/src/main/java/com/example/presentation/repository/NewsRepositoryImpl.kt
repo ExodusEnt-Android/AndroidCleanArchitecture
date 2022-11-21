@@ -10,8 +10,13 @@ class NewsRepositoryImpl(
     private val topNewsRemoteDataSource: NewsRemoteDataSource,
     private val savedNewsLocalDataSource: SavedNewsLocalDataSource
 ) : NewsRepository {
-    override fun getNews(category: String?): Call<NewsData> {
-        return topNewsRemoteDataSource.getNews(category)
+
+    override fun getNews(): Call<NewsData> {
+        return topNewsRemoteDataSource.getNews()
+    }
+
+    override fun getNewsCategory(category: String): Call<NewsData> {
+        return topNewsRemoteDataSource.getNewsCategory(category)
     }
 
     override fun getSavedNews(callback: (List<Articles>?, Throwable?) -> Unit) {
