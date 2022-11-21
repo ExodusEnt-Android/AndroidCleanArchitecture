@@ -1,0 +1,103 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_business"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:text="business"
+                android:textSize="20dp"
+                android:gravity="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_entertain"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_entertain"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginStart="10dp"
+                android:text="entertain"
+                android:textSize="20dp"
+                android:gravity="center"
+                app:layout_constraintStart_toEndOf="@id/btn_business"
+                app:layout_constraintEnd_toStartOf="@id/btn_general"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_general"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginStart="10dp"
+                android:text="general"
+                android:textSize="20dp"
+                android:gravity="center"
+                app:layout_constraintStart_toEndOf="@id/btn_entertain"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_health"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:text="health"
+                android:textSize="20dp"
+                android:gravity="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_science"
+                app:layout_constraintTop_toBottomOf="@id/btn_business" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_science"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginStart="10dp"
+                android:text="science"
+                android:textSize="20dp"
+                android:gravity="center"
+                app:layout_constraintStart_toEndOf="@id/btn_health"
+                app:layout_constraintEnd_toStartOf="@id/btn_sports"
+                app:layout_constraintTop_toBottomOf="@id/btn_business" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_sports"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginStart="10dp"
+                android:text="sports"
+                android:textSize="20dp"
+                android:gravity="center"
+                app:layout_constraintStart_toEndOf="@id/btn_science"
+                app:layout_constraintTop_toBottomOf="@id/btn_business"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_tech"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:text="tech"
+                android:textSize="20dp"
+                android:gravity="center"
+                app:layout_constraintTop_toBottomOf="@id/btn_health"
+                app:layout_constraintStart_toStartOf="@id/btn_health" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

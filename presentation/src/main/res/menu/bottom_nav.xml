@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_top_news"
+        android:icon="@drawable/heart_ok"
+        android:title="Top News" />
+
+    <item
+        android:id="@+id/navigation_category_btn"
+        android:icon="@drawable/heart_ok"
+        android:title="Categories" />
+
+    <item
+        android:id="@+id/navigation_saved"
+        android:icon="@drawable/heart_ok"
+        android:title="Saved" />
+
+</menu>
