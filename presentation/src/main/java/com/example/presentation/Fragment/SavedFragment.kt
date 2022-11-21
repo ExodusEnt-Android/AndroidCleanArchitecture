@@ -13,6 +13,10 @@ import com.example.presentation.*
 import com.example.presentation.Adapter.NewsListAdapter
 import com.example.presentation.Room.AppDB
 import com.example.presentation.databinding.FragmentSavedBinding
+import com.example.presentation.repository.NewsRepository
+import com.example.presentation.repository.NewsRepositoryImpl
+import com.example.presentation.source.local.SavedNewsLocalDataSourceImpl
+import com.example.presentation.source.remote.NewsRemoteDataSourceImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,6 +29,13 @@ class SavedFragment : Fragment(R.layout.fragment_saved) , NewsListAdapter.OnClic
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController
     private lateinit var newsDB : AppDB
+
+    private val savedNewsRepository: NewsRepository by lazy {
+        val newsRemoteDataSourceImpl = NewsRemoteDataSourceImpl()
+        val saveNewsLocalDataSourceImpl = SavedNewsLocalDataSourceImpl(requireActivity())
+
+        NewsRepositoryImpl(newsRemoteDataSourceImpl, saveNewsLocalDataSourceImpl)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,12 +61,12 @@ class SavedFragment : Fragment(R.layout.fragment_saved) , NewsListAdapter.OnClic
 
     //저장된 뉴스 id를 통해 보여주기
     private fun newsSource() {
-        CoroutineScope(Dispatchers.IO).launch {
-            models = newsDB.newsDao().getAll()
-            CoroutineScope(Dispatchers.Main).launch {
-                saveNewsAdapter?.setItems(models)
+        savedNewsRepository.getSavedNews { list, throwable ->
+            if (list != null) {
+                saveNewsAdapter?.setItems(list)
             }
         }
+
 //        saveNewsAdapter?.notifyDataSetChanged() //여기다 선언하면 데이터 셋 되기전에 호출해서 바로 안뜸.
     }
     override fun onItemClicked(articles: Articles, view: View) {
