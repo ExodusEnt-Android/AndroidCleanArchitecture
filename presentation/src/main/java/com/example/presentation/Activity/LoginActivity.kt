@@ -7,20 +7,19 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.presentation.Base.BaseActivity
 import com.example.presentation.LoginData
+import com.example.presentation.R
 import com.example.presentation.Room.AppDB
 import com.example.presentation.databinding.ActivityLoginBinding
+import com.example.presentation.databinding.ActivityMainBinding
 import com.example.presentation.enum.UserMokData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class LoginActivity : BaseActivity() {
-    private lateinit var mBinding : ActivityLoginBinding
+class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mBinding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(mBinding.root)
 
         mBinding.btnLogin.setOnClickListener {
             if(loginCheck(mBinding.etId.text.toString(), mBinding.etPwd.text.toString())){
