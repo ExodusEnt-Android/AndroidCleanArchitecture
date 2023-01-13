@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigation_saved"
+    app:startDestination="@id/savedFragment">
+
+    <fragment
+        android:id="@+id/savedFragment"
+        android:name="com.example.presentation.Fragment.SavedFragment"
+        android:label="SavedFragment" />
+
+    <fragment
+        android:id="@+id/newsDetailFragment"
+        android:name="com.example.presentation.Fragment.NewsDetailFragment"
+        android:label="NewsDetailFragment"/>
+</navigation>

@@ -1,10 +1,11 @@
-package com.example.presentation
+package com.example.presentation.Activity
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import com.example.presentation.PreferenceUtil
+import com.example.presentation.R
 import com.example.presentation.databinding.ActivityLoginBinding
-import timber.log.Timber
 
 class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login) {
 

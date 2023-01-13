@@ -1,4 +1,4 @@
-package com.example.presentation
+package com.example.presentation.Activity
 
 import android.os.Bundle
 import androidx.annotation.LayoutRes

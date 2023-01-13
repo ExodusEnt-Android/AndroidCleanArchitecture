@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigation_category_btn"
+    app:startDestination="@id/categoryBtnFragment">
+
+    <fragment
+        android:id="@+id/categoryBtnFragment"
+        android:name="com.example.presentation.Fragment.CategoryBtnFragment"
+        android:label="CategoryBtnFragment" />
+
+    <fragment
+        android:id="@+id/categoryNewsFragment"
+        android:name="com.example.presentation.Fragment.CategoryNewsFragment"
+        android:label="CategoryNewsFragment"/>
+
+    <fragment
+        android:id="@+id/newsDetailFragment"
+        android:name="com.example.presentation.Fragment.NewsDetailFragment"
+        android:label="NewsDetailFragment"/>
+</navigation>
