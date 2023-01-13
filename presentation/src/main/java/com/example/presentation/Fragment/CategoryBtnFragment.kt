@@ -21,10 +21,21 @@ class CategoryBtnFragment : Fragment(R.layout.fragment_category_btn) , View.OnCl
         mBinding = FragmentCategoryBtnBinding.inflate(inflater, container, false)
         navHostFragment =requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
-
-
         return mBinding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        mBinding.btnBusiness.setOnClickListener(this)
+        mBinding.btnEntertain.setOnClickListener(this)
+        mBinding.btnGeneral.setOnClickListener(this)
+        mBinding.btnHealth.setOnClickListener(this)
+        mBinding.btnScience.setOnClickListener(this)
+        mBinding.btnSports.setOnClickListener(this)
+        mBinding.btnTech.setOnClickListener(this)
+    }
+
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.btn_business -> {
