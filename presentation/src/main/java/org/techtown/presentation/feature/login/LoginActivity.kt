@@ -5,6 +5,7 @@ import android.widget.Toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.techtown.presentation.R
 import org.techtown.presentation.feature.main.MainActivity
 import org.techtown.presentation.base.BaseActivity
@@ -35,7 +36,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
                     PreferenceUtil.setBoolean(LOGIN_STATUS, true)
                     PreferenceUtil.setString(LOGIN_ID, binding.edtId.text.toString())
 
-                    runOnUiThread {
+                    withContext(Dispatchers.Main) {
                         goMainActivity()
                     }
                 }

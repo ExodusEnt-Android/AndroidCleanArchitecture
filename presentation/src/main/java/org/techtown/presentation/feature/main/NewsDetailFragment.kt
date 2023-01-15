@@ -5,6 +5,7 @@ import com.bumptech.glide.Glide
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.techtown.presentation.R
 import org.techtown.presentation.base.BaseFragment
 import org.techtown.presentation.database.database.AppDatabase
@@ -59,7 +60,7 @@ class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.frag
         CoroutineScope(Dispatchers.IO).launch {
             newsRepository.getAllSavedArticles().collect { data ->
                 val isSelected = data.any { it.url == articles.url }
-                CoroutineScope((Dispatchers.Main)).launch {
+                withContext(Dispatchers.Main) {
                     setSavedItemListenerEvent(isSelected)
                 }
             }

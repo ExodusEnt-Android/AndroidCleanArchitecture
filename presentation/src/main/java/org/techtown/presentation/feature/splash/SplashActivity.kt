@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.techtown.presentation.R
 import org.techtown.presentation.feature.main.MainActivity
 import org.techtown.presentation.base.BaseActivity
@@ -36,7 +37,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
         CoroutineScope(Dispatchers.IO).launch {
             delay(2000)
 
-            runOnUiThread {
+            withContext(Dispatchers.Main) {
                 if (PreferenceUtil.getBoolean(LoginActivity.LOGIN_STATUS, false)) {
                     startActivity(Intent(this@SplashActivity, MainActivity::class.java))
                 } else {
