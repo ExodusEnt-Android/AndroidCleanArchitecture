@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -162,5 +164,11 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
         outState.putParcelableArrayList("recyclerview_list", tempArticleList)
     }
 
-
+    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
+        return if(enter) {
+            AnimationUtils.loadAnimation(context, R.anim.stationary)
+        } else {
+            null
+        }
+    }
 }

@@ -3,6 +3,8 @@ package org.techtown.presentation.feature.main
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -108,6 +110,14 @@ class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved
         super.onSaveInstanceState(outState)
         outState.putParcelable("recyclerview_state", recyclerViewScrollState)
         outState.putParcelableArrayList("recyclerview_list", tempSavedArticleList)
+    }
+
+    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
+        return if(enter) {
+            AnimationUtils.loadAnimation(context, R.anim.stationary)
+        } else {
+            null
+        }
     }
 
 }
