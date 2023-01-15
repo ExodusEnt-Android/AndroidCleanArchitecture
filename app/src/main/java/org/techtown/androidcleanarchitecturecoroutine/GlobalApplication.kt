@@ -12,7 +12,7 @@ import timber.log.Timber
 class GlobalApplication : Application() {
 
     override fun onCreate() {
-        PreferenceUtil.prefs = PreferenceUtil(applicationContext)
+        PreferenceUtil.with(application = this)
         super.onCreate()
         Timber.plant(Timber.DebugTree())
     }

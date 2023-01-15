@@ -1,16 +1,20 @@
 package org.techtown.util.preference
 
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 
+object PreferenceUtil {
 
-/**
- * @see
- * */
+    private lateinit var prefs: SharedPreferences
 
-class PreferenceUtil(context: Context) {
-    private val prefs: SharedPreferences =
-        context.getSharedPreferences("prefs_name", Context.MODE_PRIVATE)
+    private const val PREFERENCE_FILE_NAME = "prefs_name"
+
+    fun with(application: Application) {
+        prefs = application.getSharedPreferences(
+            PREFERENCE_FILE_NAME, Context.MODE_PRIVATE
+        )
+    }
 
     fun getString(key: String, defValue: String): String {
         return prefs.getString(key, defValue).toString()
@@ -26,9 +30,5 @@ class PreferenceUtil(context: Context) {
 
     fun getBoolean(key: String, defValue: Boolean): Boolean {
         return prefs.getBoolean(key, defValue)
-    }
-
-    companion object {
-        lateinit var prefs: PreferenceUtil
     }
 }

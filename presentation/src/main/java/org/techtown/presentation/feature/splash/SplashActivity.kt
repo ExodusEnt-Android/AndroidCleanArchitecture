@@ -26,8 +26,8 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
 
     //로그인 할 수 있는 멤버 등록.
     private fun registMember() {
-        PreferenceUtil.prefs.setString("member1", "1111")
-        PreferenceUtil.prefs.setString("member2", "2222")
+        PreferenceUtil.setString("member1", "1111")
+        PreferenceUtil.setString("member2", "2222")
     }
 
 
@@ -37,7 +37,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
             delay(2000)
 
             runOnUiThread {
-                if (PreferenceUtil.prefs.getBoolean(LoginActivity.LOGIN_STATUS, false)) {
+                if (PreferenceUtil.getBoolean(LoginActivity.LOGIN_STATUS, false)) {
                     startActivity(Intent(this@SplashActivity, MainActivity::class.java))
                 } else {
                     startActivity(Intent(this@SplashActivity, LoginActivity::class.java))

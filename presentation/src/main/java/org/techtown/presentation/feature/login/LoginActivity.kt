@@ -9,7 +9,6 @@ import org.techtown.presentation.R
 import org.techtown.presentation.feature.main.MainActivity
 import org.techtown.presentation.base.BaseActivity
 import org.techtown.presentation.databinding.ActivityLoginBinding
-import org.techtown.presentation.feature.splash.SplashActivity
 import org.techtown.util.preference.PreferenceUtil
 
 class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login) {
@@ -22,19 +21,19 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
 
         binding.btnLogin.setOnClickListener {
 
-            if (binding.edtId.text.toString() == MEMBER1 && binding.edtPass.text.toString() == PreferenceUtil.prefs.getString(
+            if (binding.edtId.text.toString() == MEMBER1 && binding.edtPass.text.toString() == PreferenceUtil.getString(
                     MEMBER1,
                     ""
                 )
-                || binding.edtId.text.toString() == MEMBER2 && binding.edtPass.text.toString() == PreferenceUtil.prefs.getString(
+                || binding.edtId.text.toString() == MEMBER2 && binding.edtPass.text.toString() == PreferenceUtil.getString(
                     MEMBER2,
                     ""
                 )
             ) {
                 CoroutineScope(Dispatchers.IO).launch {
                     //로그인 여부 저장 및 아이디 저장해줍니다.
-                    PreferenceUtil.prefs.setBoolean(LOGIN_STATUS, true)
-                    PreferenceUtil.prefs.setString(LOGIN_ID, binding.edtId.text.toString())
+                    PreferenceUtil.setBoolean(LOGIN_STATUS, true)
+                    PreferenceUtil.setString(LOGIN_ID, binding.edtId.text.toString())
 
                     runOnUiThread {
                         goMainActivity()
