@@ -3,7 +3,7 @@ package org.techtown.presentation.ext
 import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
-import org.techtown.androidcleanarchitecturecoroutine.R
+import org.techtown.presentation.R
 
 fun NavController.navigateWithAnim(destinationId: Int, bundle: Bundle){
     val options = NavOptions.Builder()

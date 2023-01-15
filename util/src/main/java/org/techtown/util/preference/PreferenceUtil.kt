@@ -1,4 +1,4 @@
-package org.techtown.presentation.util
+package org.techtown.util.preference
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -26,5 +26,9 @@ class PreferenceUtil(context: Context) {
 
     fun getBoolean(key: String, defValue: Boolean): Boolean {
         return prefs.getBoolean(key, defValue)
+    }
+
+    companion object {
+        lateinit var prefs: PreferenceUtil
     }
 }

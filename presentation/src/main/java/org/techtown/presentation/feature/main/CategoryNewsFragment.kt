@@ -5,9 +5,9 @@ import android.util.Log
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
-import org.techtown.androidcleanarchitecturecoroutine.R
-import org.techtown.androidcleanarchitecturecoroutine.databinding.FragmentCategoryNewsBinding
+import org.techtown.presentation.R
 import org.techtown.presentation.base.BaseFragment
+import org.techtown.presentation.databinding.FragmentCategoryNewsBinding
 import org.techtown.presentation.ext.navigateWithAnim
 
 

@@ -3,7 +3,7 @@ package org.techtown.presentation.retrofit
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.techtown.androidcleanarchitecturecoroutine.BuildConfig
+import org.techtown.presentation.BuildConfig
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

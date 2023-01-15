@@ -6,9 +6,9 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import org.techtown.androidcleanarchitecturecoroutine.R
-import org.techtown.androidcleanarchitecturecoroutine.databinding.ActivityMainBinding
+import org.techtown.presentation.R
 import org.techtown.presentation.base.BaseActivity
+import org.techtown.presentation.databinding.ActivityMainBinding
 
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 

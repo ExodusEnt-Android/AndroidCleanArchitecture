@@ -2,7 +2,7 @@ package org.techtown.presentation.viewholder
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import org.techtown.androidcleanarchitecturecoroutine.databinding.TopNewsItemBinding
+import org.techtown.presentation.databinding.TopNewsItemBinding
 import org.techtown.presentation.model.Articles
 
 class TopNewsVH(

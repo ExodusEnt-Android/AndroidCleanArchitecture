@@ -7,9 +7,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import org.techtown.androidcleanarchitecturecoroutine.R
-import org.techtown.androidcleanarchitecturecoroutine.databinding.ItemLoadingBinding
-import org.techtown.androidcleanarchitecturecoroutine.databinding.TopNewsItemBinding
+import org.techtown.presentation.R
+import org.techtown.presentation.databinding.ItemLoadingBinding
+import org.techtown.presentation.databinding.TopNewsItemBinding
 import org.techtown.presentation.model.Articles
 import org.techtown.presentation.viewholder.LoadingVH
 import org.techtown.presentation.viewholder.TopNewsVH

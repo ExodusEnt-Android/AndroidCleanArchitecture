@@ -9,10 +9,10 @@ import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.techtown.androidcleanarchitecturecoroutine.R
-import org.techtown.androidcleanarchitecturecoroutine.databinding.FragmentSavedBinding
+import org.techtown.presentation.R
 import org.techtown.presentation.base.BaseFragment
 import org.techtown.presentation.database.database.AppDatabase
+import org.techtown.presentation.databinding.FragmentSavedBinding
 import org.techtown.presentation.ext.navigateWithAnim
 import org.techtown.presentation.feature.main.adapter.TopNewsAdapter
 import org.techtown.presentation.model.Articles

@@ -5,12 +5,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.techtown.androidcleanarchitecturecoroutine.R
-import org.techtown.androidcleanarchitecturecoroutine.databinding.ActivitySplashBinding
+import org.techtown.presentation.R
 import org.techtown.presentation.feature.main.MainActivity
 import org.techtown.presentation.base.BaseActivity
+import org.techtown.presentation.databinding.ActivitySplashBinding
 import org.techtown.presentation.feature.login.LoginActivity
-import org.techtown.presentation.util.PreferenceUtil
+import org.techtown.util.preference.PreferenceUtil
 
 class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_splash) {
 
@@ -20,15 +20,14 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
     }
 
     private fun initSet() {
-        prefs = PreferenceUtil((applicationContext))
         registMember()
 
     }
 
     //로그인 할 수 있는 멤버 등록.
     private fun registMember() {
-        prefs.setString("member1", "1111")
-        prefs.setString("member2", "2222")
+        PreferenceUtil.prefs.setString("member1", "1111")
+        PreferenceUtil.prefs.setString("member2", "2222")
     }
 
 
@@ -38,7 +37,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
             delay(2000)
 
             runOnUiThread {
-                if (prefs.getBoolean(LoginActivity.LOGIN_STATUS, false)) {
+                if (PreferenceUtil.prefs.getBoolean(LoginActivity.LOGIN_STATUS, false)) {
                     startActivity(Intent(this@SplashActivity, MainActivity::class.java))
                 } else {
                     startActivity(Intent(this@SplashActivity, LoginActivity::class.java))
@@ -46,10 +45,6 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
                 finish()
             }
         }
-    }
-
-    companion object {
-        lateinit var prefs: PreferenceUtil
     }
 
 }

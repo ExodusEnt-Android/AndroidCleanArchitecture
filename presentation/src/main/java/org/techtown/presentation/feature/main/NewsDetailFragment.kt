@@ -5,10 +5,10 @@ import com.bumptech.glide.Glide
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.techtown.androidcleanarchitecturecoroutine.R
-import org.techtown.androidcleanarchitecturecoroutine.databinding.FragmentNewsDetailBinding
+import org.techtown.presentation.R
 import org.techtown.presentation.base.BaseFragment
 import org.techtown.presentation.database.database.AppDatabase
+import org.techtown.presentation.databinding.FragmentNewsDetailBinding
 import org.techtown.presentation.model.Articles
 import org.techtown.presentation.repository.NewsRepository
 import org.techtown.presentation.repository.NewsRepositoryImpl
