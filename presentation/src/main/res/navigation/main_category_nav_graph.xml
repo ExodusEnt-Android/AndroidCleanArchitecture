@@ -20,7 +20,7 @@
     <fragment
         android:id="@+id/topNews_detail"
         android:name="org.techtown.presentation.feature.main.NewsDetailFragment"
-        android:label="topNewsDetail"
+        android:label="categoryTopNewsDetail"
         tools:layout="@layout/fragment_news_detail"/>
 
 </navigation>

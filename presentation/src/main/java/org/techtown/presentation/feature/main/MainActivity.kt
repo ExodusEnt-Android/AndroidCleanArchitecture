@@ -36,16 +36,25 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
             when (destination.label) {
                 "topNews" -> {
-                    binding.toolbarMain.visibility = View.VISIBLE
-                    binding.tvToolbarTitle.text = "topNews"
+                    binding.tvToolbarTitle.text = getString(R.string.top_news)
+                }
+                "topNewsDetail" -> {
+                    binding.tvToolbarTitle.text = getString(R.string.top_news_detail)
                 }
                 "category" -> {
-                    binding.toolbarMain.visibility = View.VISIBLE
-                    binding.tvToolbarTitle.text = "category"
+                    binding.tvToolbarTitle.text = getString(R.string.category)
+                }
+                "categoryDetail" -> {
+                    binding.tvToolbarTitle.text = getString(R.string.category_detail)
+                }
+                "categoryTopNewsDetail" -> {
+                    binding.tvToolbarTitle.text = getString(R.string.category_top_news_detail)
                 }
                 "saved" -> {
-                    binding.toolbarMain.visibility = View.VISIBLE
-                    binding.tvToolbarTitle.text = "saved"
+                    binding.tvToolbarTitle.text = getString(R.string.saved)
+                }
+                "savedTopNewsDetail" -> {
+                    binding.tvToolbarTitle.text = getString(R.string.saved_top_news_detail)
                 }
             }
         }
