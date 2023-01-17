@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_category_nav_graph"
+    app:startDestination="@id/category">
+
+    <fragment
+        android:id="@+id/category"
+        android:name="org.techtown.presentation.feature.main.CategoryNewsFragment"
+        android:label="category"
+        tools:layout="@layout/fragment_category_news"/>
+
+    <fragment
+        android:id="@+id/category_detail"
+        android:name="org.techtown.presentation.feature.main.CategoryDetailNewsFragment"
+        android:label="categoryDetail"
+        tools:layout="@layout/fragment_category_detail_news"/>
+
+    <fragment
+        android:id="@+id/topNews_detail"
+        android:name="org.techtown.presentation.feature.main.NewsDetailFragment"
+        android:label="categoryTopNewsDetail"
+        tools:layout="@layout/fragment_news_detail"/>
+
+</navigation>

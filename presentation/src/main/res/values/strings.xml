@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">presentation</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="top_news">Top News</string>
+    <string name="top_news_detail">Top News Detail</string>
+    <string name="category">Category</string>
+    <string name="category_detail">Category Detail</string>
+    <string name="category_top_news_detail">Category Top News Detail</string>
+    <string name="saved">Saved</string>
+    <string name="saved_top_news_detail">Saved Top News Detail</string>
+</resources>
