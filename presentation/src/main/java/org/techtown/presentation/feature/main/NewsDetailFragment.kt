@@ -10,11 +10,12 @@ import org.techtown.presentation.R
 import org.techtown.presentation.base.BaseFragment
 import org.techtown.presentation.database.database.AppDatabase
 import org.techtown.presentation.databinding.FragmentNewsDetailBinding
+import org.techtown.presentation.datasource.local.LocalDataSourceImpl
+import org.techtown.presentation.datasource.remote.RemoteDataSourceImpl
 import org.techtown.presentation.model.Articles
 import org.techtown.presentation.repository.NewsRepository
 import org.techtown.presentation.repository.NewsRepositoryImpl
 import org.techtown.presentation.retrofit.NewsService
-import kotlin.concurrent.thread
 
 class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.fragment_news_detail) {
 
@@ -28,8 +29,9 @@ class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.frag
     }
 
     private val newsRepository: NewsRepository by lazy {
-        val newsService = NewsService.apiService
-        NewsRepositoryImpl(newsService, database)
+        val localDataSource = LocalDataSourceImpl(database)
+        val remoteDataSource = RemoteDataSourceImpl(NewsService.apiService)
+        NewsRepositoryImpl(localDataSource, remoteDataSource)
     }
 
     override fun FragmentNewsDetailBinding.onCreateView() {
@@ -58,7 +60,7 @@ class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.frag
         }
 
         CoroutineScope(Dispatchers.IO).launch {
-            newsRepository.getAllSavedArticles().collect { data ->
+            newsRepository.getAllArticles().collect { data ->
                 val isSelected = data.any { it.url == articles.url }
                 withContext(Dispatchers.Main) {
                     setSavedItemListenerEvent(isSelected)

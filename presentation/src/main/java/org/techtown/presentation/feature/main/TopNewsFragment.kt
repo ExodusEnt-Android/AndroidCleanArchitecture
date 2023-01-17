@@ -19,11 +19,14 @@ import org.techtown.presentation.R
 import org.techtown.presentation.base.BaseFragment
 import org.techtown.presentation.database.database.AppDatabase
 import org.techtown.presentation.databinding.FragmentTopNewsBinding
+import org.techtown.presentation.datasource.local.LocalDataSourceImpl
+import org.techtown.presentation.datasource.remote.RemoteDataSourceImpl
 import org.techtown.presentation.ext.navigateWithAnim
 import org.techtown.presentation.feature.main.adapter.TopNewsAdapter
 import org.techtown.presentation.model.Articles
 import org.techtown.presentation.repository.NewsRepository
 import org.techtown.presentation.repository.NewsRepositoryImpl
+import org.techtown.presentation.retrofit.ApiService
 import org.techtown.presentation.retrofit.NewsService
 
 class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_top_news) {
@@ -47,8 +50,9 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
     }
 
     private val newsRepository: NewsRepository by lazy {
-        val newsService = NewsService.apiService
-        NewsRepositoryImpl(newsService, database)
+        val localDataSource = LocalDataSourceImpl(database)
+        val remoteDataSource = RemoteDataSourceImpl(NewsService.apiService)
+        NewsRepositoryImpl(localDataSource, remoteDataSource)
     }
 
 

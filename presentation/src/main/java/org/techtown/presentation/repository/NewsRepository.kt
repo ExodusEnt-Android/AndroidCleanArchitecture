@@ -1,11 +1,3 @@
-/**
- * Copyright (C) 2023. ExodusEnt Corp. All rights reserved.
- * You must have prior written permission to read this file.
- * @author __Jung Sang Min__ <jnugg0819@myloveidol.com>
- * Description:
- *
- * */
-
 package org.techtown.presentation.repository
 
 import kotlinx.coroutines.flow.Flow
@@ -27,7 +19,7 @@ interface NewsRepository {
         @Query("page") offset : Int
     ) : Flow<NewsRootModel>
 
-    suspend fun getAllSavedArticles() : Flow<List<Articles>>
+    suspend fun getAllArticles() : Flow<List<Articles>>
 
     fun insertArticle(articles: Articles, callback : () -> Unit)
 
