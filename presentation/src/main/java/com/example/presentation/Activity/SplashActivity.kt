@@ -16,7 +16,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
         super.onCreate(savedInstanceState)
 
         CoroutineScope(Dispatchers.IO).launch {
-//            delay(3000)
+            delay(3000)
             //아이디 2개 저장
             PreferenceUtil.setPreference(this@SplashActivity, "mingue0605", "alsrb123")
             PreferenceUtil.setPreference(this@SplashActivity, "mingue1234", "alsrb1234")
