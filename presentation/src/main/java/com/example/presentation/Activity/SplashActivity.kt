@@ -24,11 +24,8 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
             //로그인 상태 아닐 경우
             if(PreferenceUtil.getPreferenceBool(this@SplashActivity, "Login", false)){
                 startActivity(Intent(this@SplashActivity, LoginActivity::class.java))
-                finish()
-
             }else{  //로그인 상태일 경우
                 startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-                finish()
             }
         }
 
