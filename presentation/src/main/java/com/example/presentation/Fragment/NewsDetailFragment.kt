@@ -17,9 +17,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class NewsDetailFragment : Fragment(R.layout.fragment_news_detail), View.OnClickListener {
+class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.fragment_news_detail), View.OnClickListener {
 
-    private lateinit var mBinding : FragmentNewsDetailBinding
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController
     private var ivSaved : Boolean = false

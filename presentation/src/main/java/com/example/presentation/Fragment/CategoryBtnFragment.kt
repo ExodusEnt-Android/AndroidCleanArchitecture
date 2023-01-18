@@ -11,9 +11,8 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.presentation.R
 import com.example.presentation.databinding.FragmentCategoryBtnBinding
 
-class CategoryBtnFragment : Fragment(R.layout.fragment_category_btn) , View.OnClickListener{
+class CategoryBtnFragment : BaseFragment<FragmentCategoryBtnBinding>(R.layout.fragment_category_btn) , View.OnClickListener{
 
-    private lateinit var mBinding : FragmentCategoryBtnBinding
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController
 

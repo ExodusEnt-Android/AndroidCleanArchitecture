@@ -24,9 +24,8 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class CategoryNewsFragment : Fragment(R.layout.fragment_category_news), NewsListAdapter.OnClickListener{
+class CategoryNewsFragment : BaseFragment<FragmentCategoryNewsBinding>(R.layout.fragment_category_news), NewsListAdapter.OnClickListener{
 
-    private lateinit var mBinding : FragmentCategoryNewsBinding
     private var categoryAdapter : NewsListAdapter? = null
     private lateinit var models : ArrayList<Articles>
     lateinit var navHostFragment: NavHostFragment

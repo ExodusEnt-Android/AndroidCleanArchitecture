@@ -17,9 +17,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class SavedFragment : Fragment(R.layout.fragment_saved) , NewsListAdapter.OnClickListener{
+class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved) , NewsListAdapter.OnClickListener{
 
-    private lateinit var mBinding : FragmentSavedBinding
     private var saveNewsAdapter : NewsListAdapter? = null
     private lateinit var models : List<Articles>
     lateinit var navHostFragment: NavHostFragment
