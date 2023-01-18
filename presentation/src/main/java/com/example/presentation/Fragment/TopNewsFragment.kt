@@ -61,7 +61,9 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
                    val model = result?.articles
 
                    models = ArrayList()
-                   for(i in model!!.indices){
+                   if(model.isNullOrEmpty()) return@withContext
+
+                   for(i in model.indices){
                        models.add(model[i])
                    }
 
