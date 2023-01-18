@@ -14,6 +14,7 @@ import com.example.presentation.*
 import com.example.presentation.Adapter.NewsListAdapter
 import com.example.presentation.databinding.FragmentCategoryNewsBinding
 import com.example.presentation.retrofit.ApiService
+import com.example.presentation.retrofit.RetrofitHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -52,11 +53,8 @@ class CategoryNewsFragment : BaseFragment<FragmentCategoryNewsBinding>(R.layout.
     }
 
     private fun newsCategory(category : String) {
-        val retrofit = Retrofit.Builder().baseUrl("https://newsapi.org/")
-            .addConverterFactory(GsonConverterFactory.create()).build();
-
         CoroutineScope(Dispatchers.IO).launch {
-            val response = retrofit.create(ApiService::class.java).requestCategoryNews(category)
+            val response = RetrofitHelper.retrofit.requestCategoryNews(category)
             withContext(Dispatchers.Main) {
                 // 정상적으로 통신이 성공된 경우
                 if(response.isSuccessful){

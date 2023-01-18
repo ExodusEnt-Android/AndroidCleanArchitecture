@@ -14,6 +14,7 @@ import com.example.presentation.*
 import com.example.presentation.Adapter.NewsListAdapter
 import com.example.presentation.databinding.FragmentTopNewsBinding
 import com.example.presentation.retrofit.ApiService
+import com.example.presentation.retrofit.RetrofitHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,7 +32,7 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         mBinding = FragmentTopNewsBinding.inflate(inflater, container, false)
         navHostFragment =requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
@@ -49,11 +50,10 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
     }
 
     private fun topNews() {
-        val retrofit = Retrofit.Builder().baseUrl("https://newsapi.org/")
-            .addConverterFactory(GsonConverterFactory.create()).build()
+
 
         CoroutineScope(Dispatchers.IO).launch {
-            val response = retrofit.create(ApiService::class.java).requestNews()
+            val response = RetrofitHelper.retrofit.requestNews()
            withContext(Dispatchers.Main) {
                if(response.isSuccessful){
                    val result: NewsData? = response.body()
