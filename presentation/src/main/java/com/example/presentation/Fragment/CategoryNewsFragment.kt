@@ -54,7 +54,7 @@ class CategoryNewsFragment : BaseFragment<FragmentCategoryNewsBinding>(R.layout.
 
     private fun newsCategory(category : String) {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = RetrofitHelper.retrofit.requestCategoryNews(category)
+            val response = RetrofitHelper.retrofit.requestNews(null, category)
             withContext(Dispatchers.Main) {
                 // 정상적으로 통신이 성공된 경우
                 if(response.isSuccessful){

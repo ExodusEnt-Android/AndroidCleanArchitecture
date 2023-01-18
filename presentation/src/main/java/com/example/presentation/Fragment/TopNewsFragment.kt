@@ -53,7 +53,7 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
 
 
         CoroutineScope(Dispatchers.IO).launch {
-            val response = RetrofitHelper.retrofit.requestNews()
+            val response = RetrofitHelper.retrofit.requestNews("us",null)
            withContext(Dispatchers.Main) {
                if(response.isSuccessful){
                    val result: NewsData? = response.body()
