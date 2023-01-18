@@ -42,7 +42,7 @@ class CategoryBtnFragment : BaseFragment<FragmentCategoryBtnBinding>(R.layout.fr
                 navController.navigate(R.id.categoryNewsFragment, item)
             }
             R.id.btn_entertain -> {
-                val item = bundleOf("category" to "business")
+                val item = bundleOf("category" to "entertain")
                 navController.navigate(R.id.categoryNewsFragment, item)
             }
             R.id.btn_general -> {
