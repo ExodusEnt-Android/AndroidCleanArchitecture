@@ -12,7 +12,12 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.presentation.*
 import com.example.presentation.Adapter.NewsListAdapter
+import com.example.presentation.Room.AppDB
 import com.example.presentation.databinding.FragmentTopNewsBinding
+import com.example.presentation.datasource.local.LocalDataSourceImpl
+import com.example.presentation.datasource.remote.RemoteDataSourceImpl
+import com.example.presentation.repository.NewsRepository
+import com.example.presentation.repository.NewsRepositoryImpl
 import com.example.presentation.retrofit.ApiService
 import com.example.presentation.retrofit.RetrofitHelper
 import kotlinx.coroutines.CoroutineScope
@@ -31,6 +36,13 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
     private lateinit var models : ArrayList<Articles>
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController
+
+    private val topNewsFragmentRepository : NewsRepository by lazy {
+        val remoteDataSourceImpl = RemoteDataSourceImpl()
+        val localDataSourceImpl = LocalDataSourceImpl(context?.let { AppDB.getInstance(it) }!!)
+
+        NewsRepositoryImpl(remoteDataSourceImpl, localDataSourceImpl)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         mBinding = FragmentTopNewsBinding.inflate(inflater, container, false)
@@ -51,25 +63,22 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
 
     private fun topNews() {
 
-
         CoroutineScope(Dispatchers.IO).launch {
-            val response = RetrofitHelper.retrofit.requestNews("us",null)
-           withContext(Dispatchers.Main) {
-               if(response.isSuccessful){
-                   val result: NewsData? = response.body()
+            topNewsFragmentRepository.getNews("us", null).collect {
 
-                   val model = result?.articles
+                withContext(Dispatchers.Main) {
+                    val model = it.articles
 
-                   models = ArrayList()
-                   if(model.isNullOrEmpty()) return@withContext
+                    models = ArrayList()
+                    if (model.isNullOrEmpty()) return@withContext
 
-                   for(i in model.indices){
-                       models.add(model[i])
-                   }
+                    for (i in model.indices) {
+                        models.add(model[i])
+                    }
 
-                   topNewsAdapter?.setItems(models)
-               }
-           }
+                    topNewsAdapter?.setItems(models)
+                }
+            }
         }
     }
     override fun onItemClicked(articles: Articles, view: View) {

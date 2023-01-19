@@ -13,9 +13,15 @@ import com.example.presentation.*
 import com.example.presentation.Adapter.NewsListAdapter
 import com.example.presentation.Room.AppDB
 import com.example.presentation.databinding.FragmentSavedBinding
+import com.example.presentation.datasource.local.LocalDataSourceImpl
+import com.example.presentation.datasource.remote.RemoteDataSourceImpl
+import com.example.presentation.repository.NewsRepository
+import com.example.presentation.repository.NewsRepositoryImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved) , NewsListAdapter.OnClickListener{
 
@@ -23,13 +29,18 @@ class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved
     private lateinit var models : List<Articles>
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController
-    private lateinit var newsDB : AppDB
+
+    private val savedFragmentRepository : NewsRepository by lazy {
+        val remoteDataSourceImpl = RemoteDataSourceImpl()
+        val localDataSourceImpl = LocalDataSourceImpl(context?.let { AppDB.getInstance(it) }!!)
+
+        NewsRepositoryImpl(remoteDataSourceImpl, localDataSourceImpl)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mBinding = FragmentSavedBinding.inflate(inflater, container, false)
         navHostFragment =requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
-        newsDB = context?.let { AppDB.getInstance(it) }!!
 
         return mBinding.root
     }
@@ -46,9 +57,10 @@ class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved
     //저장된 뉴스 id를 통해 보여주기
     private fun newsSource() {
         CoroutineScope(Dispatchers.IO).launch {
-            models = newsDB.newsDao().getAll()
-            CoroutineScope(Dispatchers.Main).launch {
-                saveNewsAdapter?.setItems(models)
+            savedFragmentRepository.getAll().collect{
+                withContext(Dispatchers.Main) {
+                    saveNewsAdapter?.setItems(it)
+                }
             }
         }
 //        saveNewsAdapter?.notifyDataSetChanged() //여기다 선언하면 데이터 셋 되기전에 호출해서 바로 안뜸.
