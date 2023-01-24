@@ -40,12 +40,12 @@ class CategoryNewsFragment : BaseFragment<FragmentCategoryNewsBinding>(R.layout.
 
     private val categoryNewsFragmentRepository : NewsRepository by lazy{
         val remoteDataSourceImpl = RemoteDataSourceImpl()
-        val localDataSourceImpl = LocalDataSourceImpl(context?.let { AppDB.getInstance(it) }!!)
+        val localDataSourceImpl = LocalDataSourceImpl(AppDB.getInstance(requireActivity()))
 
         NewsRepositoryImpl(remoteDataSourceImpl, localDataSourceImpl)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         mBinding = FragmentCategoryNewsBinding.inflate(inflater, container, false)
         navHostFragment =requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
