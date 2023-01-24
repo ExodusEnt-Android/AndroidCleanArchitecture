@@ -21,7 +21,7 @@ interface NewsRepository {
 
     suspend fun getAllArticles() : Flow<List<Articles>>
 
-    fun insertArticle(articles: Articles, callback : () -> Unit)
+    suspend fun insertArticle(articles: Articles)
 
-    fun deleteArticle(url: String, callback : () -> Unit)
+    suspend fun deleteArticle(url: String)
 }

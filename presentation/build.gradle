@@ -86,6 +86,8 @@ dependencies {
     // optional - Test helpers
     testImplementation "androidx.room:room-testing:$room_version"
 
+    implementation "androidx.room:room-ktx:$room_version"
+
     def nav_version = "2.5.2"
 
     // Kotlin

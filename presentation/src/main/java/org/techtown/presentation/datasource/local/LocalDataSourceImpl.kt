@@ -20,14 +20,12 @@ class LocalDataSourceImpl(
         emit(result)
     }.flowOn(Dispatchers.IO)
 
-    override fun addArticle(articles: Articles, callback: () -> Unit) {
+    override suspend fun addArticle(articles: Articles) {
         appDatabase.articleDao().insertArticle(articles)
-        callback()
     }
 
-    override fun removeArticle(url: String, callback: () -> Unit) {
+    override suspend fun removeArticle(url: String) {
         appDatabase.articleDao().deleteArticle(url)
-        callback()
     }
 
 }

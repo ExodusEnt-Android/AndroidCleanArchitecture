@@ -12,6 +12,6 @@ import org.techtown.presentation.model.Articles
 
 interface LocalDataSource {
     suspend fun getAllArticles(): Flow<List<Articles>>
-    fun addArticle(articles: Articles, callback: () -> Unit)
-    fun removeArticle(url: String, callback: () -> Unit)
+    suspend fun addArticle(articles: Articles)
+    suspend fun removeArticle(url: String)
 }

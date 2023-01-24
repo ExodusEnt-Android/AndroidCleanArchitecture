@@ -29,15 +29,11 @@ class NewsRepositoryImpl(
 
     override suspend fun getAllArticles(): Flow<List<Articles>> = localDataSource.getAllArticles()
 
-    override fun insertArticle(articles: Articles, callback: () -> Unit) {
-        localDataSource.addArticle(articles = articles) {
-            callback()
-        }
+    override suspend fun insertArticle(articles: Articles) {
+        localDataSource.addArticle(articles = articles)
     }
 
-    override fun deleteArticle(url: String, callback: () -> Unit) {
-        localDataSource.removeArticle(url = url) {
-            callback()
-        }
+    override suspend fun deleteArticle(url: String) {
+        localDataSource.removeArticle(url = url)
     }
 }

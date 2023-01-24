@@ -73,24 +73,18 @@ class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.frag
             binding.ivSaved.setImageResource(R.drawable.star_active)
 
             binding.ivSaved.setOnClickListener {
-                CoroutineScope(Dispatchers.IO).launch {
-                    newsRepository.deleteArticle(articles.url) {
-                        CoroutineScope(Dispatchers.Main).launch {
-                            binding.ivSaved.setImageResource(R.drawable.star_inactive)
-                        }
-                    }
+                viewLifecycleOwner.lifecycleScope.launch {
+                    newsRepository.deleteArticle(articles.url)
+                    binding.ivSaved.setImageResource(R.drawable.star_inactive)
                 }
             }
         } else {
             binding.ivSaved.setImageResource(R.drawable.star_inactive)
 
             binding.ivSaved.setOnClickListener {
-                CoroutineScope(Dispatchers.IO).launch {
-                    newsRepository.insertArticle(articles) {
-                        CoroutineScope(Dispatchers.Main).launch {
-                            binding.ivSaved.setImageResource(R.drawable.star_active)
-                        }
-                    }
+                viewLifecycleOwner.lifecycleScope.launch {
+                    newsRepository.insertArticle(articles)
+                    binding.ivSaved.setImageResource(R.drawable.star_active)
                 }
             }
         }
