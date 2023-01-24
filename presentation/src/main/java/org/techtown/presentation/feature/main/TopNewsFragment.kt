@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -129,33 +130,31 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
             }
         }
 
-        CoroutineScope(Dispatchers.IO).launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             newsRepository.getTopHeadlinesArticles(
                 country = "us", pageSize = limit, offset = offset, category = null
             ).collect { data ->
 
-                withContext(Dispatchers.Main) {
-                    if (!this@TopNewsFragment::topNewsAdapter.isInitialized) {
-                        topNewsAdapter = TopNewsAdapter()
-                        binding.rvTopNews.apply {
-                            adapter = topNewsAdapter
-                        }
+                if (!this@TopNewsFragment::topNewsAdapter.isInitialized) {
+                    topNewsAdapter = TopNewsAdapter()
+                    binding.rvTopNews.apply {
+                        adapter = topNewsAdapter
                     }
-
-                    if (tempArticleList.size > 0) {
-                        if (tempArticleList[tempArticleList.lastIndex].isLoading) {
-                            tempArticleList.removeAt(tempArticleList.lastIndex)
-                            topNewsAdapter.submitList(tempArticleList.map { it.copy() })
-                        }
-                    }
-
-                    tempArticleList.addAll(data.articles)
-                    topNewsAdapter.submitList(tempArticleList.map { it.copy() }.toMutableList())
-
-                    setListenerEvent()
-
-                    offset += 1
                 }
+
+                if (tempArticleList.size > 0) {
+                    if (tempArticleList[tempArticleList.lastIndex].isLoading) {
+                        tempArticleList.removeAt(tempArticleList.lastIndex)
+                        topNewsAdapter.submitList(tempArticleList.map { it.copy() })
+                    }
+                }
+
+                tempArticleList.addAll(data.articles)
+                topNewsAdapter.submitList(tempArticleList.map { it.copy() }.toMutableList())
+
+                setListenerEvent()
+
+                offset += 1
             }
         }
 

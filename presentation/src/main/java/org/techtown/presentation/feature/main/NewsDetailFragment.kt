@@ -1,6 +1,7 @@
 package org.techtown.presentation.feature.main
 
 import android.os.Bundle
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -59,12 +60,10 @@ class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.frag
             }
         }
 
-        CoroutineScope(Dispatchers.IO).launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             newsRepository.getAllArticles().collect { data ->
                 val isSelected = data.any { it.url == articles.url }
-                withContext(Dispatchers.Main) {
-                    setSavedItemListenerEvent(isSelected)
-                }
+                setSavedItemListenerEvent(isSelected)
             }
         }
     }

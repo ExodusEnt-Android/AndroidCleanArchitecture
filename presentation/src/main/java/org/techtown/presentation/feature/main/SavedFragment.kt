@@ -5,6 +5,7 @@ import android.os.Parcelable
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -65,33 +66,31 @@ class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved
 
     private fun getSavedArticleList() {
 
-        CoroutineScope(Dispatchers.IO).launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             val savedArticles = database.articleDao().getAllArticles()
 
-            withContext(Dispatchers.Main) {
-                if (savedArticles.isNotEmpty()) {
+            if (savedArticles.isNotEmpty()) {
 
-                    savedNewsAdapter = TopNewsAdapter()
-                    binding.rvSavedNews.apply {
-                        adapter = savedNewsAdapter
-                    }
-
-                    if (tempSavedArticleList.size > 0) {
-                        if (tempSavedArticleList[tempSavedArticleList.lastIndex].isLoading) {
-                            tempSavedArticleList.removeAt(tempSavedArticleList.lastIndex)
-                            savedNewsAdapter.submitList(tempSavedArticleList.map { it.copy() })
-                        }
-                    }
-
-                    tempSavedArticleList.clear()
-                    tempSavedArticleList.addAll(savedArticles)
-                    savedNewsAdapter.submitList(tempSavedArticleList.map { it.copy() }
-                        .toMutableList())
-
-                    setListenerEvent()
-                } else {
-                    shouldRequestViewMore = false
+                savedNewsAdapter = TopNewsAdapter()
+                binding.rvSavedNews.apply {
+                    adapter = savedNewsAdapter
                 }
+
+                if (tempSavedArticleList.size > 0) {
+                    if (tempSavedArticleList[tempSavedArticleList.lastIndex].isLoading) {
+                        tempSavedArticleList.removeAt(tempSavedArticleList.lastIndex)
+                        savedNewsAdapter.submitList(tempSavedArticleList.map { it.copy() })
+                    }
+                }
+
+                tempSavedArticleList.clear()
+                tempSavedArticleList.addAll(savedArticles)
+                savedNewsAdapter.submitList(tempSavedArticleList.map { it.copy() }
+                    .toMutableList())
+
+                setListenerEvent()
+            } else {
+                shouldRequestViewMore = false
             }
         }
     }
