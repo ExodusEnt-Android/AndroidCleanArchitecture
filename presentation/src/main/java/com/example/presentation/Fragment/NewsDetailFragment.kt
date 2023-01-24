@@ -50,7 +50,7 @@ class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.frag
         Glide.with(this).load(articles?.urlToImage).into(mBinding.ivPhoto)
         mBinding.ivSaved.setOnClickListener(this)
 
-        CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(Dispatchers.Main).launch {
             newsDetailFragmentRepository.getAll().collect{ it ->
                 if(it.any { it.url == articles!!.url }){
                     mBinding.ivSaved.setImageResource(R.drawable.star_ok)
