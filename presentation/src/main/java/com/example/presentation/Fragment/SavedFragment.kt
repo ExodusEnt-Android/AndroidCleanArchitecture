@@ -37,16 +37,12 @@ class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved
         NewsRepositoryImpl(remoteDataSourceImpl, localDataSourceImpl)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mBinding = FragmentSavedBinding.inflate(inflater, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         navHostFragment =requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
-        return mBinding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         mBinding.rvTopNews.layoutManager = LinearLayoutManagerWrapper(requireContext(), LinearLayoutManager.VERTICAL, false)
         saveNewsAdapter = context?.let { NewsListAdapter(it, this) }
         mBinding.rvTopNews.adapter = saveNewsAdapter

@@ -45,16 +45,10 @@ class CategoryNewsFragment : BaseFragment<FragmentCategoryNewsBinding>(R.layout.
         NewsRepositoryImpl(remoteDataSourceImpl, localDataSourceImpl)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        mBinding = FragmentCategoryNewsBinding.inflate(inflater, container, false)
-        navHostFragment =requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        navController = navHostFragment.navController
-
-        return mBinding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navHostFragment =requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
         mBinding.rvCategory.layoutManager = LinearLayoutManagerWrapper(requireContext(), LinearLayoutManager.VERTICAL, false)
         categoryAdapter = context?.let { NewsListAdapter(it, this) }
         mBinding.rvCategory.adapter = categoryAdapter
