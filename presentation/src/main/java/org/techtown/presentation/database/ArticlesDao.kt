@@ -13,8 +13,8 @@ interface ArticlesDao {
     fun getAllArticles(): List<Articles>
 
     @Insert(onConflict = REPLACE)
-    fun insertArticle(articles: Articles)
+    suspend fun insertArticle(articles: Articles)
 
     @Query("DELETE FROM articles WHERE url =:url")
-    fun deleteArticle(url: String)
+    suspend fun deleteArticle(url: String)
 }

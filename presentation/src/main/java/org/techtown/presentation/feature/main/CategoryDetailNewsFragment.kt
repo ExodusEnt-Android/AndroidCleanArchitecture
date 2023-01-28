@@ -3,6 +3,7 @@ package org.techtown.presentation.feature.main
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -16,6 +17,8 @@ import org.techtown.presentation.R
 import org.techtown.presentation.base.BaseFragment
 import org.techtown.presentation.database.database.AppDatabase
 import org.techtown.presentation.databinding.FragmentCategoryDetailNewsBinding
+import org.techtown.presentation.datasource.local.LocalDataSourceImpl
+import org.techtown.presentation.datasource.remote.RemoteDataSourceImpl
 import org.techtown.presentation.ext.navigateWithAnim
 import org.techtown.presentation.feature.main.adapter.TopNewsAdapter
 import org.techtown.presentation.model.Articles
@@ -47,8 +50,9 @@ class CategoryDetailNewsFragment :
     }
 
     private val newsRepository: NewsRepository by lazy {
-        val newsService = NewsService.apiService
-        NewsRepositoryImpl(newsService, database)
+        val localDataSource = LocalDataSourceImpl(database)
+        val remoteDataSource = RemoteDataSourceImpl(NewsService.apiService)
+        NewsRepositoryImpl(localDataSource, remoteDataSource)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -138,7 +142,7 @@ class CategoryDetailNewsFragment :
             }
         }
 
-        CoroutineScope(Dispatchers.IO).launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             newsRepository.getTopHeadlinesArticles(
                 "us",
                 category = category,
@@ -146,29 +150,27 @@ class CategoryDetailNewsFragment :
                 offset
             ).collect { data ->
 
-                withContext(Dispatchers.Main) {
-                    if (!this@CategoryDetailNewsFragment::categoryNewsAdapter.isInitialized) {
-                        categoryNewsAdapter = TopNewsAdapter()
-                        binding.rvCategoryDetail.apply {
-                            adapter = categoryNewsAdapter
-                        }
+                if (!this@CategoryDetailNewsFragment::categoryNewsAdapter.isInitialized) {
+                    categoryNewsAdapter = TopNewsAdapter()
+                    binding.rvCategoryDetail.apply {
+                        adapter = categoryNewsAdapter
                     }
-
-                    if (tempCategoryList.size > 0) {
-                        if (tempCategoryList[tempCategoryList.lastIndex].isLoading) {
-                            tempCategoryList.removeAt(tempCategoryList.lastIndex)
-                            categoryNewsAdapter.submitList(tempCategoryList.map { it.copy() })
-                        }
-                    }
-
-                    tempCategoryList.addAll(data.articles)
-                    categoryNewsAdapter.submitList(tempCategoryList.map { it.copy() }
-                        .toMutableList())
-
-                    setListenerEvent()
-
-                    offset += 1
                 }
+
+                if (tempCategoryList.size > 0) {
+                    if (tempCategoryList[tempCategoryList.lastIndex].isLoading) {
+                        tempCategoryList.removeAt(tempCategoryList.lastIndex)
+                        categoryNewsAdapter.submitList(tempCategoryList.map { it.copy() })
+                    }
+                }
+
+                tempCategoryList.addAll(data.articles)
+                categoryNewsAdapter.submitList(tempCategoryList.map { it.copy() }
+                    .toMutableList())
+
+                setListenerEvent()
+
+                offset += 1
             }
         }
     }

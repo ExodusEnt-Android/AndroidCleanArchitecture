@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -19,11 +20,14 @@ import org.techtown.presentation.R
 import org.techtown.presentation.base.BaseFragment
 import org.techtown.presentation.database.database.AppDatabase
 import org.techtown.presentation.databinding.FragmentTopNewsBinding
+import org.techtown.presentation.datasource.local.LocalDataSourceImpl
+import org.techtown.presentation.datasource.remote.RemoteDataSourceImpl
 import org.techtown.presentation.ext.navigateWithAnim
 import org.techtown.presentation.feature.main.adapter.TopNewsAdapter
 import org.techtown.presentation.model.Articles
 import org.techtown.presentation.repository.NewsRepository
 import org.techtown.presentation.repository.NewsRepositoryImpl
+import org.techtown.presentation.retrofit.ApiService
 import org.techtown.presentation.retrofit.NewsService
 
 class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_top_news) {
@@ -47,8 +51,9 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
     }
 
     private val newsRepository: NewsRepository by lazy {
-        val newsService = NewsService.apiService
-        NewsRepositoryImpl(newsService, database)
+        val localDataSource = LocalDataSourceImpl(database)
+        val remoteDataSource = RemoteDataSourceImpl(NewsService.apiService)
+        NewsRepositoryImpl(localDataSource, remoteDataSource)
     }
 
 
@@ -125,33 +130,31 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
             }
         }
 
-        CoroutineScope(Dispatchers.IO).launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             newsRepository.getTopHeadlinesArticles(
                 country = "us", pageSize = limit, offset = offset, category = null
             ).collect { data ->
 
-                withContext(Dispatchers.Main) {
-                    if (!this@TopNewsFragment::topNewsAdapter.isInitialized) {
-                        topNewsAdapter = TopNewsAdapter()
-                        binding.rvTopNews.apply {
-                            adapter = topNewsAdapter
-                        }
+                if (!this@TopNewsFragment::topNewsAdapter.isInitialized) {
+                    topNewsAdapter = TopNewsAdapter()
+                    binding.rvTopNews.apply {
+                        adapter = topNewsAdapter
                     }
-
-                    if (tempArticleList.size > 0) {
-                        if (tempArticleList[tempArticleList.lastIndex].isLoading) {
-                            tempArticleList.removeAt(tempArticleList.lastIndex)
-                            topNewsAdapter.submitList(tempArticleList.map { it.copy() })
-                        }
-                    }
-
-                    tempArticleList.addAll(data.articles)
-                    topNewsAdapter.submitList(tempArticleList.map { it.copy() }.toMutableList())
-
-                    setListenerEvent()
-
-                    offset += 1
                 }
+
+                if (tempArticleList.size > 0) {
+                    if (tempArticleList[tempArticleList.lastIndex].isLoading) {
+                        tempArticleList.removeAt(tempArticleList.lastIndex)
+                        topNewsAdapter.submitList(tempArticleList.map { it.copy() })
+                    }
+                }
+
+                tempArticleList.addAll(data.articles)
+                topNewsAdapter.submitList(tempArticleList.map { it.copy() }.toMutableList())
+
+                setListenerEvent()
+
+                offset += 1
             }
         }
 

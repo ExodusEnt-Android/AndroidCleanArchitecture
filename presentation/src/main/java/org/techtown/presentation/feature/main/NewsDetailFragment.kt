@@ -1,6 +1,7 @@
 package org.techtown.presentation.feature.main
 
 import android.os.Bundle
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -10,11 +11,12 @@ import org.techtown.presentation.R
 import org.techtown.presentation.base.BaseFragment
 import org.techtown.presentation.database.database.AppDatabase
 import org.techtown.presentation.databinding.FragmentNewsDetailBinding
+import org.techtown.presentation.datasource.local.LocalDataSourceImpl
+import org.techtown.presentation.datasource.remote.RemoteDataSourceImpl
 import org.techtown.presentation.model.Articles
 import org.techtown.presentation.repository.NewsRepository
 import org.techtown.presentation.repository.NewsRepositoryImpl
 import org.techtown.presentation.retrofit.NewsService
-import kotlin.concurrent.thread
 
 class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.fragment_news_detail) {
 
@@ -28,8 +30,9 @@ class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.frag
     }
 
     private val newsRepository: NewsRepository by lazy {
-        val newsService = NewsService.apiService
-        NewsRepositoryImpl(newsService, database)
+        val localDataSource = LocalDataSourceImpl(database)
+        val remoteDataSource = RemoteDataSourceImpl(NewsService.apiService)
+        NewsRepositoryImpl(localDataSource, remoteDataSource)
     }
 
     override fun FragmentNewsDetailBinding.onCreateView() {
@@ -57,12 +60,10 @@ class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.frag
             }
         }
 
-        CoroutineScope(Dispatchers.IO).launch {
-            newsRepository.getAllSavedArticles().collect { data ->
+        viewLifecycleOwner.lifecycleScope.launch {
+            newsRepository.getAllArticles().collect { data ->
                 val isSelected = data.any { it.url == articles.url }
-                withContext(Dispatchers.Main) {
-                    setSavedItemListenerEvent(isSelected)
-                }
+                setSavedItemListenerEvent(isSelected)
             }
         }
     }
@@ -72,24 +73,18 @@ class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.frag
             binding.ivSaved.setImageResource(R.drawable.star_active)
 
             binding.ivSaved.setOnClickListener {
-                CoroutineScope(Dispatchers.IO).launch {
-                    newsRepository.deleteArticle(articles.url) {
-                        CoroutineScope(Dispatchers.Main).launch {
-                            binding.ivSaved.setImageResource(R.drawable.star_inactive)
-                        }
-                    }
+                viewLifecycleOwner.lifecycleScope.launch {
+                    newsRepository.deleteArticle(articles.url)
+                    binding.ivSaved.setImageResource(R.drawable.star_inactive)
                 }
             }
         } else {
             binding.ivSaved.setImageResource(R.drawable.star_inactive)
 
             binding.ivSaved.setOnClickListener {
-                CoroutineScope(Dispatchers.IO).launch {
-                    newsRepository.insertArticle(articles) {
-                        CoroutineScope(Dispatchers.Main).launch {
-                            binding.ivSaved.setImageResource(R.drawable.star_active)
-                        }
-                    }
+                viewLifecycleOwner.lifecycleScope.launch {
+                    newsRepository.insertArticle(articles)
+                    binding.ivSaved.setImageResource(R.drawable.star_active)
                 }
             }
         }

@@ -5,6 +5,7 @@ import android.os.Parcelable
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -16,9 +17,14 @@ import org.techtown.presentation.R
 import org.techtown.presentation.base.BaseFragment
 import org.techtown.presentation.database.database.AppDatabase
 import org.techtown.presentation.databinding.FragmentSavedBinding
+import org.techtown.presentation.datasource.local.LocalDataSourceImpl
+import org.techtown.presentation.datasource.remote.RemoteDataSourceImpl
 import org.techtown.presentation.ext.navigateWithAnim
 import org.techtown.presentation.feature.main.adapter.TopNewsAdapter
 import org.techtown.presentation.model.Articles
+import org.techtown.presentation.repository.NewsRepository
+import org.techtown.presentation.repository.NewsRepositoryImpl
+import org.techtown.presentation.retrofit.NewsService
 
 class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved) {
 
@@ -33,6 +39,12 @@ class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved
     var recyclerViewScrollState: Parcelable? = null
 
     private lateinit var database: AppDatabase
+
+    private val newsRepository: NewsRepository by lazy {
+        val localDataSource = LocalDataSourceImpl(database)
+        val remoteDataSource = RemoteDataSourceImpl(NewsService.apiService)
+        NewsRepositoryImpl(localDataSource, remoteDataSource)
+    }
 
     override fun FragmentSavedBinding.onCreateView() {
 
@@ -65,33 +77,31 @@ class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved
 
     private fun getSavedArticleList() {
 
-        CoroutineScope(Dispatchers.IO).launch {
-            val savedArticles = database.articleDao().getAllArticles()
-
-            withContext(Dispatchers.Main) {
-                if (savedArticles.isNotEmpty()) {
-
-                    savedNewsAdapter = TopNewsAdapter()
-                    binding.rvSavedNews.apply {
-                        adapter = savedNewsAdapter
-                    }
-
-                    if (tempSavedArticleList.size > 0) {
-                        if (tempSavedArticleList[tempSavedArticleList.lastIndex].isLoading) {
-                            tempSavedArticleList.removeAt(tempSavedArticleList.lastIndex)
-                            savedNewsAdapter.submitList(tempSavedArticleList.map { it.copy() })
-                        }
-                    }
-
-                    tempSavedArticleList.clear()
-                    tempSavedArticleList.addAll(savedArticles)
-                    savedNewsAdapter.submitList(tempSavedArticleList.map { it.copy() }
-                        .toMutableList())
-
-                    setListenerEvent()
-                } else {
+        viewLifecycleOwner.lifecycleScope.launch {
+            newsRepository.getAllArticles().collect { savedArticles ->
+                if (savedArticles.isEmpty()) {
                     shouldRequestViewMore = false
+                    return@collect
                 }
+
+                savedNewsAdapter = TopNewsAdapter()
+                binding.rvSavedNews.apply {
+                    adapter = savedNewsAdapter
+                }
+
+                if (tempSavedArticleList.size > 0) {
+                    if (tempSavedArticleList[tempSavedArticleList.lastIndex].isLoading) {
+                        tempSavedArticleList.removeAt(tempSavedArticleList.lastIndex)
+                        savedNewsAdapter.submitList(tempSavedArticleList.map { it.copy() })
+                    }
+                }
+
+                tempSavedArticleList.clear()
+                tempSavedArticleList.addAll(savedArticles)
+                savedNewsAdapter.submitList(tempSavedArticleList.map { it.copy() }
+                    .toMutableList())
+
+                setListenerEvent()
             }
         }
     }
