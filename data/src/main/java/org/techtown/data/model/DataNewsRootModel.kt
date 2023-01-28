@@ -8,7 +8,7 @@ package org.techtown.data.model
 data class DataNewsRootModel(
     var status: String? = null,
     var totalResults: Int? = null,
-    var articles: ArrayList<DataArticles> = arrayListOf()
+    var articles: List<DataArticles> = listOf()
 )
 
 data class DataSource(

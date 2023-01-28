@@ -14,7 +14,7 @@ import org.techtown.presentation.model.Source.Companion.toFloData
 data class NewsRootModel(
     var status: String? = null,
     var totalResults: Int? = null,
-    var articles: ArrayList<Articles> = arrayListOf()
+    var articles: List<Articles> = listOf()
 ) {
     companion object : FloPresentationMapper<NewsRootModel, DataNewsRootModel> {
         override fun NewsRootModel.toFloData(): DataNewsRootModel {
@@ -23,7 +23,7 @@ data class NewsRootModel(
                 totalResults = this.totalResults,
                 articles = this.articles.map {
                     it.toFloData()
-                } as ArrayList<DataArticles>
+                }
 
             )
         }
@@ -34,7 +34,7 @@ data class NewsRootModel(
                 totalResults = this.totalResults,
                 articles = this.articles.map {
                     it.fromFloData()
-                } as ArrayList<Articles>
+                }
             )
         }
 

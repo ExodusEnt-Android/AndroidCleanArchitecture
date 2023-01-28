@@ -19,7 +19,7 @@ import org.techtown.remote.model.RemoteSource.Companion.toFloData
 data class RemoteNewsRootModel(
     var status: String? = null,
     var totalResults: Int? = null,
-    var articles: ArrayList<RemoteArticles> = arrayListOf()
+    var articles: List<RemoteArticles> = listOf()
 ) : Parcelable {
 
     companion object : FloRemoteMapper<RemoteNewsRootModel, DataNewsRootModel> {
@@ -29,7 +29,7 @@ data class RemoteNewsRootModel(
                 totalResults = this.totalResults,
                 articles = this.articles.map {
                     it.toFloData()
-                } as ArrayList<DataArticles>
+                }
 
             )
         }
@@ -40,7 +40,7 @@ data class RemoteNewsRootModel(
                 totalResults = this.totalResults,
                 articles = this.articles.map {
                     it.fromFloData()
-                } as ArrayList<RemoteArticles>
+                }
             )
         }
 

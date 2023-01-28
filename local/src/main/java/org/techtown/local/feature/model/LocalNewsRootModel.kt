@@ -24,7 +24,7 @@ import org.techtown.local.feature.model.LocalSource.Companion.toFloData
 data class LocalNewsRootModel(
     var status: String? = null,
     var totalResults: Int? = null,
-    var articles: ArrayList<LocalArticles> = arrayListOf()
+    var articles: List<LocalArticles> = listOf()
 ) : Parcelable {
 
     companion object : FloLocalMapper<LocalNewsRootModel, DataNewsRootModel> {
@@ -34,7 +34,7 @@ data class LocalNewsRootModel(
                 totalResults = this.totalResults,
                 articles = this.articles.map {
                     it.toFloData()
-                } as ArrayList<DataArticles>
+                }
 
             )
         }
@@ -45,7 +45,7 @@ data class LocalNewsRootModel(
                 totalResults = this.totalResults,
                 articles = this.articles.map {
                     it.fromFloData()
-                } as ArrayList<LocalArticles>
+                }
             )
         }
 
