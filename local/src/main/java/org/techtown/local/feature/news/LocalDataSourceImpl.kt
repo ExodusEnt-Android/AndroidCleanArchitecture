@@ -4,6 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 import org.techtown.data.model.DataArticles
 import org.techtown.data.source.local.news.LocalDataSource
 import org.techtown.local.feature.database.database.AppDatabase
@@ -26,11 +27,15 @@ class LocalDataSourceImpl(
     }.flowOn(Dispatchers.IO)
 
     override suspend fun addArticle(articles: DataArticles) {
-        appDatabase.articleDao().insertArticle(articles.fromFloData())
+        withContext(Dispatchers.IO) {
+            appDatabase.articleDao().insertArticle(articles.fromFloData())
+        }
     }
 
     override suspend fun removeArticle(url: String) {
-        appDatabase.articleDao().deleteArticle(url)
+        withContext(Dispatchers.IO) {
+            appDatabase.articleDao().deleteArticle(url)
+        }
     }
 
 }
