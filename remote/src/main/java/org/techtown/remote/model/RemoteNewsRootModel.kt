@@ -1,19 +1,15 @@
 package org.techtown.remote.model
 
-import android.os.Parcel
 import android.os.Parcelable
-import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
 import org.techtown.data.model.DataArticles
 import org.techtown.data.model.DataNewsRootModel
 import org.techtown.data.model.DataSource
-import org.techtown.remote.mapper.FloRemoteMapper
-import org.techtown.remote.model.RemoteArticles.Companion.fromFloData
-import org.techtown.remote.model.RemoteArticles.Companion.toFloData
-import org.techtown.remote.model.RemoteNewsRootModel.Companion.fromFloData
-import org.techtown.remote.model.RemoteNewsRootModel.Companion.toFloData
-import org.techtown.remote.model.RemoteSource.Companion.fromFloData
-import org.techtown.remote.model.RemoteSource.Companion.toFloData
+import org.techtown.remote.mapper.NewsRemoteMapper
+import org.techtown.remote.model.RemoteArticles.Companion.fromData
+import org.techtown.remote.model.RemoteArticles.Companion.toData
+import org.techtown.remote.model.RemoteSource.Companion.fromData
+import org.techtown.remote.model.RemoteSource.Companion.toData
 
 @Parcelize
 data class RemoteNewsRootModel(
@@ -22,24 +18,24 @@ data class RemoteNewsRootModel(
     var articles: List<RemoteArticles> = listOf()
 ) : Parcelable {
 
-    companion object : FloRemoteMapper<RemoteNewsRootModel, DataNewsRootModel> {
-        override fun RemoteNewsRootModel.toFloData(): DataNewsRootModel {
+    companion object : NewsRemoteMapper<RemoteNewsRootModel, DataNewsRootModel> {
+        override fun RemoteNewsRootModel.toData(): DataNewsRootModel {
             return DataNewsRootModel(
                 status = this.status,
                 totalResults = this.totalResults,
                 articles = this.articles.map {
-                    it.toFloData()
+                    it.toData()
                 }
 
             )
         }
 
-        override fun DataNewsRootModel.fromFloData(): RemoteNewsRootModel {
+        override fun DataNewsRootModel.fromData(): RemoteNewsRootModel {
             return RemoteNewsRootModel(
                 status = this.status,
                 totalResults = this.totalResults,
                 articles = this.articles.map {
-                    it.fromFloData()
+                    it.fromData()
                 }
             )
         }
@@ -52,15 +48,15 @@ data class RemoteSource(
     var id: String? = null,
     var name: String? = null
 ) : Parcelable {
-    companion object : FloRemoteMapper<RemoteSource, DataSource> {
-        override fun RemoteSource.toFloData(): DataSource =
+    companion object : NewsRemoteMapper<RemoteSource, DataSource> {
+        override fun RemoteSource.toData(): DataSource =
             DataSource(
                 id = this.id,
                 name = this.name
             )
 
 
-        override fun DataSource.fromFloData(): RemoteSource {
+        override fun DataSource.fromData(): RemoteSource {
             return RemoteSource(
                 id = this.id,
                 name = this.name
@@ -82,10 +78,10 @@ data class RemoteArticles(
     var content: String? = null,
     var isLoading: Boolean = false,
 ) : Parcelable {
-    companion object : FloRemoteMapper<RemoteArticles, DataArticles> {
-        override fun RemoteArticles.toFloData(): DataArticles =
+    companion object : NewsRemoteMapper<RemoteArticles, DataArticles> {
+        override fun RemoteArticles.toData(): DataArticles =
             DataArticles(
-                source = this.source?.toFloData(),
+                source = this.source?.toData(),
                 author = this.author,
                 title = this.title,
                 description = this.description,
@@ -96,9 +92,9 @@ data class RemoteArticles(
                 isLoading = this.isLoading
             )
 
-        override fun DataArticles.fromFloData(): RemoteArticles {
+        override fun DataArticles.fromData(): RemoteArticles {
             return RemoteArticles(
-                source = this.source?.fromFloData(),
+                source = this.source?.fromData(),
                 author = this.author,
                 title = this.title,
                 description = this.description,

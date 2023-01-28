@@ -8,8 +8,8 @@ import kotlinx.coroutines.withContext
 import org.techtown.data.model.DataArticles
 import org.techtown.data.source.local.news.LocalDataSource
 import org.techtown.local.feature.database.database.AppDatabase
-import org.techtown.local.feature.model.LocalArticles.Companion.fromFloData
-import org.techtown.local.feature.model.LocalArticles.Companion.toFloData
+import org.techtown.local.feature.model.LocalArticles.Companion.fromData
+import org.techtown.local.feature.model.LocalArticles.Companion.toData
 
 
 /**
@@ -22,13 +22,13 @@ class LocalDataSourceImpl(
     override suspend fun getAllArticles(): Flow<List<DataArticles>> = flow {
         val result = appDatabase.articleDao().getAllArticles()
         emit(result.map {
-            it.toFloData()
+            it.toData()
         })
     }.flowOn(Dispatchers.IO)
 
     override suspend fun addArticle(articles: DataArticles) {
         withContext(Dispatchers.IO) {
-            appDatabase.articleDao().insertArticle(articles.fromFloData())
+            appDatabase.articleDao().insertArticle(articles.fromData())
         }
     }
 

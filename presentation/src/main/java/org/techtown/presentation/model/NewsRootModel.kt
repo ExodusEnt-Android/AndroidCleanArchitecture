@@ -5,35 +5,35 @@ import kotlinx.parcelize.Parcelize
 import org.techtown.data.model.DataArticles
 import org.techtown.data.model.DataNewsRootModel
 import org.techtown.data.model.DataSource
-import org.techtown.presentation.mapper.FloPresentationMapper
-import org.techtown.presentation.model.Articles.Companion.fromFloData
-import org.techtown.presentation.model.Articles.Companion.toFloData
-import org.techtown.presentation.model.Source.Companion.fromFloData
-import org.techtown.presentation.model.Source.Companion.toFloData
+import org.techtown.presentation.mapper.NewPresentationMapper
+import org.techtown.presentation.model.Articles.Companion.fromData
+import org.techtown.presentation.model.Articles.Companion.toData
+import org.techtown.presentation.model.Source.Companion.fromData
+import org.techtown.presentation.model.Source.Companion.toData
 
 data class NewsRootModel(
     var status: String? = null,
     var totalResults: Int? = null,
     var articles: List<Articles> = listOf()
 ) {
-    companion object : FloPresentationMapper<NewsRootModel, DataNewsRootModel> {
-        override fun NewsRootModel.toFloData(): DataNewsRootModel {
+    companion object : NewPresentationMapper<NewsRootModel, DataNewsRootModel> {
+        override fun NewsRootModel.toData(): DataNewsRootModel {
             return DataNewsRootModel(
                 status = this.status,
                 totalResults = this.totalResults,
                 articles = this.articles.map {
-                    it.toFloData()
+                    it.toData()
                 }
 
             )
         }
 
-        override fun DataNewsRootModel.fromFloData(): NewsRootModel {
+        override fun DataNewsRootModel.fromData(): NewsRootModel {
             return NewsRootModel(
                 status = this.status,
                 totalResults = this.totalResults,
                 articles = this.articles.map {
-                    it.fromFloData()
+                    it.fromData()
                 }
             )
         }
@@ -46,14 +46,14 @@ data class Source(
     var id: String? = null,
     var name: String? = null
 ) : Parcelable {
-    companion object : FloPresentationMapper<Source, DataSource> {
-        override fun Source.toFloData(): DataSource =
+    companion object : NewPresentationMapper<Source, DataSource> {
+        override fun Source.toData(): DataSource =
             DataSource(
                 id = this.id,
                 name = this.name
             )
 
-        override fun DataSource.fromFloData(): Source {
+        override fun DataSource.fromData(): Source {
             return Source(
                 id = this.id,
                 name = this.name
@@ -74,10 +74,10 @@ data class Articles(
     var content: String? = null,
     var isLoading: Boolean = false,
 ) : Parcelable {
-    companion object : FloPresentationMapper<Articles, DataArticles> {
-        override fun Articles.toFloData(): DataArticles =
+    companion object : NewPresentationMapper<Articles, DataArticles> {
+        override fun Articles.toData(): DataArticles =
             DataArticles(
-                source = this.source?.toFloData(),
+                source = this.source?.toData(),
                 author = this.author,
                 title = this.title,
                 description = this.description,
@@ -88,9 +88,9 @@ data class Articles(
                 isLoading = this.isLoading
             )
 
-        override fun DataArticles.fromFloData(): Articles {
+        override fun DataArticles.fromData(): Articles {
             return Articles(
-                source = this.source?.fromFloData(),
+                source = this.source?.fromData(),
                 author = this.author,
                 title = this.title,
                 description = this.description,

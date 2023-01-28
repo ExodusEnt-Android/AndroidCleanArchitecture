@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import org.techtown.data.model.DataNewsRootModel
 import org.techtown.data.source.remote.news.RemoteDataSource
-import org.techtown.remote.model.RemoteNewsRootModel.Companion.toFloData
+import org.techtown.remote.model.RemoteNewsRootModel.Companion.toData
 import org.techtown.remote.retrofit.ApiService
 
 
@@ -27,7 +27,7 @@ class RemoteDataSourceImpl(
 
         if (response.isSuccessful) {
             response.body()?.let {
-                emit(it.toFloData())
+                emit(it.toData())
             }
         }
     }.flowOn(Dispatchers.IO)

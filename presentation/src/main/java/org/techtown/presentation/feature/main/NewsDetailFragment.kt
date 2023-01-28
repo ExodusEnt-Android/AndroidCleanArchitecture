@@ -13,7 +13,7 @@ import org.techtown.remote.feature.news.RemoteDataSourceImpl
 import org.techtown.presentation.model.Articles
 import org.techtown.data.repository.news.NewsRepository
 import org.techtown.data.repository.news.NewsRepositoryImpl
-import org.techtown.presentation.model.Articles.Companion.toFloData
+import org.techtown.presentation.model.Articles.Companion.toData
 import org.techtown.remote.retrofit.NewsService
 
 class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.fragment_news_detail) {
@@ -81,7 +81,7 @@ class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.frag
 
             binding.ivSaved.setOnClickListener {
                 viewLifecycleOwner.lifecycleScope.launch {
-                    newsRepository.insertArticle(articles.toFloData())
+                    newsRepository.insertArticle(articles.toData())
                     binding.ivSaved.setImageResource(R.drawable.star_active)
                 }
             }

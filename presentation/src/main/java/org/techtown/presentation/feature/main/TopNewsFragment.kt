@@ -24,7 +24,7 @@ import org.techtown.presentation.feature.main.adapter.TopNewsAdapter
 import org.techtown.presentation.model.Articles
 import org.techtown.data.repository.news.NewsRepository
 import org.techtown.data.repository.news.NewsRepositoryImpl
-import org.techtown.presentation.model.NewsRootModel.Companion.fromFloData
+import org.techtown.presentation.model.NewsRootModel.Companion.fromData
 import org.techtown.remote.retrofit.NewsService
 
 class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_top_news) {
@@ -146,7 +146,7 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
                     }
                 }
 
-                tempArticleList.addAll(data.fromFloData().articles)
+                tempArticleList.addAll(data.fromData().articles)
                 topNewsAdapter.submitList(tempArticleList.map { it.copy() }.toMutableList())
 
                 setListenerEvent()

@@ -21,7 +21,7 @@ import org.techtown.presentation.model.Articles
 import org.techtown.data.repository.news.NewsRepository
 import org.techtown.data.repository.news.NewsRepositoryImpl
 import org.techtown.local.feature.database.database.AppDatabase
-import org.techtown.presentation.model.Articles.Companion.fromFloData
+import org.techtown.presentation.model.Articles.Companion.fromData
 import org.techtown.remote.retrofit.NewsService
 
 class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved) {
@@ -95,7 +95,7 @@ class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved
                 }
 
                 tempSavedArticleList.clear()
-                tempSavedArticleList.addAll(savedArticles.map { it.fromFloData() })
+                tempSavedArticleList.addAll(savedArticles.map { it.fromData() })
                 savedNewsAdapter.submitList(tempSavedArticleList.map { it.copy() }
                     .toMutableList())
 

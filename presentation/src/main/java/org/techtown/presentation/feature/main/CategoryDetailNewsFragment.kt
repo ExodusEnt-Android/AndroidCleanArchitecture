@@ -21,7 +21,7 @@ import org.techtown.presentation.feature.main.adapter.TopNewsAdapter
 import org.techtown.presentation.model.Articles
 import org.techtown.data.repository.news.NewsRepository
 import org.techtown.data.repository.news.NewsRepositoryImpl
-import org.techtown.presentation.model.NewsRootModel.Companion.fromFloData
+import org.techtown.presentation.model.NewsRootModel.Companion.fromData
 import org.techtown.remote.retrofit.NewsService
 
 class CategoryDetailNewsFragment :
@@ -162,7 +162,7 @@ class CategoryDetailNewsFragment :
                     }
                 }
 
-                tempCategoryList.addAll(data.fromFloData().articles)
+                tempCategoryList.addAll(data.fromData().articles)
                 categoryNewsAdapter.submitList(tempCategoryList.map { it.copy() }
                     .toMutableList())
 

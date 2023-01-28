@@ -9,11 +9,11 @@ import kotlinx.parcelize.Parcelize
 import org.techtown.data.model.DataArticles
 import org.techtown.data.model.DataNewsRootModel
 import org.techtown.data.model.DataSource
-import org.techtown.local.feature.mapper.FloLocalMapper
-import org.techtown.local.feature.model.LocalArticles.Companion.fromFloData
-import org.techtown.local.feature.model.LocalArticles.Companion.toFloData
-import org.techtown.local.feature.model.LocalSource.Companion.fromFloData
-import org.techtown.local.feature.model.LocalSource.Companion.toFloData
+import org.techtown.local.feature.mapper.NewsLocalMapper
+import org.techtown.local.feature.model.LocalArticles.Companion.fromData
+import org.techtown.local.feature.model.LocalArticles.Companion.toData
+import org.techtown.local.feature.model.LocalSource.Companion.fromData
+import org.techtown.local.feature.model.LocalSource.Companion.toData
 
 
 /**
@@ -27,24 +27,24 @@ data class LocalNewsRootModel(
     var articles: List<LocalArticles> = listOf()
 ) : Parcelable {
 
-    companion object : FloLocalMapper<LocalNewsRootModel, DataNewsRootModel> {
-        override fun LocalNewsRootModel.toFloData(): DataNewsRootModel {
+    companion object : NewsLocalMapper<LocalNewsRootModel, DataNewsRootModel> {
+        override fun LocalNewsRootModel.toData(): DataNewsRootModel {
             return DataNewsRootModel(
                 status = this.status,
                 totalResults = this.totalResults,
                 articles = this.articles.map {
-                    it.toFloData()
+                    it.toData()
                 }
 
             )
         }
 
-        override fun DataNewsRootModel.fromFloData(): LocalNewsRootModel {
+        override fun DataNewsRootModel.fromData(): LocalNewsRootModel {
             return LocalNewsRootModel(
                 status = this.status,
                 totalResults = this.totalResults,
                 articles = this.articles.map {
-                    it.fromFloData()
+                    it.fromData()
                 }
             )
         }
@@ -57,15 +57,15 @@ data class LocalSource(
     @ColumnInfo(name = "id") var id: String? = null,
     @ColumnInfo(name = "name") var name: String? = null
 ) : Parcelable {
-    companion object : FloLocalMapper<LocalSource, DataSource> {
-        override fun LocalSource.toFloData(): DataSource =
+    companion object : NewsLocalMapper<LocalSource, DataSource> {
+        override fun LocalSource.toData(): DataSource =
             DataSource(
                 id = this.id,
                 name = this.name
             )
 
 
-        override fun DataSource.fromFloData(): LocalSource {
+        override fun DataSource.fromData(): LocalSource {
             return LocalSource(
                 id = this.id,
                 name = this.name
@@ -90,10 +90,10 @@ data class LocalArticles(
     @ColumnInfo(name = "content") var content: String? = null,
     @ColumnInfo(name = "isLoading") var isLoading: Boolean = false,
 ) : Parcelable {
-    companion object : FloLocalMapper<LocalArticles, DataArticles> {
-        override fun LocalArticles.toFloData(): DataArticles =
+    companion object : NewsLocalMapper<LocalArticles, DataArticles> {
+        override fun LocalArticles.toData(): DataArticles =
             DataArticles(
-                source = this.source?.toFloData(),
+                source = this.source?.toData(),
                 author = this.author,
                 title = this.title,
                 description = this.description,
@@ -104,9 +104,9 @@ data class LocalArticles(
                 isLoading = this.isLoading
             )
 
-        override fun DataArticles.fromFloData(): LocalArticles {
+        override fun DataArticles.fromData(): LocalArticles {
             return LocalArticles(
-                source = this.source?.fromFloData(),
+                source = this.source?.fromData(),
                 author = this.author,
                 title = this.title,
                 description = this.description,
