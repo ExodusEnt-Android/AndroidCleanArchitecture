@@ -1,23 +1,29 @@
-package org.techtown.presentation.model
+package org.techtown.remote.model
 
+import android.os.Parcel
 import android.os.Parcelable
+import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
 import org.techtown.data.model.DataArticles
 import org.techtown.data.model.DataNewsRootModel
 import org.techtown.data.model.DataSource
-import org.techtown.presentation.mapper.FloPresentationMapper
-import org.techtown.presentation.model.Articles.Companion.fromFloData
-import org.techtown.presentation.model.Articles.Companion.toFloData
-import org.techtown.presentation.model.Source.Companion.fromFloData
-import org.techtown.presentation.model.Source.Companion.toFloData
+import org.techtown.remote.mapper.FloRemoteMapper
+import org.techtown.remote.model.RemoteArticles.Companion.fromFloData
+import org.techtown.remote.model.RemoteArticles.Companion.toFloData
+import org.techtown.remote.model.RemoteNewsRootModel.Companion.fromFloData
+import org.techtown.remote.model.RemoteNewsRootModel.Companion.toFloData
+import org.techtown.remote.model.RemoteSource.Companion.fromFloData
+import org.techtown.remote.model.RemoteSource.Companion.toFloData
 
-data class NewsRootModel(
+@Parcelize
+data class RemoteNewsRootModel(
     var status: String? = null,
     var totalResults: Int? = null,
-    var articles: ArrayList<Articles> = arrayListOf()
-) {
-    companion object : FloPresentationMapper<NewsRootModel, DataNewsRootModel> {
-        override fun NewsRootModel.toFloData(): DataNewsRootModel {
+    var articles: ArrayList<RemoteArticles> = arrayListOf()
+) : Parcelable {
+
+    companion object : FloRemoteMapper<RemoteNewsRootModel, DataNewsRootModel> {
+        override fun RemoteNewsRootModel.toFloData(): DataNewsRootModel {
             return DataNewsRootModel(
                 status = this.status,
                 totalResults = this.totalResults,
@@ -28,13 +34,13 @@ data class NewsRootModel(
             )
         }
 
-        override fun DataNewsRootModel.fromFloData(): NewsRootModel {
-            return NewsRootModel(
+        override fun DataNewsRootModel.fromFloData(): RemoteNewsRootModel {
+            return RemoteNewsRootModel(
                 status = this.status,
                 totalResults = this.totalResults,
                 articles = this.articles.map {
                     it.fromFloData()
-                } as ArrayList<Articles>
+                } as ArrayList<RemoteArticles>
             )
         }
 
@@ -42,29 +48,31 @@ data class NewsRootModel(
 }
 
 @Parcelize
-data class Source(
+data class RemoteSource(
     var id: String? = null,
     var name: String? = null
 ) : Parcelable {
-    companion object : FloPresentationMapper<Source, DataSource> {
-        override fun Source.toFloData(): DataSource =
+    companion object : FloRemoteMapper<RemoteSource, DataSource> {
+        override fun RemoteSource.toFloData(): DataSource =
             DataSource(
                 id = this.id,
                 name = this.name
             )
 
-        override fun DataSource.fromFloData(): Source {
-            return Source(
+
+        override fun DataSource.fromFloData(): RemoteSource {
+            return RemoteSource(
                 id = this.id,
                 name = this.name
             )
         }
+
     }
 }
 
 @Parcelize
-data class Articles(
-    var source: Source? = Source(),
+data class RemoteArticles(
+    var source: RemoteSource? = null,
     var author: String? = null,
     var title: String? = null,
     var description: String? = null,
@@ -74,8 +82,8 @@ data class Articles(
     var content: String? = null,
     var isLoading: Boolean = false,
 ) : Parcelable {
-    companion object : FloPresentationMapper<Articles, DataArticles> {
-        override fun Articles.toFloData(): DataArticles =
+    companion object : FloRemoteMapper<RemoteArticles, DataArticles> {
+        override fun RemoteArticles.toFloData(): DataArticles =
             DataArticles(
                 source = this.source?.toFloData(),
                 author = this.author,
@@ -88,8 +96,8 @@ data class Articles(
                 isLoading = this.isLoading
             )
 
-        override fun DataArticles.fromFloData(): Articles {
-            return Articles(
+        override fun DataArticles.fromFloData(): RemoteArticles {
+            return RemoteArticles(
                 source = this.source?.fromFloData(),
                 author = this.author,
                 title = this.title,
@@ -101,5 +109,6 @@ data class Articles(
                 isLoading = this.isLoading
             )
         }
+
     }
 }

@@ -9,22 +9,20 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.techtown.presentation.R
 import org.techtown.presentation.base.BaseFragment
-import org.techtown.presentation.database.database.AppDatabase
+import org.techtown.local.feature.database.database.AppDatabase
 import org.techtown.presentation.databinding.FragmentCategoryDetailNewsBinding
-import org.techtown.presentation.datasource.local.LocalDataSourceImpl
-import org.techtown.presentation.datasource.remote.RemoteDataSourceImpl
+import org.techtown.local.feature.news.LocalDataSourceImpl
+import org.techtown.remote.feature.news.RemoteDataSourceImpl
 import org.techtown.presentation.ext.navigateWithAnim
 import org.techtown.presentation.feature.main.adapter.TopNewsAdapter
 import org.techtown.presentation.model.Articles
-import org.techtown.presentation.repository.NewsRepository
-import org.techtown.presentation.repository.NewsRepositoryImpl
-import org.techtown.presentation.retrofit.NewsService
+import org.techtown.data.repository.news.NewsRepository
+import org.techtown.data.repository.news.NewsRepositoryImpl
+import org.techtown.presentation.model.NewsRootModel.Companion.fromFloData
+import org.techtown.remote.retrofit.NewsService
 
 class CategoryDetailNewsFragment :
     BaseFragment<FragmentCategoryDetailNewsBinding>(R.layout.fragment_category_detail_news) {
@@ -164,7 +162,7 @@ class CategoryDetailNewsFragment :
                     }
                 }
 
-                tempCategoryList.addAll(data.articles)
+                tempCategoryList.addAll(data.fromFloData().articles)
                 categoryNewsAdapter.submitList(tempCategoryList.map { it.copy() }
                     .toMutableList())
 
