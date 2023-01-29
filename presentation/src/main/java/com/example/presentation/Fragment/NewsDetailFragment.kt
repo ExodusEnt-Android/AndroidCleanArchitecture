@@ -2,24 +2,20 @@ package com.example.presentation.Fragment
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.bumptech.glide.Glide
-import com.example.presentation.Articles
+import com.example.data.model.Articles
+import com.example.data.repository.NewsRepository
+import com.example.data.repository.NewsRepositoryImpl
 import com.example.presentation.R
-import com.example.presentation.Room.AppDB
+import com.example.local.Room.AppDB
 import com.example.presentation.databinding.FragmentNewsDetailBinding
-import com.example.presentation.datasource.local.LocalDataSourceImpl
-import com.example.presentation.datasource.remote.RemoteDataSourceImpl
-import com.example.presentation.repository.NewsRepository
-import com.example.presentation.repository.NewsRepositoryImpl
+import com.example.local.dataSource.LocalDataSourceImpl
+import com.example.remote.dataSource.RemoteDataSourceImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.fragment_news_detail), View.OnClickListener {
@@ -31,7 +27,9 @@ class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.frag
 
     private val newsDetailFragmentRepository : NewsRepository by lazy {
         val remoteDataSourceImpl = RemoteDataSourceImpl()
-        val localDataSourceImpl = LocalDataSourceImpl(context?.let { AppDB.getInstance(it) }!!)
+        val localDataSourceImpl = LocalDataSourceImpl(context?.let {
+            AppDB.getInstance(it)
+        }!!)
 
         NewsRepositoryImpl(remoteDataSourceImpl, localDataSourceImpl)
     }

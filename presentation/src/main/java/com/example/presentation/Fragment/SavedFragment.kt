@@ -1,25 +1,21 @@
 package com.example.presentation.Fragment
 
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.data.model.Articles
+import com.example.data.repository.NewsRepository
+import com.example.data.repository.NewsRepositoryImpl
 import com.example.presentation.*
 import com.example.presentation.Adapter.NewsListAdapter
-import com.example.presentation.Room.AppDB
+import com.example.local.Room.AppDB
 import com.example.presentation.databinding.FragmentSavedBinding
-import com.example.presentation.datasource.local.LocalDataSourceImpl
-import com.example.presentation.datasource.remote.RemoteDataSourceImpl
-import com.example.presentation.repository.NewsRepository
-import com.example.presentation.repository.NewsRepositoryImpl
+import com.example.local.dataSource.LocalDataSourceImpl
+import com.example.remote.dataSource.RemoteDataSourceImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -32,7 +28,9 @@ class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved
 
     private val savedFragmentRepository : NewsRepository by lazy {
         val remoteDataSourceImpl = RemoteDataSourceImpl()
-        val localDataSourceImpl = LocalDataSourceImpl(context?.let { AppDB.getInstance(it) }!!)
+        val localDataSourceImpl = LocalDataSourceImpl(context?.let {
+            AppDB.getInstance(it)
+        }!!)
 
         NewsRepositoryImpl(remoteDataSourceImpl, localDataSourceImpl)
     }

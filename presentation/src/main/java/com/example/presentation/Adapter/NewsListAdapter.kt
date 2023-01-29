@@ -11,7 +11,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.presentation.Articles
+import com.example.data.model.Articles
 import com.example.presentation.R
 import com.example.presentation.databinding.NewsItemBinding
 import java.util.ArrayList
