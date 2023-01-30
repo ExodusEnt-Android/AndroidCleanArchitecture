@@ -13,8 +13,13 @@ import com.example.presentation.Articles
 import com.example.presentation.R
 import com.example.presentation.Room.AppDB
 import com.example.presentation.databinding.FragmentNewsDetailBinding
+import com.example.presentation.datasource.local.LocalDataSourceImpl
+import com.example.presentation.datasource.remote.RemoteDataSourceImpl
+import com.example.presentation.repository.NewsRepository
+import com.example.presentation.repository.NewsRepositoryImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.fragment_news_detail), View.OnClickListener {
@@ -22,22 +27,21 @@ class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.frag
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController
     private var ivSaved : Boolean = false
-    private lateinit var newsDB : AppDB
-
     var articles: Articles? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mBinding = FragmentNewsDetailBinding.inflate(inflater, container, false)
-        navHostFragment =requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        navController = navHostFragment.navController
+    private val newsDetailFragmentRepository : NewsRepository by lazy {
+        val remoteDataSourceImpl = RemoteDataSourceImpl()
+        val localDataSourceImpl = LocalDataSourceImpl(context?.let { AppDB.getInstance(it) }!!)
 
-        newsDB = context?.let { AppDB.getInstance(it) }!!
-
-        return mBinding.root
+        NewsRepositoryImpl(remoteDataSourceImpl, localDataSourceImpl)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        navHostFragment =requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
+
         articles = arguments?.getParcelable("items")
         Log.d("asdasd", articles.toString())
         mBinding.tvTitle.text = articles?.title
@@ -46,11 +50,13 @@ class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.frag
         Glide.with(this).load(articles?.urlToImage).into(mBinding.ivPhoto)
         mBinding.ivSaved.setOnClickListener(this)
 
-        CoroutineScope(Dispatchers.IO).launch {
-            if(newsDB.newsDao().getAll().any { items -> items.url == articles!!.url  }){    //같은 url이 있을 경우, 즐겨찾기를 해놨단 이야기이므로
-                mBinding.ivSaved.setImageResource(R.drawable.star_ok)
-            }else{
-                mBinding.ivSaved.setImageResource(R.drawable.star_no)
+        CoroutineScope(Dispatchers.Main).launch {
+            newsDetailFragmentRepository.getAll().collect{ it ->
+                if(it.any { it.url == articles!!.url }){
+                    mBinding.ivSaved.setImageResource(R.drawable.star_ok)
+                }else{
+                    mBinding.ivSaved.setImageResource(R.drawable.star_no)
+                }
             }
         }
     }
@@ -62,13 +68,13 @@ class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.frag
                     ivSaved = false
                     CoroutineScope(Dispatchers.IO).launch {
                         mBinding.ivSaved.setImageResource(R.drawable.star_no)
-                        articles?.let { newsDB.newsDao().deleteArticle(articles!!.url) }   //DB delete
+                        newsDetailFragmentRepository.deleteArticle(articles!!.url){}
                     }
                 }else{
                     ivSaved = true
                     CoroutineScope(Dispatchers.IO).launch {
                         mBinding.ivSaved.setImageResource(R.drawable.star_ok)
-                        articles?.let { newsDB.newsDao().insert(it) }   //DB에 INSERT
+                        newsDetailFragmentRepository.insert(articles!!){}
                     }
                 }
             }

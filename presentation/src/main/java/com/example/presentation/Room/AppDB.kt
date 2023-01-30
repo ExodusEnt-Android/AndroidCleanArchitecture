@@ -14,7 +14,7 @@ abstract class AppDB : RoomDatabase() {
         private var INSTANCE: AppDB? = null
 
         //Singleton pattern
-        fun getInstance(context: Context): AppDB? {
+        fun getInstance(context: Context): AppDB {
             if (INSTANCE == null) {
                 //synchronized : 중복 방지
                 synchronized(AppDB::class) {

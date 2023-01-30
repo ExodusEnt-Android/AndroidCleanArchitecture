@@ -16,15 +16,11 @@ class CategoryBtnFragment : BaseFragment<FragmentCategoryBtnBinding>(R.layout.fr
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mBinding = FragmentCategoryBtnBinding.inflate(inflater, container, false)
-        navHostFragment =requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        navController = navHostFragment.navController
-        return mBinding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        navHostFragment =requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
 
         mBinding.btnBusiness.setOnClickListener(this)
         mBinding.btnEntertain.setOnClickListener(this)

@@ -12,7 +12,12 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.presentation.*
 import com.example.presentation.Adapter.NewsListAdapter
+import com.example.presentation.Room.AppDB
 import com.example.presentation.databinding.FragmentCategoryNewsBinding
+import com.example.presentation.datasource.local.LocalDataSourceImpl
+import com.example.presentation.datasource.remote.RemoteDataSourceImpl
+import com.example.presentation.repository.NewsRepository
+import com.example.presentation.repository.NewsRepositoryImpl
 import com.example.presentation.retrofit.ApiService
 import com.example.presentation.retrofit.RetrofitHelper
 import kotlinx.coroutines.CoroutineScope
@@ -24,6 +29,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import timber.log.Timber
 
 class CategoryNewsFragment : BaseFragment<FragmentCategoryNewsBinding>(R.layout.fragment_category_news), NewsListAdapter.OnClickListener{
 
@@ -32,16 +38,17 @@ class CategoryNewsFragment : BaseFragment<FragmentCategoryNewsBinding>(R.layout.
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mBinding = FragmentCategoryNewsBinding.inflate(inflater, container, false)
-        navHostFragment =requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        navController = navHostFragment.navController
+    private val categoryNewsFragmentRepository : NewsRepository by lazy{
+        val remoteDataSourceImpl = RemoteDataSourceImpl()
+        val localDataSourceImpl = LocalDataSourceImpl(AppDB.getInstance(requireActivity()))
 
-        return mBinding.root
+        NewsRepositoryImpl(remoteDataSourceImpl, localDataSourceImpl)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navHostFragment =requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
         mBinding.rvCategory.layoutManager = LinearLayoutManagerWrapper(requireContext(), LinearLayoutManager.VERTICAL, false)
         categoryAdapter = context?.let { NewsListAdapter(it, this) }
         mBinding.rvCategory.adapter = categoryAdapter
@@ -54,18 +61,15 @@ class CategoryNewsFragment : BaseFragment<FragmentCategoryNewsBinding>(R.layout.
 
     private fun newsCategory(category : String) {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = RetrofitHelper.retrofit.requestNews(null, category)
-            withContext(Dispatchers.Main) {
-                // 정상적으로 통신이 성공된 경우
-                if(response.isSuccessful){
-                    val result: NewsData? = response.body()
-                    val model = result?.articles
-
+            categoryNewsFragmentRepository.getNews("us", category).collect{
+                withContext(Dispatchers.Main){
+                    val model = it.articles
                     models = ArrayList()
-                    for(i in model!!.indices){
+                    if (model.isNullOrEmpty()) return@withContext
+
+                    for(i in model.indices){
                         models.add(model[i])
                     }
-
                     categoryAdapter?.setItems(models)
                 }
             }
