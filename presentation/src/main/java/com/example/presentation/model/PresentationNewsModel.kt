@@ -6,23 +6,17 @@
  *
  * */
 
-package com.example.local.model
+package com.example.presentation.model
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo
-import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.data.model.Articles
-import com.example.data.model.DataNewsModel
-import com.example.local.mapper.LocalMapper
-import com.example.local.model.LocalArticles.Companion.fromData
-import com.example.local.model.LocalArticles.Companion.toData
-
+import com.example.presentation.mapper.PresentationMapper
 import kotlinx.android.parcel.Parcelize
 
-@Entity(tableName = "articles")
 @Parcelize
-data class LocalArticles(
+data class PresentationArticles(
     @PrimaryKey @ColumnInfo(name = "url") var url: String,
     @ColumnInfo(name = "author") var author: String? = null,
     @ColumnInfo(name = "title") var title: String,
@@ -30,10 +24,10 @@ data class LocalArticles(
     @ColumnInfo(name = "urlToImage") var urlToImage: String? = null,
     @ColumnInfo(name = "publishedAt")  var publishedAt: String? = null,
     @ColumnInfo(name = "content") var content: String? = null,
-) : Parcelable{
+) : Parcelable {
 
-    companion object : LocalMapper<LocalArticles, Articles> {
-        override fun LocalArticles.toData(): Articles =
+    companion object : PresentationMapper<PresentationArticles, Articles> {
+        override fun PresentationArticles.toData(): Articles =
             Articles(
                 url = this.url,
                 author = this.author,
@@ -44,8 +38,8 @@ data class LocalArticles(
                 content = this.content
             )
 
-        override fun Articles.fromData(): LocalArticles {
-            return LocalArticles(
+        override fun Articles.fromData(): PresentationArticles {
+            return PresentationArticles(
                 url = this.url,
                 author = this.author,
                 title = this.title,
@@ -55,6 +49,7 @@ data class LocalArticles(
                 content = this.content
             )
         }
-
     }
+
+
 }

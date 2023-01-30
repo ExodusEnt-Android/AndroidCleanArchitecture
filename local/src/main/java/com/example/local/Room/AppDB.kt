@@ -5,8 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.data.model.Articles
+import com.example.local.model.LocalArticles
 
-@Database(entities = [Articles::class], version = 1, exportSchema = false)
+@Database(entities = [LocalArticles::class], version = 2, exportSchema = false)
 abstract class AppDB : RoomDatabase() {
     abstract fun newsDao() : NewsDao
 

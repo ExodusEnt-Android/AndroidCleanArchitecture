@@ -6,5 +6,9 @@
  *
  * */
 
-package com.example.presentation.model
+package com.example.presentation.mapper
 
+interface PresentationMapper<T, E> {
+    fun T.toData(): E
+    fun E.fromData(): T
+}

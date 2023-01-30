@@ -10,6 +10,7 @@ package com.example.remote.dataSource
 
 import com.example.data.model.DataNewsModel
 import com.example.data.remote.RemoteDataSource
+import com.example.local.model.RemoteNewsModel.Companion.toData
 import com.example.remote.retrofit.RetrofitHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -31,7 +32,7 @@ class RemoteDataSourceImpl(
 
         if(response.isSuccessful){
             response.body()?.let {
-                emit(it)
+                emit(it.toData())
             }
         }
 

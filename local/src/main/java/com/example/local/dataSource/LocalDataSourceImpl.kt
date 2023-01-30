@@ -11,6 +11,8 @@ package com.example.local.dataSource
 import com.example.data.local.LocalDataSource
 import com.example.data.model.Articles
 import com.example.local.Room.AppDB
+import com.example.local.model.LocalArticles.Companion.fromData
+import com.example.local.model.LocalArticles.Companion.toData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -26,11 +28,13 @@ class LocalDataSourceImpl(
 ) : LocalDataSource {
     override suspend fun getAll(): Flow<List<Articles>> = flow {
         val result = appDB.newsDao().getAll()
-        emit(result)
+        emit(result.map {
+            it.toData()
+        })
     }.flowOn(Dispatchers.IO)
 
     override fun insert(items: Articles, callback: () -> Unit) {
-        appDB.newsDao().insert(items)
+        appDB.newsDao().insert(items.fromData())
         callback()
     }
 
