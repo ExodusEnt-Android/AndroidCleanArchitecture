@@ -16,3 +16,6 @@ rootProject.name = "AndroidCleanArchitectureCoroutine"
 include ':app'
 include ':presentation'
 include ':util'
+include ':data'
+include ':remote'
+include ':local'

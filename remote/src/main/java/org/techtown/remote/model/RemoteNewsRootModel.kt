@@ -1,23 +1,25 @@
-package org.techtown.presentation.model
+package org.techtown.remote.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.techtown.data.model.DataArticles
 import org.techtown.data.model.DataNewsRootModel
 import org.techtown.data.model.DataSource
-import org.techtown.presentation.mapper.NewPresentationMapper
-import org.techtown.presentation.model.Articles.Companion.fromData
-import org.techtown.presentation.model.Articles.Companion.toData
-import org.techtown.presentation.model.Source.Companion.fromData
-import org.techtown.presentation.model.Source.Companion.toData
+import org.techtown.remote.mapper.NewsRemoteMapper
+import org.techtown.remote.model.RemoteArticles.Companion.fromData
+import org.techtown.remote.model.RemoteArticles.Companion.toData
+import org.techtown.remote.model.RemoteSource.Companion.fromData
+import org.techtown.remote.model.RemoteSource.Companion.toData
 
-data class NewsRootModel(
+@Parcelize
+data class RemoteNewsRootModel(
     var status: String? = null,
     var totalResults: Int? = null,
-    var articles: List<Articles> = listOf()
-) {
-    companion object : NewPresentationMapper<NewsRootModel, DataNewsRootModel> {
-        override fun NewsRootModel.toData(): DataNewsRootModel {
+    var articles: List<RemoteArticles> = listOf()
+) : Parcelable {
+
+    companion object : NewsRemoteMapper<RemoteNewsRootModel, DataNewsRootModel> {
+        override fun RemoteNewsRootModel.toData(): DataNewsRootModel {
             return DataNewsRootModel(
                 status = this.status,
                 totalResults = this.totalResults,
@@ -28,8 +30,8 @@ data class NewsRootModel(
             )
         }
 
-        override fun DataNewsRootModel.fromData(): NewsRootModel {
-            return NewsRootModel(
+        override fun DataNewsRootModel.fromData(): RemoteNewsRootModel {
+            return RemoteNewsRootModel(
                 status = this.status,
                 totalResults = this.totalResults,
                 articles = this.articles.map {
@@ -42,29 +44,31 @@ data class NewsRootModel(
 }
 
 @Parcelize
-data class Source(
+data class RemoteSource(
     var id: String? = null,
     var name: String? = null
 ) : Parcelable {
-    companion object : NewPresentationMapper<Source, DataSource> {
-        override fun Source.toData(): DataSource =
+    companion object : NewsRemoteMapper<RemoteSource, DataSource> {
+        override fun RemoteSource.toData(): DataSource =
             DataSource(
                 id = this.id,
                 name = this.name
             )
 
-        override fun DataSource.fromData(): Source {
-            return Source(
+
+        override fun DataSource.fromData(): RemoteSource {
+            return RemoteSource(
                 id = this.id,
                 name = this.name
             )
         }
+
     }
 }
 
 @Parcelize
-data class Articles(
-    var source: Source? = Source(),
+data class RemoteArticles(
+    var source: RemoteSource? = null,
     var author: String? = null,
     var title: String? = null,
     var description: String? = null,
@@ -74,8 +78,8 @@ data class Articles(
     var content: String? = null,
     var isLoading: Boolean = false,
 ) : Parcelable {
-    companion object : NewPresentationMapper<Articles, DataArticles> {
-        override fun Articles.toData(): DataArticles =
+    companion object : NewsRemoteMapper<RemoteArticles, DataArticles> {
+        override fun RemoteArticles.toData(): DataArticles =
             DataArticles(
                 source = this.source?.toData(),
                 author = this.author,
@@ -88,8 +92,8 @@ data class Articles(
                 isLoading = this.isLoading
             )
 
-        override fun DataArticles.fromData(): Articles {
-            return Articles(
+        override fun DataArticles.fromData(): RemoteArticles {
+            return RemoteArticles(
                 source = this.source?.fromData(),
                 author = this.author,
                 title = this.title,
@@ -101,5 +105,6 @@ data class Articles(
                 isLoading = this.isLoading
             )
         }
+
     }
 }

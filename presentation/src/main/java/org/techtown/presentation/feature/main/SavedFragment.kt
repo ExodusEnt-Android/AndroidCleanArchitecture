@@ -9,22 +9,20 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.techtown.presentation.R
 import org.techtown.presentation.base.BaseFragment
-import org.techtown.presentation.database.database.AppDatabase
 import org.techtown.presentation.databinding.FragmentSavedBinding
-import org.techtown.presentation.datasource.local.LocalDataSourceImpl
-import org.techtown.presentation.datasource.remote.RemoteDataSourceImpl
+import org.techtown.local.feature.news.LocalDataSourceImpl
+import org.techtown.remote.feature.news.RemoteDataSourceImpl
 import org.techtown.presentation.ext.navigateWithAnim
 import org.techtown.presentation.feature.main.adapter.TopNewsAdapter
 import org.techtown.presentation.model.Articles
-import org.techtown.presentation.repository.NewsRepository
-import org.techtown.presentation.repository.NewsRepositoryImpl
-import org.techtown.presentation.retrofit.NewsService
+import org.techtown.data.repository.news.NewsRepository
+import org.techtown.data.repository.news.NewsRepositoryImpl
+import org.techtown.local.feature.database.database.AppDatabase
+import org.techtown.presentation.model.Articles.Companion.fromData
+import org.techtown.remote.retrofit.NewsService
 
 class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved) {
 
@@ -97,7 +95,7 @@ class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved
                 }
 
                 tempSavedArticleList.clear()
-                tempSavedArticleList.addAll(savedArticles)
+                tempSavedArticleList.addAll(savedArticles.map { it.fromData() })
                 savedNewsAdapter.submitList(tempSavedArticleList.map { it.copy() }
                     .toMutableList())
 

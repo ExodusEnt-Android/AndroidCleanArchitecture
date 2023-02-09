@@ -3,20 +3,18 @@ package org.techtown.presentation.feature.main
 import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.techtown.presentation.R
 import org.techtown.presentation.base.BaseFragment
-import org.techtown.presentation.database.database.AppDatabase
+import org.techtown.local.feature.database.database.AppDatabase
 import org.techtown.presentation.databinding.FragmentNewsDetailBinding
-import org.techtown.presentation.datasource.local.LocalDataSourceImpl
-import org.techtown.presentation.datasource.remote.RemoteDataSourceImpl
+import org.techtown.local.feature.news.LocalDataSourceImpl
+import org.techtown.remote.feature.news.RemoteDataSourceImpl
 import org.techtown.presentation.model.Articles
-import org.techtown.presentation.repository.NewsRepository
-import org.techtown.presentation.repository.NewsRepositoryImpl
-import org.techtown.presentation.retrofit.NewsService
+import org.techtown.data.repository.news.NewsRepository
+import org.techtown.data.repository.news.NewsRepositoryImpl
+import org.techtown.presentation.model.Articles.Companion.toData
+import org.techtown.remote.retrofit.NewsService
 
 class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.fragment_news_detail) {
 
@@ -74,7 +72,7 @@ class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.frag
 
             binding.ivSaved.setOnClickListener {
                 viewLifecycleOwner.lifecycleScope.launch {
-                    newsRepository.deleteArticle(articles.url)
+                    newsRepository.deleteArticle(articles.url ?: return@launch)
                     binding.ivSaved.setImageResource(R.drawable.star_inactive)
                 }
             }
@@ -83,7 +81,7 @@ class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.frag
 
             binding.ivSaved.setOnClickListener {
                 viewLifecycleOwner.lifecycleScope.launch {
-                    newsRepository.insertArticle(articles)
+                    newsRepository.insertArticle(articles.toData())
                     binding.ivSaved.setImageResource(R.drawable.star_active)
                 }
             }
