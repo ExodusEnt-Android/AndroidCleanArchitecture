@@ -5,6 +5,7 @@ import android.os.Parcelable
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -21,6 +22,8 @@ import org.techtown.presentation.model.Articles
 import org.techtown.data.repository.news.NewsRepository
 import org.techtown.data.repository.news.NewsRepositoryImpl
 import org.techtown.local.feature.database.database.AppDatabase
+import org.techtown.presentation.feature.main.viewmodel.SavedViewModel
+import org.techtown.presentation.feature.main.viewmodel.factory.ViewModelFactory
 import org.techtown.presentation.model.Articles.Companion.fromData
 import org.techtown.remote.retrofit.NewsService
 
@@ -31,17 +34,23 @@ class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved
     private lateinit var navController: NavController
     private lateinit var navHost: NavHostFragment
 
-    private var shouldRequestViewMore: Boolean = true
-
-    private var tempSavedArticleList: ArrayList<Articles> = arrayListOf()
     var recyclerViewScrollState: Parcelable? = null
 
-    private lateinit var database: AppDatabase
+    private val database: AppDatabase by lazy {
+        AppDatabase.getInstance(requireActivity().applicationContext)
+    }
 
     private val newsRepository: NewsRepository by lazy {
         val localDataSource = LocalDataSourceImpl(database)
         val remoteDataSource = RemoteDataSourceImpl(NewsService.apiService)
         NewsRepositoryImpl(localDataSource, remoteDataSource)
+    }
+
+    private val savedViewModel: SavedViewModel by lazy {
+        ViewModelProvider(
+            owner = this,
+            factory = ViewModelFactory(newsRepository = newsRepository)
+        )[SavedViewModel::class.java]
     }
 
     override fun FragmentSavedBinding.onCreateView() {
@@ -52,18 +61,19 @@ class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved
         super.onViewCreated(view, savedInstanceState)
         if (savedInstanceState != null) {// 데이터값 날라가는 경우 주의.
             recyclerViewScrollState = savedInstanceState.getParcelable("recyclerview_state")
-            tempSavedArticleList = savedInstanceState.getParcelableArrayList("recyclerview_list")!!
         }
         initSet()
+        getDataFromVM()
+        setListenerEvent()
+    }
+
+    private fun getDataFromVM() {
+        savedViewModel.savedArticleList.observe(viewLifecycleOwner) { savedArticleList ->
+            savedNewsAdapter.submitList(savedArticleList.map { it.copy() }.toMutableList())
+        }
     }
 
     private fun initSet() {
-
-        //db setting
-        database = AppDatabase.getInstance(requireActivity().applicationContext)
-
-        //로컬 디비에 있는 리스트 가지고옴.
-        getSavedArticleList()
 
         navHost =
             requireActivity().supportFragmentManager.findFragmentById(R.id.main_nav_host_fragment) as NavHostFragment
@@ -71,36 +81,10 @@ class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved
 
         //스크롤 유지.
         binding.rvSavedNews.layoutManager?.onRestoreInstanceState(recyclerViewScrollState)
-    }
 
-    private fun getSavedArticleList() {
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            newsRepository.getAllArticles().collect { savedArticles ->
-                if (savedArticles.isEmpty()) {
-                    shouldRequestViewMore = false
-                    return@collect
-                }
-
-                savedNewsAdapter = TopNewsAdapter()
-                binding.rvSavedNews.apply {
-                    adapter = savedNewsAdapter
-                }
-
-                if (tempSavedArticleList.size > 0) {
-                    if (tempSavedArticleList[tempSavedArticleList.lastIndex].isLoading) {
-                        tempSavedArticleList.removeAt(tempSavedArticleList.lastIndex)
-                        savedNewsAdapter.submitList(tempSavedArticleList.map { it.copy() })
-                    }
-                }
-
-                tempSavedArticleList.clear()
-                tempSavedArticleList.addAll(savedArticles.map { it.fromData() })
-                savedNewsAdapter.submitList(tempSavedArticleList.map { it.copy() }
-                    .toMutableList())
-
-                setListenerEvent()
-            }
+        savedNewsAdapter = TopNewsAdapter()
+        binding.rvSavedNews.apply {
+            adapter = savedNewsAdapter
         }
     }
 
@@ -117,7 +101,6 @@ class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelable("recyclerview_state", recyclerViewScrollState)
-        outState.putParcelableArrayList("recyclerview_list", tempSavedArticleList)
     }
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
