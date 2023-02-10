@@ -27,9 +27,7 @@ class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.frag
 
     private val newsDetailFragmentRepository : NewsRepository by lazy {
         val remoteDataSourceImpl = RemoteDataSourceImpl()
-        val localDataSourceImpl = LocalDataSourceImpl(context?.let {
-            AppDB.getInstance(it)
-        }!!)
+        val localDataSourceImpl = LocalDataSourceImpl(AppDB.getInstance(requireActivity()))
 
         NewsRepositoryImpl(remoteDataSourceImpl, localDataSourceImpl)
     }
