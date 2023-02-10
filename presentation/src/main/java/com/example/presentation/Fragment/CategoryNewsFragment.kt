@@ -13,6 +13,8 @@ import com.example.presentation.Adapter.NewsListAdapter
 import com.example.local.Room.AppDB
 import com.example.presentation.databinding.FragmentCategoryNewsBinding
 import com.example.local.dataSource.LocalDataSourceImpl
+import com.example.presentation.model.PresentationArticles
+import com.example.presentation.model.PresentationArticles.Companion.fromData
 import com.example.remote.dataSource.RemoteDataSourceImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -54,23 +56,27 @@ class CategoryNewsFragment : BaseFragment<FragmentCategoryNewsBinding>(R.layout.
             categoryNewsFragmentRepository.getNews("us", category).collect{
                 withContext(Dispatchers.Main){
                     val model = it.articles
-                    models = ArrayList()
-                    if (model.isNullOrEmpty()) return@withContext
+//                    models = ArrayList()
+//                    if (model.isNullOrEmpty()) return@withContext
+//
+//                    for(i in model.indices){
+//                        models.add(model[i])
+//                    }
+//
+//                    val items = models.map { it.fromData() }
 
-                    for(i in model.indices){
-                        models.add(model[i])
-                    }
-                    categoryAdapter?.setItems(models)
+                    val items = model.map { it.fromData() }
+                    categoryAdapter?.setItems(items)
                 }
             }
         }
     }
 
-    override fun onItemClicked(articles: Articles, view: View) {
+    override fun onItemClicked(item: PresentationArticles, view: View) {
         when(view.id){
             R.id.cl_article -> {
                 navController.navigate(R.id.newsDetailFragment, Bundle().apply {
-                    putParcelable("items", articles)
+                    putParcelable("items", item)
                 })
             }
         }

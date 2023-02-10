@@ -11,12 +11,12 @@ import com.example.local.model.LocalArticles
 interface NewsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(items : LocalArticles)
+    suspend fun insert(items : LocalArticles)
 
     @Query("SELECT * FROM articles")
-    fun getAll() : List<LocalArticles>
+    suspend fun getAll() : List<LocalArticles>
 
     @Query("DELETE FROM articles WHERE url =:url")
-    fun deleteArticle(url : String)
+    suspend fun deleteArticle(url : String)
 
 }

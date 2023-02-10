@@ -1,18 +1,18 @@
 package com.example.presentation.Fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.bumptech.glide.Glide
-import com.example.data.model.Articles
 import com.example.data.repository.NewsRepository
 import com.example.data.repository.NewsRepositoryImpl
 import com.example.presentation.R
 import com.example.local.Room.AppDB
 import com.example.presentation.databinding.FragmentNewsDetailBinding
 import com.example.local.dataSource.LocalDataSourceImpl
+import com.example.presentation.model.PresentationArticles
+import com.example.presentation.model.PresentationArticles.Companion.toData
 import com.example.remote.dataSource.RemoteDataSourceImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +23,7 @@ class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.frag
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController
     private var ivSaved : Boolean = false
-    var articles: Articles? = null
+    var articles: PresentationArticles? = null
 
     private val newsDetailFragmentRepository : NewsRepository by lazy {
         val remoteDataSourceImpl = RemoteDataSourceImpl()
@@ -41,7 +41,6 @@ class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.frag
         navController = navHostFragment.navController
 
         articles = arguments?.getParcelable("items")
-        Log.d("asdasd", articles.toString())
         mBinding.tvTitle.text = articles?.title
         mBinding.tvAuthor.text = articles?.author
         mBinding.tvDetail.text = articles?.description
@@ -66,13 +65,15 @@ class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.frag
                     ivSaved = false
                     CoroutineScope(Dispatchers.IO).launch {
                         mBinding.ivSaved.setImageResource(R.drawable.star_no)
-                        newsDetailFragmentRepository.deleteArticle(articles!!.url){}
+                        newsDetailFragmentRepository.deleteArticle(articles!!.url)
                     }
                 }else{
                     ivSaved = true
-                    CoroutineScope(Dispatchers.IO).launch {
+
+                    CoroutineScope(Dispatchers.Main).launch {
+                        newsDetailFragmentRepository.insert(articles!!.toData())
                         mBinding.ivSaved.setImageResource(R.drawable.star_ok)
-                        newsDetailFragmentRepository.insert(articles!!){}
+
                     }
                 }
             }

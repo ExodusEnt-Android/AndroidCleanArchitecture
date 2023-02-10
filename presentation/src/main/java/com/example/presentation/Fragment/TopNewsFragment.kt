@@ -13,6 +13,8 @@ import com.example.presentation.Adapter.NewsListAdapter
 import com.example.local.Room.AppDB
 import com.example.presentation.databinding.FragmentTopNewsBinding
 import com.example.local.dataSource.LocalDataSourceImpl
+import com.example.presentation.model.PresentationArticles
+import com.example.presentation.model.PresentationArticles.Companion.fromData
 import com.example.remote.dataSource.RemoteDataSourceImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -62,16 +64,18 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
                         models.add(model[i])
                     }
 
-                    topNewsAdapter?.setItems(models)
+                    val items = models.map { it.fromData() }
+
+                    topNewsAdapter?.setItems(items)
                 }
             }
         }
     }
-    override fun onItemClicked(articles: Articles, view: View) {
+    override fun onItemClicked(item: PresentationArticles, view: View) {
         when(view.id){
             R.id.cl_article -> {
                 navController.navigate(R.id.newsDetailFragment, Bundle().apply {
-                    putParcelable("items", articles)
+                    putParcelable("items", item)
                 })
             }
         }

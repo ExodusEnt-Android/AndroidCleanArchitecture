@@ -20,7 +20,7 @@ interface LocalDataSource{
 
     suspend fun getAll() : Flow<List<Articles>>
 
-    fun insert(items : Articles, callback: () -> Unit)
+    suspend fun insert(items : Articles)
 
-    fun deleteArticle(url : String, callback: () -> Unit)
+    suspend fun deleteArticle(url : String)
 }

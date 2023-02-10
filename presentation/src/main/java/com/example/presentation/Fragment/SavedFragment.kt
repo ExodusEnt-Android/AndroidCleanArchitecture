@@ -13,12 +13,12 @@ import com.example.presentation.Adapter.NewsListAdapter
 import com.example.local.Room.AppDB
 import com.example.presentation.databinding.FragmentSavedBinding
 import com.example.local.dataSource.LocalDataSourceImpl
+import com.example.presentation.model.PresentationArticles
+import com.example.presentation.model.PresentationArticles.Companion.fromData
 import com.example.remote.dataSource.RemoteDataSourceImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved) , NewsListAdapter.OnClickListener{
 
@@ -51,16 +51,17 @@ class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved
 
     //저장된 뉴스 id를 통해 보여주기
     private fun newsSource() {
-        CoroutineScope(Dispatchers.IO).launch {
-            savedFragmentRepository.getAll().collect{
-                withContext(Dispatchers.Main) {
-                    saveNewsAdapter?.setItems(it)
+        CoroutineScope(Dispatchers.Main).launch {
+            savedFragmentRepository.getAll().collect{ it ->
+                val item = it.map {
+                        it.fromData()
+                    }
+                    saveNewsAdapter?.setItems(item)
                 }
             }
-        }
-//        saveNewsAdapter?.notifyDataSetChanged() //여기다 선언하면 데이터 셋 되기전에 호출해서 바로 안뜸.
     }
-    override fun onItemClicked(articles: Articles, view: View) {
+
+    override fun onItemClicked(articles: PresentationArticles, view: View) {
         when(view.id){
             R.id.cl_article -> {
                 navController.navigate(R.id.newsDetailFragment,  Bundle().apply {

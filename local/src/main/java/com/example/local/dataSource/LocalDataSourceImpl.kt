@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 
 
 /**
@@ -33,14 +34,16 @@ class LocalDataSourceImpl(
         })
     }.flowOn(Dispatchers.IO)
 
-    override fun insert(items: Articles, callback: () -> Unit) {
-        appDB.newsDao().insert(items.fromData())
-        callback()
+    override suspend fun insert(items: Articles)  {
+        withContext(Dispatchers.IO){
+            appDB.newsDao().insert(items.fromData())
+        }
     }
 
-    override fun deleteArticle(url: String, callback: () -> Unit) {
-        appDB.newsDao().deleteArticle(url)
-        callback()
+    override suspend fun deleteArticle(url: String) {
+        withContext(Dispatchers.IO){
+            appDB.newsDao().deleteArticle(url)
+        }
     }
 
 }
