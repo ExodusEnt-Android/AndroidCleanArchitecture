@@ -26,7 +26,7 @@ data class RemoteNewsModel(
     companion object : RemoteMapper<RemoteNewsModel, DataNewsModel> {
         override fun RemoteNewsModel.toData(): DataNewsModel {
             return DataNewsModel(
-                articles = this.articles.map {
+                dataArticlesModel = this.articles.map {
                     it.toData()
                 }
 
@@ -35,7 +35,7 @@ data class RemoteNewsModel(
 
         override fun DataNewsModel.fromData(): RemoteNewsModel {
             return RemoteNewsModel(
-                articles = this.articles.map {
+                articles = this.dataArticlesModel.map {
                     it.fromData()
                 }
             )

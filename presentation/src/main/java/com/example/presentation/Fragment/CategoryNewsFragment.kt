@@ -55,15 +55,7 @@ class CategoryNewsFragment : BaseFragment<FragmentCategoryNewsBinding>(R.layout.
         CoroutineScope(Dispatchers.IO).launch {
             categoryNewsFragmentRepository.getNews("us", category).collect{
                 withContext(Dispatchers.Main){
-                    val model = it.articles
-//                    models = ArrayList()
-//                    if (model.isNullOrEmpty()) return@withContext
-//
-//                    for(i in model.indices){
-//                        models.add(model[i])
-//                    }
-//
-//                    val items = models.map { it.fromData() }
+                    val model = it.dataArticlesModel
 
                     val items = model.map { it.fromData() }
                     categoryAdapter?.setItems(items)

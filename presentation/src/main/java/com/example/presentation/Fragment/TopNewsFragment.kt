@@ -55,16 +55,8 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
             topNewsFragmentRepository.getNews("us", null).collect {
 
                 withContext(Dispatchers.Main) {
-                    val model = it.articles
-
-                    models = ArrayList()
-                    if (model.isNullOrEmpty()) return@withContext
-
-                    for (i in model.indices) {
-                        models.add(model[i])
-                    }
-
-                    val items = models.map { it.fromData() }
+                    val model = it.dataArticlesModel
+                    val items = model.map { it.fromData() }
 
                     topNewsAdapter?.setItems(items)
                 }

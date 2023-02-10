@@ -12,7 +12,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 data class DataNewsModel(
-    var articles: List<Articles> = listOf()
+    var dataArticlesModel: List<Articles> = listOf()
 )
 
 @Parcelize
