@@ -11,19 +11,20 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.presentation.Articles
+import com.example.data.model.Articles
 import com.example.presentation.R
 import com.example.presentation.databinding.NewsItemBinding
+import com.example.presentation.model.PresentationArticles
 import java.util.ArrayList
 
 class NewsListAdapter (
     private val context: Context,
     private var onClickListener: OnClickListener
 )  : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var newsData = ArrayList<Articles>()
+    private var newsData = ArrayList<PresentationArticles>()
 
     interface OnClickListener{
-        fun onItemClicked(item : Articles, view: View)
+        fun onItemClicked(item : PresentationArticles, view: View)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -42,7 +43,7 @@ class NewsListAdapter (
 
     override fun getItemCount(): Int = newsData.size
 
-    fun setItems(@NonNull items: List<Articles>) {
+    fun setItems(@NonNull items: List<PresentationArticles>) {
         newsData.clear()
         newsData.addAll(items)
         notifyDataSetChanged()
@@ -50,7 +51,7 @@ class NewsListAdapter (
 
     inner class NewsListViewHolder(val binding: NewsItemBinding) : RecyclerView.ViewHolder(binding.root){
 
-        fun bind(item : Articles){
+        fun bind(item : PresentationArticles){
             Glide.with(itemView).load(item.urlToImage).into(binding.ivPhoto)
             binding.tvTitle.text = item.title
             binding.tvAuthor.text = item.author

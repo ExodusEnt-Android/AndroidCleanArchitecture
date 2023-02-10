@@ -9,3 +9,6 @@ dependencyResolutionManagement {
 rootProject.name = "NewsCorutin"
 include ':app'
 include ':presentation'
+include ':local'
+include ':data'
+include ':remote'

@@ -1,34 +1,25 @@
 package com.example.presentation.Fragment
 
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.data.model.Articles
+import com.example.data.repository.NewsRepository
+import com.example.data.repository.NewsRepositoryImpl
 import com.example.presentation.*
 import com.example.presentation.Adapter.NewsListAdapter
-import com.example.presentation.Room.AppDB
+import com.example.local.Room.AppDB
 import com.example.presentation.databinding.FragmentTopNewsBinding
-import com.example.presentation.datasource.local.LocalDataSourceImpl
-import com.example.presentation.datasource.remote.RemoteDataSourceImpl
-import com.example.presentation.repository.NewsRepository
-import com.example.presentation.repository.NewsRepositoryImpl
-import com.example.presentation.retrofit.ApiService
-import com.example.presentation.retrofit.RetrofitHelper
+import com.example.local.dataSource.LocalDataSourceImpl
+import com.example.presentation.model.PresentationArticles
+import com.example.presentation.model.PresentationArticles.Companion.fromData
+import com.example.remote.dataSource.RemoteDataSourceImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_top_news), NewsListAdapter.OnClickListener{
 
@@ -39,7 +30,9 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
 
     private val topNewsFragmentRepository : NewsRepository by lazy {
         val remoteDataSourceImpl = RemoteDataSourceImpl()
-        val localDataSourceImpl = LocalDataSourceImpl(context?.let { AppDB.getInstance(it) }!!)
+        val localDataSourceImpl = LocalDataSourceImpl(context?.let {
+            AppDB.getInstance(it)
+        }!!)
 
         NewsRepositoryImpl(remoteDataSourceImpl, localDataSourceImpl)
     }
@@ -62,25 +55,19 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
             topNewsFragmentRepository.getNews("us", null).collect {
 
                 withContext(Dispatchers.Main) {
-                    val model = it.articles
+                    val model = it.dataArticlesModel
+                    val items = model.map { it.fromData() }
 
-                    models = ArrayList()
-                    if (model.isNullOrEmpty()) return@withContext
-
-                    for (i in model.indices) {
-                        models.add(model[i])
-                    }
-
-                    topNewsAdapter?.setItems(models)
+                    topNewsAdapter?.setItems(items)
                 }
             }
         }
     }
-    override fun onItemClicked(articles: Articles, view: View) {
+    override fun onItemClicked(item: PresentationArticles, view: View) {
         when(view.id){
             R.id.cl_article -> {
                 navController.navigate(R.id.newsDetailFragment, Bundle().apply {
-                    putParcelable("items", articles)
+                    putParcelable("items", item)
                 })
             }
         }
