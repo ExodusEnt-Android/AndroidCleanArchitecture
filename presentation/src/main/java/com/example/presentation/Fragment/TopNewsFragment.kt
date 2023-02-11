@@ -1,7 +1,9 @@
 package com.example.presentation.Fragment
 
+import ViewModelFactory
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,6 +15,7 @@ import com.example.presentation.Adapter.NewsListAdapter
 import com.example.local.Room.AppDB
 import com.example.presentation.databinding.FragmentTopNewsBinding
 import com.example.local.dataSource.LocalDataSourceImpl
+import com.example.presentation.ViewModel.TopNewsViewModel
 import com.example.presentation.model.PresentationArticles
 import com.example.presentation.model.PresentationArticles.Companion.fromData
 import com.example.remote.dataSource.RemoteDataSourceImpl
@@ -46,23 +49,22 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
         mBinding.rvTopNews.layoutManager = LinearLayoutManagerWrapper(requireContext(), LinearLayoutManager.VERTICAL, false)
         topNewsAdapter = context?.let { NewsListAdapter(it, this) }
         mBinding.rvTopNews.adapter = topNewsAdapter
-        topNews()
+        getDataFromVM()
     }
 
-    private fun topNews() {
+    private val topNewsViewModel: TopNewsViewModel by lazy {
+        ViewModelProvider(
+            owner = this,
+            factory = ViewModelFactory(repository = topNewsFragmentRepository)
+        )[TopNewsViewModel::class.java]
+    }
 
-        CoroutineScope(Dispatchers.IO).launch {
-            topNewsFragmentRepository.getNews("us", null).collect {
-
-                withContext(Dispatchers.Main) {
-                    val model = it.dataArticlesModel
-                    val items = model.map { it.fromData() }
-
-                    topNewsAdapter?.setItems(items)
-                }
-            }
+    private fun getDataFromVM(){
+        topNewsViewModel.articleList.observe(viewLifecycleOwner){
+            topNewsAdapter?.setItems(it)
         }
     }
+
     override fun onItemClicked(item: PresentationArticles, view: View) {
         when(view.id){
             R.id.cl_article -> {

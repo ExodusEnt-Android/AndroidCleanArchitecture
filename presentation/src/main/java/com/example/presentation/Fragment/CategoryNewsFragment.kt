@@ -1,7 +1,9 @@
 package com.example.presentation.Fragment
 
+import ViewModelFactory
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,6 +15,8 @@ import com.example.presentation.Adapter.NewsListAdapter
 import com.example.local.Room.AppDB
 import com.example.presentation.databinding.FragmentCategoryNewsBinding
 import com.example.local.dataSource.LocalDataSourceImpl
+import com.example.presentation.ViewModel.CategoryNewsViewModel
+import com.example.presentation.ViewModel.TopNewsViewModel
 import com.example.presentation.model.PresentationArticles
 import com.example.presentation.model.PresentationArticles.Companion.fromData
 import com.example.remote.dataSource.RemoteDataSourceImpl
@@ -47,20 +51,20 @@ class CategoryNewsFragment : BaseFragment<FragmentCategoryNewsBinding>(R.layout.
 
         val category = arguments?.getString("category")
         if (category != null) {
-            newsCategory(category)
+            getDataFromVM()
         }
     }
 
-    private fun newsCategory(category : String) {
-        CoroutineScope(Dispatchers.IO).launch {
-            categoryNewsFragmentRepository.getNews("us", category).collect{
-                withContext(Dispatchers.Main){
-                    val model = it.dataArticlesModel
+    private val categoryNewsViewModel: CategoryNewsViewModel by lazy {
+        ViewModelProvider(
+            owner = this,
+            factory = ViewModelFactory(repository = categoryNewsFragmentRepository)
+        )[CategoryNewsViewModel::class.java]
+    }
 
-                    val items = model.map { it.fromData() }
-                    categoryAdapter?.setItems(items)
-                }
-            }
+    private fun getDataFromVM(){
+        categoryNewsViewModel.articleList.observe(viewLifecycleOwner){
+            categoryAdapter?.setItems(it)
         }
     }
 
