@@ -1,7 +1,9 @@
 package com.example.presentation.Fragment
 
+import ViewModelFactory
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.bumptech.glide.Glide
@@ -11,18 +13,16 @@ import com.example.presentation.R
 import com.example.local.Room.AppDB
 import com.example.presentation.databinding.FragmentNewsDetailBinding
 import com.example.local.dataSource.LocalDataSourceImpl
+import com.example.presentation.ViewModel.NewsDetailViewModel
 import com.example.presentation.model.PresentationArticles
-import com.example.presentation.model.PresentationArticles.Companion.toData
 import com.example.remote.dataSource.RemoteDataSourceImpl
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.fragment_news_detail), View.OnClickListener {
 
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController
-    private var ivSaved : Boolean = false
+    private var isSaved : Boolean = false
     var articles: PresentationArticles? = null
 
     private val newsDetailFragmentRepository : NewsRepository by lazy {
@@ -45,13 +45,25 @@ class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.frag
         Glide.with(this).load(articles?.urlToImage).into(mBinding.ivPhoto)
         mBinding.ivSaved.setOnClickListener(this)
 
-        CoroutineScope(Dispatchers.Main).launch {
-            newsDetailFragmentRepository.getAll().collect{ it ->
-                if(it.any { it.url == articles!!.url }){
-                    mBinding.ivSaved.setImageResource(R.drawable.star_ok)
-                }else{
-                    mBinding.ivSaved.setImageResource(R.drawable.star_no)
-                }
+        getDataFromVM()
+    }
+
+    private val newsDetailViewModel: NewsDetailViewModel by lazy {
+        ViewModelProvider(
+            owner = this,
+            factory = ViewModelFactory(repository = newsDetailFragmentRepository)
+        )[NewsDetailViewModel::class.java]
+    }
+
+
+    private fun getDataFromVM(){
+        newsDetailViewModel.isSaved.observe(viewLifecycleOwner) {
+            if (it) {
+                isSaved = true
+                mBinding.ivSaved.setImageResource(R.drawable.star_ok)
+            } else {
+                isSaved = false
+                mBinding.ivSaved.setImageResource(R.drawable.star_no)
             }
         }
     }
@@ -59,20 +71,11 @@ class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.frag
     override fun onClick(view: View) {
         when(view){
             mBinding.ivSaved -> {
-                if(ivSaved){
-                    ivSaved = false
-                    CoroutineScope(Dispatchers.IO).launch {
-                        mBinding.ivSaved.setImageResource(R.drawable.star_no)
-                        newsDetailFragmentRepository.deleteArticle(articles!!.url)
-                    }
+                if(isSaved){
+                    newsDetailViewModel.deleteArticle()
+
                 }else{
-                    ivSaved = true
-
-                    CoroutineScope(Dispatchers.Main).launch {
-                        newsDetailFragmentRepository.insert(articles!!.toData())
-                        mBinding.ivSaved.setImageResource(R.drawable.star_ok)
-
-                    }
+                    newsDetailViewModel.saveArticle()
                 }
             }
         }

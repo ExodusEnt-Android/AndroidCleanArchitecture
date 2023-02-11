@@ -1,7 +1,9 @@
 package com.example.presentation.Fragment
 
+import ViewModelFactory
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,12 +15,10 @@ import com.example.presentation.Adapter.NewsListAdapter
 import com.example.local.Room.AppDB
 import com.example.presentation.databinding.FragmentSavedBinding
 import com.example.local.dataSource.LocalDataSourceImpl
+import com.example.presentation.ViewModel.SavedViewModel
 import com.example.presentation.model.PresentationArticles
-import com.example.presentation.model.PresentationArticles.Companion.fromData
 import com.example.remote.dataSource.RemoteDataSourceImpl
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved) , NewsListAdapter.OnClickListener{
 
@@ -46,26 +46,31 @@ class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved
         saveNewsAdapter = context?.let { NewsListAdapter(it, this) }
         mBinding.rvTopNews.adapter = saveNewsAdapter
 
-        newsSource()
+        savedViewModel.newsSource()
+        Timber.d("asdasdasdasd onViewCreated")
+        getDataFromVM()
+    }
+
+    private val savedViewModel: SavedViewModel by lazy {
+        ViewModelProvider(
+            owner = this,
+            factory = ViewModelFactory(repository = savedFragmentRepository)
+        )[SavedViewModel::class.java]
     }
 
     //저장된 뉴스 id를 통해 보여주기
-    private fun newsSource() {
-        CoroutineScope(Dispatchers.Main).launch {
-            savedFragmentRepository.getAll().collect{ it ->
-                val item = it.map {
-                        it.fromData()
-                    }
-                    saveNewsAdapter?.setItems(item)
-                }
-            }
+    private fun getDataFromVM(){
+        savedViewModel.articleList.observe(viewLifecycleOwner){
+            Timber.d("asdasdasd -> "+it.size)
+            saveNewsAdapter?.setItems(it)
+        }
     }
 
-    override fun onItemClicked(articles: PresentationArticles, view: View) {
+    override fun onItemClicked(item: PresentationArticles, view: View) {
         when(view.id){
             R.id.cl_article -> {
                 navController.navigate(R.id.newsDetailFragment,  Bundle().apply {
-                    putParcelable("items", articles)
+                    putParcelable("items", item)
                 })
             }
         }
