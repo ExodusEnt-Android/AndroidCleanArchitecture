@@ -21,28 +21,13 @@ class CategoryDetailNewsViewModel(
     private var shouldRequestViewMore: Boolean = true
 
     private var tempCategoryList: ArrayList<Articles> = arrayListOf()
-        set(value) {
-            savedStateHandle["category_article_list"] = value
-            field = value
-        }
 
     private var category: String = savedStateHandle.get<String>("category_detail") ?: ""
-        set(value) {
-            savedStateHandle["category_detail"] = value
-            field = value
-        }
-
 
     private var offset = 1
     private var limit = 5
 
     init {
-        savedStateHandle.get<ArrayList<Articles>>("category_article_list")?.run {
-            tempCategoryList = this
-        }
-        savedStateHandle.get<String>("category_detail")?.run {
-            category = this
-        }
         getCategoryArticles()
     }
 
