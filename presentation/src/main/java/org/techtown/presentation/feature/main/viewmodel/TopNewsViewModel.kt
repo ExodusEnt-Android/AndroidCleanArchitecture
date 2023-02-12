@@ -38,9 +38,9 @@ class TopNewsViewModel(
                     country = "us", pageSize = limit, offset = offset, category = null
                 ).map { data ->
                     data.fromData()
-                }.collect { data ->
-                    if (data.articles.isNotEmpty()) {
-                        tempArticleList.addAll(data.articles)
+                }.collect { presentArticles ->
+                    if (presentArticles.articles.isNotEmpty()) {
+                        tempArticleList.addAll(presentArticles.articles)
                         _articleList.value = tempArticleList
 
                         offset += 1

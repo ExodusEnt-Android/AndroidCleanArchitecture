@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.techtown.data.repository.news.NewsRepository
 import org.techtown.presentation.model.Articles
@@ -39,10 +40,12 @@ class CategoryDetailNewsViewModel(
                     category = category,
                     limit,
                     offset
-                ).collect { data ->
+                ).map { data ->
+                    data.fromData()
+                }.collect { presentArticles ->
 
-                    if (data.fromData().articles.isNotEmpty()) {
-                        tempCategoryList.addAll(data.fromData().articles)
+                    if (presentArticles.articles.isNotEmpty()) {
+                        tempCategoryList.addAll(presentArticles.articles)
                         _categoryArticleList.value = tempCategoryList
 
                         offset += 1

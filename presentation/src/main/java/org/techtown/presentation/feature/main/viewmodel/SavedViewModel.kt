@@ -37,9 +37,13 @@ class SavedViewModel(
 
         if (shouldRequestViewMore) {
             viewModelScope.launch {
-                newsRepository.getAllArticles().collect { savedArticles ->
-                    if (savedArticles.map { it.fromData() }.isNotEmpty()) {
-                        tempSavedArticleList.addAll(savedArticles.map { it.fromData() })
+                newsRepository.getAllArticles().
+                    map { savedArticles->
+                        savedArticles.map { it.fromData() }
+                    }.
+                collect { presentArticles ->
+                    if (presentArticles.isNotEmpty()) {
+                        tempSavedArticleList.addAll(presentArticles)
                         _savedArticleList.value = tempSavedArticleList
                     } else {
                         shouldRequestViewMore = false
