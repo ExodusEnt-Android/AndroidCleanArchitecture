@@ -21,15 +21,8 @@ class SavedViewModel(
     private var shouldRequestViewMore: Boolean = true
 
     private var tempSavedArticleList: ArrayList<Articles> = arrayListOf()
-        set(value) {
-            savedStateHandle["saved_article_list"] = value
-            field = value
-        }
 
     init {
-        savedStateHandle.get<ArrayList<Articles>>("saved_article_list")?.run {
-            tempSavedArticleList = this
-        }
         getSavedArticleList()
     }
 
