@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.techtown.data.repository.news.NewsRepository
 import org.techtown.presentation.model.Articles
@@ -35,9 +36,11 @@ class TopNewsViewModel(
             viewModelScope.launch {
                 newsRepository.getTopHeadlinesArticles(
                     country = "us", pageSize = limit, offset = offset, category = null
-                ).collect { data ->
-                    if (data.fromData().articles.isNotEmpty()) {
-                        tempArticleList.addAll(data.fromData().articles)
+                ).map { data ->
+                    data.fromData()
+                }.collect { data ->
+                    if (data.articles.isNotEmpty()) {
+                        tempArticleList.addAll(data.articles)
                         _articleList.postValue(tempArticleList)
 
                         offset += 1
