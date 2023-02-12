@@ -27,16 +27,9 @@ class NewsDetailViewmodel(
     private val _isSaved = MutableLiveData<Boolean>()
     val isSaved: LiveData<Boolean> = _isSaved
 
-    private var articles = savedStateHandle.get<Articles>("top_news_detail")
-        set(value) {
-            savedStateHandle["top_news_detail"] = value
-            field = value
-        }
+    private var articles = savedStateHandle.get<Articles>("top_news_detail") ?: Articles()
 
     init {
-        savedStateHandle.get<Articles>("top_news_detail")?.run {
-            articles = this
-        }
 
         //아티클 정보 초기 세팅값 넘겨줌.
         _initUI.postValue(articles)

@@ -22,18 +22,11 @@ class TopNewsViewModel(
     private var shouldRequestViewMore: Boolean = true
 
     private var tempArticleList: ArrayList<Articles> = arrayListOf()
-        set(value) {
-            savedStateHandle["article_list"] = value
-            field = value
-        }
 
     private var offset = 1
     private var limit = 5
 
     init {
-        savedStateHandle.get<ArrayList<Articles>>("article_list")?.run {
-            tempArticleList = this
-        }
         getArticles()
     }
 
