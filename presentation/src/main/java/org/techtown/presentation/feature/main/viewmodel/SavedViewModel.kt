@@ -40,7 +40,7 @@ class SavedViewModel(
                 newsRepository.getAllArticles().collect { savedArticles ->
                     if (savedArticles.map { it.fromData() }.isNotEmpty()) {
                         tempSavedArticleList.addAll(savedArticles.map { it.fromData() })
-                        _savedArticleList.postValue(tempSavedArticleList)
+                        _savedArticleList.value = tempSavedArticleList
                     } else {
                         shouldRequestViewMore = false
                     }

@@ -43,7 +43,7 @@ class CategoryDetailNewsViewModel(
 
                     if (data.fromData().articles.isNotEmpty()) {
                         tempCategoryList.addAll(data.fromData().articles)
-                        _categoryArticleList.postValue(tempCategoryList)
+                        _categoryArticleList.value = tempCategoryList
 
                         offset += 1
                     } else {

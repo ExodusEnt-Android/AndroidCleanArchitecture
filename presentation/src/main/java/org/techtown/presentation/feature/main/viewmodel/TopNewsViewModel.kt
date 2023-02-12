@@ -41,7 +41,7 @@ class TopNewsViewModel(
                 }.collect { data ->
                     if (data.articles.isNotEmpty()) {
                         tempArticleList.addAll(data.articles)
-                        _articleList.postValue(tempArticleList)
+                        _articleList.value = tempArticleList
 
                         offset += 1
                     } else {

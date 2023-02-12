@@ -42,7 +42,7 @@ class NewsDetailViewmodel(
         viewModelScope.launch {
             newsRepository.getAllArticles().collect { data ->
                 val isSelected = data.any { it.url == articles?.url }
-                _isSelected.postValue(isSelected)
+                _isSelected.value = isSelected
             }
         }
     }
@@ -50,7 +50,7 @@ class NewsDetailViewmodel(
     fun deleteArticle() {
         viewModelScope.launch {
             newsRepository.deleteArticle(articles?.url ?: return@launch)
-            _isDeleted.postValue(true)
+            _isDeleted.value = true
         }
     }
 
