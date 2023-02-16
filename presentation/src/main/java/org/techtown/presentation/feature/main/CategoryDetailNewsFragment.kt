@@ -3,6 +3,7 @@ package org.techtown.presentation.feature.main
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -48,11 +49,8 @@ class CategoryDetailNewsFragment :
         NewsRepositoryImpl(localDataSource, remoteDataSource)
     }
 
-    private val categoryDetailNewsViewModel: CategoryDetailNewsViewModel by lazy {
-        ViewModelProvider(
-            owner = this,
-            factory = ViewModelFactory(newsRepository = newsRepository)
-        )[CategoryDetailNewsViewModel::class.java]
+    private val categoryDetailNewsViewModel: CategoryDetailNewsViewModel by viewModels {
+        ViewModelFactory(newsRepository = newsRepository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,18 +59,7 @@ class CategoryDetailNewsFragment :
 
     override fun FragmentCategoryDetailNewsBinding.onCreateView() {
         initSet()
-        getDataFromVM()
         setListenerEvent()
-    }
-
-    private fun getDataFromVM() {
-        categoryDetailNewsViewModel.categoryArticleList.observe(viewLifecycleOwner) { categoryArticleList ->
-            categoryNewsAdapter.deleteLoading()
-
-            categoryNewsAdapter.submitList(categoryArticleList.map { it.copy() }.toMutableList().apply {
-                this.add(Articles(isLoading = true, title = "", url = ""))
-            })
-        }
     }
 
     private fun initSet() {
@@ -82,6 +69,9 @@ class CategoryDetailNewsFragment :
         navController = navHost.findNavController()
 
         binding.rvCategoryDetail.layoutManager?.onRestoreInstanceState(recyclerViewScrollState)
+
+        binding.viewModel = categoryDetailNewsViewModel
+        binding.lifecycleOwner = this
 
         categoryNewsAdapter = TopNewsAdapter()
         binding.rvCategoryDetail.apply {

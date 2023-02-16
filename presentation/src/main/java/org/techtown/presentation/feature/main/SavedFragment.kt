@@ -5,6 +5,7 @@ import android.os.Parcelable
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -46,11 +47,8 @@ class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved
         NewsRepositoryImpl(localDataSource, remoteDataSource)
     }
 
-    private val savedViewModel: SavedViewModel by lazy {
-        ViewModelProvider(
-            owner = this,
-            factory = ViewModelFactory(newsRepository = newsRepository)
-        )[SavedViewModel::class.java]
+    private val savedViewModel: SavedViewModel by viewModels {
+        ViewModelFactory(newsRepository = newsRepository)
     }
 
     override fun FragmentSavedBinding.onCreateView() {
@@ -63,14 +61,7 @@ class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved
             recyclerViewScrollState = savedInstanceState.getParcelable("recyclerview_state")
         }
         initSet()
-        getDataFromVM()
         setListenerEvent()
-    }
-
-    private fun getDataFromVM() {
-        savedViewModel.savedArticleList.observe(viewLifecycleOwner) { savedArticleList ->
-            savedNewsAdapter.submitList(savedArticleList.map { it.copy() }.toMutableList())
-        }
     }
 
     private fun initSet() {
@@ -81,6 +72,9 @@ class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved
 
         //스크롤 유지.
         binding.rvSavedNews.layoutManager?.onRestoreInstanceState(recyclerViewScrollState)
+
+        binding.viewModel = savedViewModel
+        binding.lifecycleOwner = this
 
         savedNewsAdapter = TopNewsAdapter()
         binding.rvSavedNews.apply {

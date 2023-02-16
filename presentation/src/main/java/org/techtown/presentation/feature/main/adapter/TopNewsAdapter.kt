@@ -1,6 +1,5 @@
 package org.techtown.presentation.feature.main.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -82,18 +81,13 @@ class TopNewsAdapter :
         try {
 
             if (currentList[currentList.lastIndex].isLoading) {
-                Log.d(
-                    "DeleteLoading",
-                    "${currentList[currentList.lastIndex].isLoading} ${currentList.lastIndex}"
-                )
                 val lastIndex = currentList.lastIndex
                 val newList = currentList.toMutableList()
                 newList.removeAt(lastIndex)// 로딩이 완료되면 프로그레스바를 지움
                 submitList(newList.map { it.copy() })
-                Log.d("DeleteLoading", "${newList[newList.lastIndex].title}")
             }
         } catch (e: Exception) {
-
+            e.printStackTrace()
         }
     }
 
@@ -119,6 +113,5 @@ class TopNewsAdapter :
             }
         }
     }
-
 
 }

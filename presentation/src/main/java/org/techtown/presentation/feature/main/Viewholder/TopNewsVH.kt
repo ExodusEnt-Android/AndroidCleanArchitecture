@@ -11,13 +11,7 @@ class TopNewsVH(
 
     fun bind(articles: Articles) {
 
-        //아이템 타이틀.
-        binding.tvTopNewsTitle.text = articles.content
-
-        //아이템 이미지.
-        Glide.with(itemView)
-            .load(articles.urlToImage)
-            .into(binding.ivTopNews)
+        binding.article = articles
     }
 
 }

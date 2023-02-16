@@ -1,5 +1,6 @@
 package org.techtown.presentation.feature.main
 
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import org.techtown.presentation.R
@@ -28,11 +29,8 @@ class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.frag
         NewsRepositoryImpl(localDataSource, remoteDataSource)
     }
 
-    private val newsDetailViewModel by lazy {
-        ViewModelProvider(
-            owner = this,
-            factory = ViewModelFactory(newsRepository = newsRepository)
-        )[NewsDetailViewmodel::class.java]
+    private val newsDetailViewModel : NewsDetailViewmodel by viewModels {
+        ViewModelFactory(newsRepository = newsRepository)
     }
 
     override fun FragmentNewsDetailBinding.onCreateView() {

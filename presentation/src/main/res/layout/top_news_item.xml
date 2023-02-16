@@ -4,6 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="article"
+            type="org.techtown.presentation.model.Articles" />
 
     </data>
 
@@ -17,6 +20,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:scaleType="fitXY"
+            loadImage="@{article.urlToImage}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -31,29 +35,31 @@
             android:maxLines="2"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
-            android:text="10 of the Cheapest and Healthiest Ways asdjflkjasdkfjdkslajfklasjfkldsajsdlkfjkalsdfasdfasdfasfsa"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:text="@{article.content}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_top_news" />
+            app:layout_constraintTop_toBottomOf="@+id/iv_top_news"
+            tools:text="10 of the Cheapest and Healthiest Ways asdjflkjasdkfjdkslajfklasjfkldsajsdlkfjkalsdfasdfasdfasfsa"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_top_news_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Pedro Berrill"
+            android:text="@{article.author}"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_top_news_title" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_top_news_title"
+            tools:text="Pedro berill"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_top_news_hour"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="3 hours age"
+            android:text="@{article.publishedAt}"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_top_news_title" />
