@@ -1,9 +1,7 @@
 package org.techtown.presentation.feature.main
 
-import android.os.Bundle
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import kotlinx.coroutines.launch
 import org.techtown.presentation.R
 import org.techtown.presentation.base.BaseFragment
 import org.techtown.local.feature.database.database.AppDatabase
@@ -13,14 +11,11 @@ import org.techtown.remote.feature.news.RemoteDataSourceImpl
 import org.techtown.presentation.model.Articles
 import org.techtown.data.repository.news.NewsRepository
 import org.techtown.data.repository.news.NewsRepositoryImpl
-import org.techtown.presentation.model.Articles.Companion.toData
+import org.techtown.presentation.feature.main.viewmodel.NewsDetailViewmodel
+import org.techtown.presentation.feature.main.viewmodel.factory.ViewModelFactory
 import org.techtown.remote.retrofit.NewsService
 
 class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.fragment_news_detail) {
-
-    private lateinit var articles: Articles
-
-    private var articleId: String = ""
 
     //db setting
     private val database: AppDatabase by lazy {
@@ -33,18 +28,50 @@ class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.frag
         NewsRepositoryImpl(localDataSource, remoteDataSource)
     }
 
-    override fun FragmentNewsDetailBinding.onCreateView() {
-        initSet()
+    private val newsDetailViewModel by lazy {
+        ViewModelProvider(
+            owner = this,
+            factory = ViewModelFactory(newsRepository = newsRepository)
+        )[NewsDetailViewmodel::class.java]
     }
 
-    private fun initSet() {
+    override fun FragmentNewsDetailBinding.onCreateView() {
+        getDataFromVM()
+    }
+
+    private fun getDataFromVM() {
+
+        //UI세팅.
+        newsDetailViewModel.initUI.observe(viewLifecycleOwner) { articles ->
+            initSet(articles)
+        }
+
+        //해당 게시글 선택됨 여부 확인.
+        newsDetailViewModel.isSelected.observe(viewLifecycleOwner) { isSelected ->
+            setSavedItemListenerEvent(isSelected)
+        }
+
+        //게시글 저장 해제.
+        newsDetailViewModel.isDeleted.observe(viewLifecycleOwner) { isDeleted ->
+            if(isDeleted) {
+                binding.ivSaved.setImageResource(R.drawable.star_inactive)
+            }
+        }
+
+        //게시글 저장.
+        newsDetailViewModel.isSaved.observe(viewLifecycleOwner) { isSaved ->
+            if(isSaved) {
+                binding.ivSaved.setImageResource(R.drawable.star_active)
+            }
+
+        }
+    }
+
+    private fun initSet(articles: Articles) {
 
         articles.let {
 
             binding.apply {
-
-                //ID가 String값임.
-                articleId = articles.source?.id ?: ""
 
                 tvTitle.text = articles.title
 
@@ -57,13 +84,6 @@ class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.frag
                 tvContent.text = articles.description
             }
         }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            newsRepository.getAllArticles().collect { data ->
-                val isSelected = data.any { it.url == articles.url }
-                setSavedItemListenerEvent(isSelected)
-            }
-        }
     }
 
     private fun setSavedItemListenerEvent(isSelected: Boolean) {
@@ -71,27 +91,14 @@ class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>(R.layout.frag
             binding.ivSaved.setImageResource(R.drawable.star_active)
 
             binding.ivSaved.setOnClickListener {
-                viewLifecycleOwner.lifecycleScope.launch {
-                    newsRepository.deleteArticle(articles.url ?: return@launch)
-                    binding.ivSaved.setImageResource(R.drawable.star_inactive)
-                }
+                newsDetailViewModel.deleteArticle()
             }
         } else {
             binding.ivSaved.setImageResource(R.drawable.star_inactive)
 
             binding.ivSaved.setOnClickListener {
-                viewLifecycleOwner.lifecycleScope.launch {
-                    newsRepository.insertArticle(articles.toData())
-                    binding.ivSaved.setImageResource(R.drawable.star_active)
-                }
+               newsDetailViewModel.insertArticle()
             }
-        }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            articles = it.getParcelable("top_news_detail") ?: Articles(title = "", url = "")
         }
     }
 

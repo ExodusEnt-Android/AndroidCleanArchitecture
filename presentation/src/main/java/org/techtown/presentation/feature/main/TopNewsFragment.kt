@@ -6,6 +6,8 @@ import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -13,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
+import org.techtown.data.model.DataNewsRootModel
 import org.techtown.presentation.R
 import org.techtown.presentation.base.BaseFragment
 import org.techtown.local.feature.database.database.AppDatabase
@@ -24,6 +27,8 @@ import org.techtown.presentation.feature.main.adapter.TopNewsAdapter
 import org.techtown.presentation.model.Articles
 import org.techtown.data.repository.news.NewsRepository
 import org.techtown.data.repository.news.NewsRepositoryImpl
+import org.techtown.presentation.feature.main.viewmodel.TopNewsViewModel
+import org.techtown.presentation.feature.main.viewmodel.factory.ViewModelFactory
 import org.techtown.presentation.model.NewsRootModel.Companion.fromData
 import org.techtown.remote.retrofit.NewsService
 
@@ -33,14 +38,7 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
     private lateinit var navHost: NavHostFragment
 
     private lateinit var topNewsAdapter: TopNewsAdapter
-
-    private var tempArticleList: ArrayList<Articles> = arrayListOf()
     var recyclerViewScrollState: Parcelable? = null
-
-    private var offset = 1
-    private var limit = 5
-
-    private var shouldRequestViewMore: Boolean = true
 
     //db setting
     private val database: AppDatabase by lazy {
@@ -53,6 +51,13 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
         NewsRepositoryImpl(localDataSource, remoteDataSource)
     }
 
+    private val topNewsViewModel: TopNewsViewModel by lazy {
+        ViewModelProvider(
+            owner = this,
+            factory = ViewModelFactory(newsRepository = newsRepository)
+        )[TopNewsViewModel::class.java]
+    }
+
 
     override fun FragmentTopNewsBinding.onCreateView() {
 
@@ -62,20 +67,25 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
         super.onViewCreated(view, savedInstanceState)
         if (savedInstanceState != null) {
             recyclerViewScrollState = savedInstanceState.getParcelable("recyclerview_state")
-            tempArticleList = savedInstanceState.getParcelableArrayList("recyclerview_list")!!
         }
         initSet()
+        getDataFromVM()
+        setListenerEvent()
+    }
+
+    private fun getDataFromVM() {
+        //뉴스 리스트 가지고 오기.
+        topNewsViewModel.articleList.observe(viewLifecycleOwner) { articleList ->
+
+            topNewsAdapter.deleteLoading()
+
+            topNewsAdapter.submitList(articleList.map { it.copy() }.toMutableList().apply {
+                this.add(Articles(isLoading = true, title = "", url = ""))
+            })
+        }
     }
 
     private fun initSet() {
-        if (tempArticleList.isEmpty() && !this::topNewsAdapter.isInitialized) {
-            getArticles()
-        } else {
-            binding.rvTopNews.apply {
-                adapter = topNewsAdapter
-            }
-            topNewsAdapter.submitList(tempArticleList)
-        }
 
         navHost =
             requireActivity().supportFragmentManager.findFragmentById(R.id.main_nav_host_fragment) as NavHostFragment
@@ -83,6 +93,14 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
 
         //스크롤 유지
         binding.rvTopNews.layoutManager?.onRestoreInstanceState(recyclerViewScrollState)
+
+        //어댑터 미리 세팅.
+        topNewsAdapter = TopNewsAdapter()
+        binding.rvTopNews.apply {
+            adapter = topNewsAdapter
+        }
+
+        topNewsViewModel.getArticles()
 
     }
 
@@ -106,62 +124,15 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
 
                 recyclerViewScrollState = binding.rvTopNews.layoutManager?.onSaveInstanceState()
 
-                if (!recyclerView.canScrollVertically(1) && lastVisiblePosition == itemTotalCount && shouldRequestViewMore) {
-                    getArticles()
+                if (!recyclerView.canScrollVertically(1) && lastVisiblePosition == itemTotalCount) {
+                    topNewsViewModel.getArticles()
                 }
-
-                if (!shouldRequestViewMore) {
-                    topNewsAdapter.deleteLoading()
-                }
-
             }
         })
     }
 
-    private fun getArticles() {
-
-        if (tempArticleList.isNotEmpty()) {
-            if (!tempArticleList[tempArticleList.lastIndex].isLoading) {
-                tempArticleList.add(Articles(isLoading = true, title = "", url = ""))
-                topNewsAdapter.submitList(tempArticleList.map { it.copy() }.toMutableList())
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            newsRepository.getTopHeadlinesArticles(
-                country = "us", pageSize = limit, offset = offset, category = null
-            ).collect { data ->
-
-                if (!this@TopNewsFragment::topNewsAdapter.isInitialized) {
-                    topNewsAdapter = TopNewsAdapter()
-                    binding.rvTopNews.apply {
-                        adapter = topNewsAdapter
-                    }
-                }
-
-                if (tempArticleList.size > 0) {
-                    if (tempArticleList[tempArticleList.lastIndex].isLoading) {
-                        tempArticleList.removeAt(tempArticleList.lastIndex)
-                        topNewsAdapter.submitList(tempArticleList.map { it.copy() })
-                    }
-                }
-
-                tempArticleList.addAll(data.fromData().articles)
-                topNewsAdapter.submitList(tempArticleList.map { it.copy() }.toMutableList())
-
-                setListenerEvent()
-
-                offset += 1
-            }
-        }
-
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        Log.d("VALUE_CHECK", "onSaveInstanceState")
         outState.putParcelable("recyclerview_state", recyclerViewScrollState)
-        outState.putParcelableArrayList("recyclerview_list", tempArticleList)
     }
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
