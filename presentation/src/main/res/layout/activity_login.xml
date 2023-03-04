@@ -4,13 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="login"
+            type="com.example.presentation.activity.LoginActivity" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.example.presentation.Activity.LoginActivity">
+        tools:context="com.example.presentation.activity.LoginActivity">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_id"

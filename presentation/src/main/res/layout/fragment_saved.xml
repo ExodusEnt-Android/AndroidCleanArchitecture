@@ -1,10 +1,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="viewModel"
+            type="com.example.presentation.viewModel.SavedViewModel" />
     </data>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,6 +16,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_top_news"
+            bind:addList="@{viewModel.articleList}"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

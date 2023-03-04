@@ -1,17 +1,13 @@
-package com.example.presentation.Adapter
+package com.example.presentation.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.NonNull
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.AppCompatTextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.data.model.Articles
 import com.example.presentation.R
 import com.example.presentation.databinding.NewsItemBinding
 import com.example.presentation.model.PresentationArticles

@@ -12,13 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NewsCorutin">
 
-        <activity android:name="com.example.presentation.Activity.MainActivity"
+        <activity android:name="com.example.presentation.activity.MainActivity"
             android:exported="true"/>
 
-        <activity android:name="com.example.presentation.Activity.LoginActivity"
+        <activity android:name="com.example.presentation.activity.LoginActivity"
             android:exported="true"/>
 
-        <activity android:name="com.example.presentation.Activity.SplashActivity"
+        <activity android:name="com.example.presentation.activity.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,66 +1,37 @@
-package com.example.presentation.Fragment
+package com.example.presentation.fragment
 
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.presentation.R
 import com.example.presentation.databinding.FragmentCategoryBtnBinding
 
-class CategoryBtnFragment : BaseFragment<FragmentCategoryBtnBinding>(R.layout.fragment_category_btn) , View.OnClickListener{
+class CategoryBtnFragment : BaseFragment<FragmentCategoryBtnBinding>(R.layout.fragment_category_btn){
 
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController
+
+    var business = "business"
+    var entertain = "entertain"
+    var general = "general"
+    var health = "health"
+    var science = "science"
+    var sports = "sports"
+    var technology = "technology"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         navHostFragment =requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
-
-        mBinding.btnBusiness.setOnClickListener(this)
-        mBinding.btnEntertain.setOnClickListener(this)
-        mBinding.btnGeneral.setOnClickListener(this)
-        mBinding.btnHealth.setOnClickListener(this)
-        mBinding.btnScience.setOnClickListener(this)
-        mBinding.btnSports.setOnClickListener(this)
-        mBinding.btnTech.setOnClickListener(this)
     }
 
-    override fun onClick(v: View?) {
-        when(v?.id){
-            R.id.btn_business -> {
-                val item = bundleOf("category" to "business")
-                navController.navigate(R.id.categoryNewsFragment, item)
-            }
-            R.id.btn_entertain -> {
-                val item = bundleOf("category" to "entertain")
-                navController.navigate(R.id.categoryNewsFragment, item)
-            }
-            R.id.btn_general -> {
-                val item = bundleOf("category" to "general")
-                navController.navigate(R.id.categoryNewsFragment, item)
-            }
-            R.id.btn_health -> {
-                val item = bundleOf("category" to "health")
-                navController.navigate(R.id.categoryNewsFragment, item)
-            }
-            R.id.btn_science -> {
-                val item = bundleOf("category" to "science")
-                navController.navigate(R.id.categoryNewsFragment, item)
-            }
-            R.id.btn_sports -> {
-                val item = bundleOf("category" to "sports")
-                navController.navigate(R.id.categoryNewsFragment, item)
-            }
-            R.id.btn_tech -> {
-                val item = bundleOf("category" to "technology")
-                navController.navigate(R.id.categoryNewsFragment, item)
-            }
-        }
+    //해당 부분 작동하지 않음. 이유좀 달아주세요
+    fun navigate(category : String){
+        val item = bundleOf("category" to category)
+        navController.navigate(R.id.categoryNewsFragment, item)
     }
 }

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
-
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/tools">
     <data>
-
+        <variable
+            name="viewModel"
+            type="com.example.presentation.viewModel.CategoryNewsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -11,6 +13,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_category"
+            bind:addList="@{viewModel.articleList}"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

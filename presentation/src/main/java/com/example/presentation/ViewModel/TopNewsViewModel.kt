@@ -6,7 +6,7 @@
  *
  * */
 
-package com.example.presentation.ViewModel
+package com.example.presentation.viewModel
 
 import androidx.lifecycle.*
 import com.example.data.repository.NewsRepository

@@ -11,10 +11,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.data.repository.NewsRepository
-import com.example.presentation.ViewModel.CategoryNewsViewModel
-import com.example.presentation.ViewModel.NewsDetailViewModel
-import com.example.presentation.ViewModel.SavedViewModel
-import com.example.presentation.ViewModel.TopNewsViewModel
+import com.example.presentation.viewModel.CategoryNewsViewModel
+import com.example.presentation.viewModel.NewsDetailViewModel
+import com.example.presentation.viewModel.SavedViewModel
+import com.example.presentation.viewModel.TopNewsViewModel
 
 
 class ViewModelFactory(
