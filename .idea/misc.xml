@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="../../../layout/custom_preview.xml" value="0.19427083333333334" />
+        <entry key="presentation/src/main/res/layout/activity_login.xml" value="0.11803444782168186" />
+        <entry key="presentation/src/main/res/layout/activity_main.xml" value="0.11803444782168186" />
+        <entry key="presentation/src/main/res/layout/activity_splash.xml" value="0.11803444782168186" />
+        <entry key="presentation/src/main/res/layout/fragment_category_btn.xml" value="0.11803444782168186" />
+        <entry key="presentation/src/main/res/layout/fragment_category_news.xml" value="0.11803444782168186" />
+        <entry key="presentation/src/main/res/layout/fragment_news_detail.xml" value="0.1" />
+        <entry key="presentation/src/main/res/layout/fragment_saved.xml" value="0.11803444782168186" />
+        <entry key="presentation/src/main/res/layout/fragment_top_news.xml" value="0.11803444782168186" />
+        <entry key="presentation/src/main/res/layout/news_item.xml" value="0.11803444782168186" />
+      </map>
+    </option>
+  </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK" />
 </project>

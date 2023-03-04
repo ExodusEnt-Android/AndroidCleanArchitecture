@@ -1,9 +1,9 @@
-package com.example.presentation.Fragment
+package com.example.presentation.fragment
 
 import ViewModelFactory
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,18 +11,13 @@ import com.example.data.model.Articles
 import com.example.data.repository.NewsRepository
 import com.example.data.repository.NewsRepositoryImpl
 import com.example.presentation.*
-import com.example.presentation.Adapter.NewsListAdapter
+import com.example.presentation.adapter.NewsListAdapter
 import com.example.local.Room.AppDB
 import com.example.presentation.databinding.FragmentTopNewsBinding
 import com.example.local.dataSource.LocalDataSourceImpl
-import com.example.presentation.ViewModel.TopNewsViewModel
+import com.example.presentation.viewModel.TopNewsViewModel
 import com.example.presentation.model.PresentationArticles
-import com.example.presentation.model.PresentationArticles.Companion.fromData
 import com.example.remote.dataSource.RemoteDataSourceImpl
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_top_news), NewsListAdapter.OnClickListener{
 
@@ -40,29 +35,22 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
         NewsRepositoryImpl(remoteDataSourceImpl, localDataSourceImpl)
     }
 
+    private val topNewsViewModel: TopNewsViewModel by viewModels {
+        ViewModelFactory(repository = topNewsFragmentRepository)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mBinding.rvTopNews.layoutManager = LinearLayoutManagerWrapper(requireContext(), LinearLayoutManager.VERTICAL, false)
+        mBinding.viewModel = topNewsViewModel
+        mBinding.lifecycleOwner = this
+
+        topNewsAdapter = context?.let { NewsListAdapter(it, this) }
+        mBinding.rvTopNews.adapter = topNewsAdapter
 
         navHostFragment =requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
-        mBinding.rvTopNews.layoutManager = LinearLayoutManagerWrapper(requireContext(), LinearLayoutManager.VERTICAL, false)
-        topNewsAdapter = context?.let { NewsListAdapter(it, this) }
-        mBinding.rvTopNews.adapter = topNewsAdapter
-        getDataFromVM()
-    }
-
-    private val topNewsViewModel: TopNewsViewModel by lazy {
-        ViewModelProvider(
-            owner = this,
-            factory = ViewModelFactory(repository = topNewsFragmentRepository)
-        )[TopNewsViewModel::class.java]
-    }
-
-    private fun getDataFromVM(){
-        topNewsViewModel.articleList.observe(viewLifecycleOwner){
-            topNewsAdapter?.setItems(it)
-        }
     }
 
     override fun onItemClicked(item: PresentationArticles, view: View) {

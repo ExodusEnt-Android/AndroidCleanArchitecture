@@ -6,17 +6,13 @@
  *
  * */
 
-package com.example.presentation.ViewModel
+package com.example.presentation.viewModel
 
 import androidx.lifecycle.*
-import com.example.data.model.Articles
 import com.example.data.repository.NewsRepository
 import com.example.presentation.model.PresentationArticles
 import com.example.presentation.model.PresentationArticles.Companion.fromData
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class CategoryNewsViewModel (
     private val newsRepository: NewsRepository,

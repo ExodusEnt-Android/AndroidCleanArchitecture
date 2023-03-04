@@ -6,28 +6,22 @@
  *
  * */
 
-package com.example.presentation.ViewModel
+package com.example.presentation.viewModel
 
-import android.os.Parcelable
 import androidx.lifecycle.*
-import com.example.data.model.Articles
 import com.example.data.repository.NewsRepository
-import com.example.presentation.R
 import com.example.presentation.model.PresentationArticles
 import com.example.presentation.model.PresentationArticles.Companion.toData
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class NewsDetailViewModel (
     private val newsRepository: NewsRepository,
     private val savedStateHandle: SavedStateHandle
 ): ViewModel(){
-    private val _isSaved = MutableLiveData<Boolean>()
+    private val _isSaved = MutableLiveData<Boolean>(false)
     var isSaved : LiveData<Boolean> = _isSaved
 
-    private var articles: PresentationArticles = savedStateHandle.get<PresentationArticles>("items")!!
+    var articles: PresentationArticles = savedStateHandle.get<PresentationArticles>("items")!!
 
     init {
         savedStateHandle.get<PresentationArticles>("items")?.run {

@@ -6,11 +6,11 @@
 
     <fragment
         android:id="@+id/savedFragment"
-        android:name="com.example.presentation.Fragment.SavedFragment"
+        android:name="com.example.presentation.fragment.SavedFragment"
         android:label="SavedFragment" />
 
     <fragment
         android:id="@+id/newsDetailFragment"
-        android:name="com.example.presentation.Fragment.NewsDetailFragment"
+        android:name="com.example.presentation.fragment.NewsDetailFragment"
         android:label="NewsDetailFragment"/>
 </navigation>
