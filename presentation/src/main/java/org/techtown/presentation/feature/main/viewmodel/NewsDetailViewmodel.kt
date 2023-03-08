@@ -21,19 +21,12 @@ class NewsDetailViewmodel(
     private val _isSelected = MutableLiveData<Boolean>()
     val isSelected: LiveData<Boolean> = _isSelected
 
-    private val _isDeleted = MutableLiveData<Boolean>()
-    val isDeleted: LiveData<Boolean> = _isDeleted
-
-    private val _isSaved = MutableLiveData<Boolean>()
-    val isSaved: LiveData<Boolean> = _isSaved
-
     private var articles = savedStateHandle.get<Articles>("top_news_detail") ?: Articles()
 
     init {
 
         //아티클 정보 초기 세팅값 넘겨줌.
-        _initUI.postValue(articles)
-
+        _initUI.value = articles
         getAllArticles()
     }
 
@@ -50,14 +43,14 @@ class NewsDetailViewmodel(
     fun deleteArticle() {
         viewModelScope.launch {
             newsRepository.deleteArticle(articles?.url ?: return@launch)
-            _isDeleted.value = true
+            _isSelected.value = false
         }
     }
 
     fun insertArticle() {
         viewModelScope.launch {
-            newsRepository.insertArticle(articles?.toData() ?: return@launch)
-            _isSaved.postValue(true)
+            newsRepository.insertArticle(articles.toData())
+            _isSelected.value = true
         }
     }
 }
