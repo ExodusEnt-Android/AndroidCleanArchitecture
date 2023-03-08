@@ -13,14 +13,10 @@ import org.techtown.presentation.model.Articles
 import org.techtown.presentation.viewholder.LoadingVH
 import org.techtown.presentation.viewholder.TopNewsVH
 
-class TopNewsAdapter :
+class TopNewsAdapter(
+    private val clickListener: TopNewsItemListener
+) :
     ListAdapter<Articles, RecyclerView.ViewHolder>(diffUtil) {
-
-    private var onItemClickListener: ItemClickListener? = null
-
-    fun setItemClickListener(itemClickListener: ItemClickListener) {
-        this.onItemClickListener = itemClickListener
-    }
 
     interface ItemClickListener {
         fun onItemClick(articles: Articles)
@@ -36,11 +32,7 @@ class TopNewsAdapter :
 
         return when (viewType) {
             IMAGE_ARTICLE -> {
-                TopNewsVH(itemTopNews).apply {
-                    itemView.setOnClickListener {
-                        onItemClickListener?.onItemClick(currentList[bindingAdapterPosition])
-                    }
-                }
+                TopNewsVH(itemTopNews, clickListener)
             }
             else -> {
                 val itemLoading: ItemLoadingBinding = DataBindingUtil.inflate(
@@ -114,4 +106,8 @@ class TopNewsAdapter :
         }
     }
 
+}
+
+class TopNewsItemListener(val clickListener: (articles: Articles) -> Unit) {
+    fun onItemClick(articles: Articles) = clickListener(articles)
 }

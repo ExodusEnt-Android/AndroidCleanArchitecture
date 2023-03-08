@@ -8,11 +8,16 @@
             name="article"
             type="org.techtown.presentation.model.Articles" />
 
+        <variable
+            name="clickListener"
+            type="org.techtown.presentation.feature.main.adapter.TopNewsItemListener" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="@{() -> clickListener.onItemClick(article)}"
         android:paddingBottom="20dp">
 
         <androidx.appcompat.widget.AppCompatImageView

@@ -32,6 +32,7 @@ import org.techtown.presentation.feature.main.adapter.TopNewsAdapter
 import org.techtown.presentation.model.Articles
 import org.techtown.data.repository.news.NewsRepository
 import org.techtown.data.repository.news.NewsRepositoryImpl
+import org.techtown.presentation.feature.main.adapter.TopNewsItemListener
 import org.techtown.presentation.feature.main.viewmodel.TopNewsViewModel
 import org.techtown.presentation.feature.main.viewmodel.factory.ViewModelFactory
 import org.techtown.presentation.model.NewsRootModel.Companion.fromData
@@ -87,22 +88,17 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
         binding.lifecycleOwner = this
 
         //어댑터 미리 세팅.
-        topNewsAdapter = TopNewsAdapter()
+        topNewsAdapter = TopNewsAdapter(TopNewsItemListener { articles ->
+            navController.navigateWithAnim(R.id.topNews_detail, Bundle().apply {
+                putParcelable("top_news_detail", articles)
+            })
+        })
         binding.rvTopNews.apply {
             adapter = topNewsAdapter
         }
     }
 
     private fun setListenerEvent() {
-        //뉴스 클릭 이벤트.
-        topNewsAdapter.setItemClickListener(object : TopNewsAdapter.ItemClickListener {
-            override fun onItemClick(articles: Articles) {
-                navController.navigateWithAnim(R.id.topNews_detail, Bundle().apply {
-                    putParcelable("top_news_detail", articles)
-                })
-            }
-        })
-
         binding.rvTopNews.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)

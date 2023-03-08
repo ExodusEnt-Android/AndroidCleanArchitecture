@@ -23,6 +23,7 @@ import org.techtown.presentation.feature.main.adapter.TopNewsAdapter
 import org.techtown.presentation.model.Articles
 import org.techtown.data.repository.news.NewsRepository
 import org.techtown.data.repository.news.NewsRepositoryImpl
+import org.techtown.presentation.feature.main.adapter.TopNewsItemListener
 import org.techtown.presentation.feature.main.viewmodel.CategoryDetailNewsViewModel
 import org.techtown.presentation.feature.main.viewmodel.factory.ViewModelFactory
 import org.techtown.presentation.model.NewsRootModel.Companion.fromData
@@ -73,7 +74,11 @@ class CategoryDetailNewsFragment :
         binding.viewModel = categoryDetailNewsViewModel
         binding.lifecycleOwner = this
 
-        categoryNewsAdapter = TopNewsAdapter()
+        categoryNewsAdapter = TopNewsAdapter(TopNewsItemListener { articles ->
+            navController.navigateWithAnim(R.id.topNews_detail, Bundle().apply {
+                putParcelable("top_news_detail", articles)
+            })
+        })
         binding.rvCategoryDetail.apply {
             adapter = categoryNewsAdapter
         }
@@ -87,15 +92,6 @@ class CategoryDetailNewsFragment :
     }
 
     private fun setListenerEvent() {
-
-        //뉴스 클릭 이벤트.
-        categoryNewsAdapter.setItemClickListener(object : TopNewsAdapter.ItemClickListener {
-            override fun onItemClick(articles: Articles) {
-                navController.navigateWithAnim(R.id.topNews_detail, Bundle().apply {
-                    putParcelable("top_news_detail", articles)
-                })
-            }
-        })
 
         binding.rvCategoryDetail.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

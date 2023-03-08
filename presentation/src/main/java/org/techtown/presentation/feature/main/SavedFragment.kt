@@ -23,6 +23,7 @@ import org.techtown.presentation.model.Articles
 import org.techtown.data.repository.news.NewsRepository
 import org.techtown.data.repository.news.NewsRepositoryImpl
 import org.techtown.local.feature.database.database.AppDatabase
+import org.techtown.presentation.feature.main.adapter.TopNewsItemListener
 import org.techtown.presentation.feature.main.viewmodel.SavedViewModel
 import org.techtown.presentation.feature.main.viewmodel.factory.ViewModelFactory
 import org.techtown.presentation.model.Articles.Companion.fromData
@@ -61,7 +62,6 @@ class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved
             recyclerViewScrollState = savedInstanceState.getParcelable("recyclerview_state")
         }
         initSet()
-        setListenerEvent()
     }
 
     private fun initSet() {
@@ -76,20 +76,14 @@ class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved
         binding.viewModel = savedViewModel
         binding.lifecycleOwner = this
 
-        savedNewsAdapter = TopNewsAdapter()
+        savedNewsAdapter = TopNewsAdapter(TopNewsItemListener { articles ->
+            navController.navigateWithAnim(R.id.topNews_detail, Bundle().apply {
+                putParcelable("top_news_detail", articles)
+            })
+        })
         binding.rvSavedNews.apply {
             adapter = savedNewsAdapter
         }
-    }
-
-    private fun setListenerEvent() {
-        savedNewsAdapter.setItemClickListener(object : TopNewsAdapter.ItemClickListener {
-            override fun onItemClick(articles: Articles) {
-                navController.navigateWithAnim(R.id.topNews_detail, Bundle().apply {
-                    putParcelable("top_news_detail", articles)
-                })
-            }
-        })
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
