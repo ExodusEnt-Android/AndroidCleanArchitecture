@@ -1,6 +1,5 @@
 package org.techtown.presentation.feature.main.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -14,14 +13,10 @@ import org.techtown.presentation.model.Articles
 import org.techtown.presentation.viewholder.LoadingVH
 import org.techtown.presentation.viewholder.TopNewsVH
 
-class TopNewsAdapter :
+class TopNewsAdapter(
+    private val clickListener: TopNewsItemListener
+) :
     ListAdapter<Articles, RecyclerView.ViewHolder>(diffUtil) {
-
-    private var onItemClickListener: ItemClickListener? = null
-
-    fun setItemClickListener(itemClickListener: ItemClickListener) {
-        this.onItemClickListener = itemClickListener
-    }
 
     interface ItemClickListener {
         fun onItemClick(articles: Articles)
@@ -37,11 +32,7 @@ class TopNewsAdapter :
 
         return when (viewType) {
             IMAGE_ARTICLE -> {
-                TopNewsVH(itemTopNews).apply {
-                    itemView.setOnClickListener {
-                        onItemClickListener?.onItemClick(currentList[bindingAdapterPosition])
-                    }
-                }
+                TopNewsVH(itemTopNews, clickListener)
             }
             else -> {
                 val itemLoading: ItemLoadingBinding = DataBindingUtil.inflate(
@@ -82,18 +73,13 @@ class TopNewsAdapter :
         try {
 
             if (currentList[currentList.lastIndex].isLoading) {
-                Log.d(
-                    "DeleteLoading",
-                    "${currentList[currentList.lastIndex].isLoading} ${currentList.lastIndex}"
-                )
                 val lastIndex = currentList.lastIndex
                 val newList = currentList.toMutableList()
                 newList.removeAt(lastIndex)// 로딩이 완료되면 프로그레스바를 지움
                 submitList(newList.map { it.copy() })
-                Log.d("DeleteLoading", "${newList[newList.lastIndex].title}")
             }
         } catch (e: Exception) {
-
+            e.printStackTrace()
         }
     }
 
@@ -120,5 +106,8 @@ class TopNewsAdapter :
         }
     }
 
+}
 
+class TopNewsItemListener(val clickListener: (articles: Articles) -> Unit) {
+    fun onItemClick(articles: Articles) = clickListener(articles)
 }

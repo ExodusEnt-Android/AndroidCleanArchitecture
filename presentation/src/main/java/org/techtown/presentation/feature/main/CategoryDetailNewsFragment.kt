@@ -3,6 +3,7 @@ package org.techtown.presentation.feature.main
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -22,6 +23,7 @@ import org.techtown.presentation.feature.main.adapter.TopNewsAdapter
 import org.techtown.presentation.model.Articles
 import org.techtown.data.repository.news.NewsRepository
 import org.techtown.data.repository.news.NewsRepositoryImpl
+import org.techtown.presentation.feature.main.adapter.TopNewsItemListener
 import org.techtown.presentation.feature.main.viewmodel.CategoryDetailNewsViewModel
 import org.techtown.presentation.feature.main.viewmodel.factory.ViewModelFactory
 import org.techtown.presentation.model.NewsRootModel.Companion.fromData
@@ -48,11 +50,8 @@ class CategoryDetailNewsFragment :
         NewsRepositoryImpl(localDataSource, remoteDataSource)
     }
 
-    private val categoryDetailNewsViewModel: CategoryDetailNewsViewModel by lazy {
-        ViewModelProvider(
-            owner = this,
-            factory = ViewModelFactory(newsRepository = newsRepository)
-        )[CategoryDetailNewsViewModel::class.java]
+    private val categoryDetailNewsViewModel: CategoryDetailNewsViewModel by viewModels {
+        ViewModelFactory(newsRepository = newsRepository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,18 +60,7 @@ class CategoryDetailNewsFragment :
 
     override fun FragmentCategoryDetailNewsBinding.onCreateView() {
         initSet()
-        getDataFromVM()
         setListenerEvent()
-    }
-
-    private fun getDataFromVM() {
-        categoryDetailNewsViewModel.categoryArticleList.observe(viewLifecycleOwner) { categoryArticleList ->
-            categoryNewsAdapter.deleteLoading()
-
-            categoryNewsAdapter.submitList(categoryArticleList.map { it.copy() }.toMutableList().apply {
-                this.add(Articles(isLoading = true, title = "", url = ""))
-            })
-        }
     }
 
     private fun initSet() {
@@ -83,7 +71,14 @@ class CategoryDetailNewsFragment :
 
         binding.rvCategoryDetail.layoutManager?.onRestoreInstanceState(recyclerViewScrollState)
 
-        categoryNewsAdapter = TopNewsAdapter()
+        binding.viewModel = categoryDetailNewsViewModel
+        binding.lifecycleOwner = this
+
+        categoryNewsAdapter = TopNewsAdapter(TopNewsItemListener { articles ->
+            navController.navigateWithAnim(R.id.topNews_detail, Bundle().apply {
+                putParcelable("top_news_detail", articles)
+            })
+        })
         binding.rvCategoryDetail.apply {
             adapter = categoryNewsAdapter
         }
@@ -97,15 +92,6 @@ class CategoryDetailNewsFragment :
     }
 
     private fun setListenerEvent() {
-
-        //뉴스 클릭 이벤트.
-        categoryNewsAdapter.setItemClickListener(object : TopNewsAdapter.ItemClickListener {
-            override fun onItemClick(articles: Articles) {
-                navController.navigateWithAnim(R.id.topNews_detail, Bundle().apply {
-                    putParcelable("top_news_detail", articles)
-                })
-            }
-        })
 
         binding.rvCategoryDetail.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

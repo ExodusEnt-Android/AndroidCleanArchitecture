@@ -6,6 +6,9 @@ import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.ImageView
+import androidx.databinding.BindingAdapter
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -13,7 +16,9 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import kotlinx.coroutines.launch
 import org.techtown.data.model.DataNewsRootModel
 import org.techtown.presentation.R
@@ -27,6 +32,7 @@ import org.techtown.presentation.feature.main.adapter.TopNewsAdapter
 import org.techtown.presentation.model.Articles
 import org.techtown.data.repository.news.NewsRepository
 import org.techtown.data.repository.news.NewsRepositoryImpl
+import org.techtown.presentation.feature.main.adapter.TopNewsItemListener
 import org.techtown.presentation.feature.main.viewmodel.TopNewsViewModel
 import org.techtown.presentation.feature.main.viewmodel.factory.ViewModelFactory
 import org.techtown.presentation.model.NewsRootModel.Companion.fromData
@@ -51,11 +57,8 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
         NewsRepositoryImpl(localDataSource, remoteDataSource)
     }
 
-    private val topNewsViewModel: TopNewsViewModel by lazy {
-        ViewModelProvider(
-            owner = this,
-            factory = ViewModelFactory(newsRepository = newsRepository)
-        )[TopNewsViewModel::class.java]
+    private val topNewsViewModel : TopNewsViewModel by viewModels {
+        ViewModelFactory(newsRepository = newsRepository)
     }
 
 
@@ -69,20 +72,7 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
             recyclerViewScrollState = savedInstanceState.getParcelable("recyclerview_state")
         }
         initSet()
-        getDataFromVM()
         setListenerEvent()
-    }
-
-    private fun getDataFromVM() {
-        //뉴스 리스트 가지고 오기.
-        topNewsViewModel.articleList.observe(viewLifecycleOwner) { articleList ->
-
-            topNewsAdapter.deleteLoading()
-
-            topNewsAdapter.submitList(articleList.map { it.copy() }.toMutableList().apply {
-                this.add(Articles(isLoading = true, title = "", url = ""))
-            })
-        }
     }
 
     private fun initSet() {
@@ -94,26 +84,21 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
         //스크롤 유지
         binding.rvTopNews.layoutManager?.onRestoreInstanceState(recyclerViewScrollState)
 
+        binding.viewModel = topNewsViewModel
+        binding.lifecycleOwner = this
+
         //어댑터 미리 세팅.
-        topNewsAdapter = TopNewsAdapter()
+        topNewsAdapter = TopNewsAdapter(TopNewsItemListener { articles ->
+            navController.navigateWithAnim(R.id.topNews_detail, Bundle().apply {
+                putParcelable("top_news_detail", articles)
+            })
+        })
         binding.rvTopNews.apply {
             adapter = topNewsAdapter
         }
-
-        topNewsViewModel.getArticles()
-
     }
 
     private fun setListenerEvent() {
-        //뉴스 클릭 이벤트.
-        topNewsAdapter.setItemClickListener(object : TopNewsAdapter.ItemClickListener {
-            override fun onItemClick(articles: Articles) {
-                navController.navigateWithAnim(R.id.topNews_detail, Bundle().apply {
-                    putParcelable("top_news_detail", articles)
-                })
-            }
-        })
-
         binding.rvTopNews.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)

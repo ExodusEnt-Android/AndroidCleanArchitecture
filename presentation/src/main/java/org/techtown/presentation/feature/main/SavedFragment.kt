@@ -5,6 +5,7 @@ import android.os.Parcelable
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -22,6 +23,7 @@ import org.techtown.presentation.model.Articles
 import org.techtown.data.repository.news.NewsRepository
 import org.techtown.data.repository.news.NewsRepositoryImpl
 import org.techtown.local.feature.database.database.AppDatabase
+import org.techtown.presentation.feature.main.adapter.TopNewsItemListener
 import org.techtown.presentation.feature.main.viewmodel.SavedViewModel
 import org.techtown.presentation.feature.main.viewmodel.factory.ViewModelFactory
 import org.techtown.presentation.model.Articles.Companion.fromData
@@ -46,11 +48,8 @@ class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved
         NewsRepositoryImpl(localDataSource, remoteDataSource)
     }
 
-    private val savedViewModel: SavedViewModel by lazy {
-        ViewModelProvider(
-            owner = this,
-            factory = ViewModelFactory(newsRepository = newsRepository)
-        )[SavedViewModel::class.java]
+    private val savedViewModel: SavedViewModel by viewModels {
+        ViewModelFactory(newsRepository = newsRepository)
     }
 
     override fun FragmentSavedBinding.onCreateView() {
@@ -63,14 +62,6 @@ class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved
             recyclerViewScrollState = savedInstanceState.getParcelable("recyclerview_state")
         }
         initSet()
-        getDataFromVM()
-        setListenerEvent()
-    }
-
-    private fun getDataFromVM() {
-        savedViewModel.savedArticleList.observe(viewLifecycleOwner) { savedArticleList ->
-            savedNewsAdapter.submitList(savedArticleList.map { it.copy() }.toMutableList())
-        }
     }
 
     private fun initSet() {
@@ -82,20 +73,17 @@ class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved
         //스크롤 유지.
         binding.rvSavedNews.layoutManager?.onRestoreInstanceState(recyclerViewScrollState)
 
-        savedNewsAdapter = TopNewsAdapter()
+        binding.viewModel = savedViewModel
+        binding.lifecycleOwner = this
+
+        savedNewsAdapter = TopNewsAdapter(TopNewsItemListener { articles ->
+            navController.navigateWithAnim(R.id.topNews_detail, Bundle().apply {
+                putParcelable("top_news_detail", articles)
+            })
+        })
         binding.rvSavedNews.apply {
             adapter = savedNewsAdapter
         }
-    }
-
-    private fun setListenerEvent() {
-        savedNewsAdapter.setItemClickListener(object : TopNewsAdapter.ItemClickListener {
-            override fun onItemClick(articles: Articles) {
-                navController.navigateWithAnim(R.id.topNews_detail, Bundle().apply {
-                    putParcelable("top_news_detail", articles)
-                })
-            }
-        })
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

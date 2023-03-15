@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="org.techtown.presentation.ThirdFragment">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="org.techtown.presentation.feature.main.viewmodel.SavedViewModel" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -14,6 +20,7 @@
             android:id="@+id/rv_saved_news"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            app:addList="@{viewModel.savedArticleList}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
