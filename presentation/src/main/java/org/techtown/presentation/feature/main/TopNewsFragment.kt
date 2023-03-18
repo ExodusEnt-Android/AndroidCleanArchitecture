@@ -2,42 +2,25 @@ package org.techtown.presentation.feature.main
 
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.ImageView
-import androidx.databinding.BindingAdapter
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import kotlinx.coroutines.launch
-import org.techtown.data.model.DataNewsRootModel
+import dagger.hilt.android.AndroidEntryPoint
 import org.techtown.presentation.R
 import org.techtown.presentation.base.BaseFragment
-import org.techtown.local.feature.database.database.AppDatabase
 import org.techtown.presentation.databinding.FragmentTopNewsBinding
-import org.techtown.local.feature.news.LocalDataSourceImpl
-import org.techtown.remote.feature.news.RemoteDataSourceImpl
 import org.techtown.presentation.ext.navigateWithAnim
 import org.techtown.presentation.feature.main.adapter.TopNewsAdapter
-import org.techtown.presentation.model.Articles
-import org.techtown.data.repository.news.NewsRepository
-import org.techtown.data.repository.news.NewsRepositoryImpl
 import org.techtown.presentation.feature.main.adapter.TopNewsItemListener
 import org.techtown.presentation.feature.main.viewmodel.TopNewsViewModel
-import org.techtown.presentation.feature.main.viewmodel.factory.ViewModelFactory
-import org.techtown.presentation.model.NewsRootModel.Companion.fromData
-import org.techtown.remote.retrofit.NewsService
 
+@AndroidEntryPoint
 class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_top_news) {
 
     private lateinit var navController: NavController
@@ -46,20 +29,7 @@ class TopNewsFragment : BaseFragment<FragmentTopNewsBinding>(R.layout.fragment_t
     private lateinit var topNewsAdapter: TopNewsAdapter
     var recyclerViewScrollState: Parcelable? = null
 
-    //db setting
-    private val database: AppDatabase by lazy {
-        AppDatabase.getInstance(requireActivity().applicationContext)
-    }
-
-    private val newsRepository: NewsRepository by lazy {
-        val localDataSource = LocalDataSourceImpl(database)
-        val remoteDataSource = RemoteDataSourceImpl(NewsService.apiService)
-        NewsRepositoryImpl(localDataSource, remoteDataSource)
-    }
-
-    private val topNewsViewModel : TopNewsViewModel by viewModels {
-        ViewModelFactory(newsRepository = newsRepository)
-    }
+    private val topNewsViewModel: TopNewsViewModel by viewModels()
 
 
     override fun FragmentTopNewsBinding.onCreateView() {

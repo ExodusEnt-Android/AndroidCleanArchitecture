@@ -5,13 +5,14 @@ import org.techtown.data.model.DataArticles
 import org.techtown.data.model.DataNewsRootModel
 import org.techtown.data.source.local.news.LocalDataSource
 import org.techtown.data.source.remote.news.RemoteDataSource
+import javax.inject.Inject
 
 
 /**
  * @see
  * */
 
-class NewsRepositoryImpl(
+class NewsRepositoryImpl @Inject constructor(
     private val localDataSource: LocalDataSource,
     private val remoteDataSource: RemoteDataSource
 ) : NewsRepository {

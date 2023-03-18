@@ -5,12 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.techtown.data.repository.news.NewsRepository
 import org.techtown.presentation.model.Articles
 import org.techtown.presentation.model.Articles.Companion.toData
+import javax.inject.Inject
 
-class NewsDetailViewmodel(
+@HiltViewModel
+class NewsDetailViewmodel @Inject constructor(
     private val newsRepository: NewsRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
