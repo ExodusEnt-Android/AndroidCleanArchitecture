@@ -18,25 +18,17 @@ import com.example.local.dataSource.LocalDataSourceImpl
 import com.example.presentation.viewModel.CategoryNewsViewModel
 import com.example.presentation.model.PresentationArticles
 import com.example.remote.dataSource.RemoteDataSourceImpl
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint  //객체를 주입할 대상에게 선언 (Activity ,Fragment ,View ,Service ,BroadcastReceiver)
 class CategoryNewsFragment : BaseFragment<FragmentCategoryNewsBinding>(R.layout.fragment_category_news), NewsListAdapter.OnClickListener{
 
     private var categoryAdapter : NewsListAdapter? = null
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController
 
-    private val categoryNewsFragmentRepository : NewsRepository by lazy{
-        val remoteDataSourceImpl = RemoteDataSourceImpl()
-        val localDataSourceImpl = LocalDataSourceImpl(
-            AppDB.getInstance(requireActivity())
-        )
 
-        NewsRepositoryImpl(remoteDataSourceImpl, localDataSourceImpl)
-    }
-
-    private val categoryNewsViewModel: CategoryNewsViewModel by viewModels {
-        ViewModelFactory(repository = categoryNewsFragmentRepository)
-    }
+    private val categoryNewsViewModel: CategoryNewsViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -13,8 +13,9 @@ import com.example.data.model.Articles
 import com.example.data.model.DataNewsModel
 import com.example.data.remote.RemoteDataSource
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class NewsRepositoryImpl(
+class NewsRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource
 ) : NewsRepository {

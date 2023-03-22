@@ -18,8 +18,10 @@ import com.example.local.dataSource.LocalDataSourceImpl
 import com.example.presentation.viewModel.SavedViewModel
 import com.example.presentation.model.PresentationArticles
 import com.example.remote.dataSource.RemoteDataSourceImpl
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
+@AndroidEntryPoint  //객체를 주입할 대상에게 선언 (Activity ,Fragment ,View ,Service ,BroadcastReceiver)
 class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved) , NewsListAdapter.OnClickListener{
 
     private var saveNewsAdapter : NewsListAdapter? = null
@@ -27,18 +29,7 @@ class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController
 
-    private val savedFragmentRepository : NewsRepository by lazy {
-        val remoteDataSourceImpl = RemoteDataSourceImpl()
-        val localDataSourceImpl = LocalDataSourceImpl(context?.let {
-            AppDB.getInstance(it)
-        }!!)
-
-        NewsRepositoryImpl(remoteDataSourceImpl, localDataSourceImpl)
-    }
-
-    private val savedViewModel: SavedViewModel by viewModels {
-        ViewModelFactory(repository = savedFragmentRepository)
-    }
+    private val savedViewModel: SavedViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
