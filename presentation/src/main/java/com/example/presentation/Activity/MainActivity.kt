@@ -7,8 +7,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.presentation.R
 import com.example.presentation.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
+@AndroidEntryPoint  //객체를 주입할 대상에게 선언 (Activity ,Fragment ,View ,Service ,BroadcastReceiver)
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     lateinit var navHostFragment : NavHostFragment

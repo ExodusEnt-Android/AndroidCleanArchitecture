@@ -20,7 +20,7 @@ import com.example.remote.mapper.RemoteMapper
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class RemoteNewsModel(
+data class RemoteNewsModel constructor(
     var articles: List<RemoteArticles> = listOf()
 ):Parcelable{
     companion object : RemoteMapper<RemoteNewsModel, DataNewsModel> {

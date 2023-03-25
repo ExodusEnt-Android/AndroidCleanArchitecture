@@ -11,6 +11,7 @@ package com.example.local.dataSource
 import com.example.data.local.LocalDataSource
 import com.example.data.model.Articles
 import com.example.local.Room.AppDB
+import com.example.local.Room.NewsDao
 import com.example.local.model.LocalArticles.Companion.fromData
 import com.example.local.model.LocalArticles.Companion.toData
 import kotlinx.coroutines.Dispatchers
@@ -18,17 +19,18 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 
 /**
  * @see
  * */
 
-class LocalDataSourceImpl(
-    private val appDB: AppDB
+class LocalDataSourceImpl @Inject constructor(
+    private val newsDao: NewsDao
 ) : LocalDataSource {
     override suspend fun getAll(): Flow<List<Articles>> = flow {
-        val result = appDB.newsDao().getAll()
+        val result = newsDao.getAll()
         emit(result.map {
             it.toData()
         })
@@ -36,13 +38,13 @@ class LocalDataSourceImpl(
 
     override suspend fun insert(items: Articles)  {
         withContext(Dispatchers.IO){
-            appDB.newsDao().insert(items.fromData())
+            newsDao.insert(items.fromData())
         }
     }
 
     override suspend fun deleteArticle(url: String) {
         withContext(Dispatchers.IO){
-            appDB.newsDao().deleteArticle(url)
+            newsDao.deleteArticle(url)
         }
     }
 
