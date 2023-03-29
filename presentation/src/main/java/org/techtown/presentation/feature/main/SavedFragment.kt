@@ -62,6 +62,8 @@ class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved
         binding.rvSavedNews.apply {
             adapter = savedNewsAdapter
         }
+
+        savedViewModel.fetchSavedArticleList()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
