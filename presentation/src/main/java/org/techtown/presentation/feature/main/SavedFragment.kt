@@ -6,29 +6,19 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
-import kotlinx.coroutines.launch
+import dagger.hilt.android.AndroidEntryPoint
 import org.techtown.presentation.R
 import org.techtown.presentation.base.BaseFragment
 import org.techtown.presentation.databinding.FragmentSavedBinding
-import org.techtown.local.feature.news.LocalDataSourceImpl
-import org.techtown.remote.feature.news.RemoteDataSourceImpl
 import org.techtown.presentation.ext.navigateWithAnim
 import org.techtown.presentation.feature.main.adapter.TopNewsAdapter
-import org.techtown.presentation.model.Articles
-import org.techtown.data.repository.news.NewsRepository
-import org.techtown.data.repository.news.NewsRepositoryImpl
-import org.techtown.local.feature.database.database.AppDatabase
 import org.techtown.presentation.feature.main.adapter.TopNewsItemListener
 import org.techtown.presentation.feature.main.viewmodel.SavedViewModel
-import org.techtown.presentation.feature.main.viewmodel.factory.ViewModelFactory
-import org.techtown.presentation.model.Articles.Companion.fromData
-import org.techtown.remote.retrofit.NewsService
 
+@AndroidEntryPoint
 class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved) {
 
     private lateinit var savedNewsAdapter: TopNewsAdapter
@@ -38,19 +28,7 @@ class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved
 
     var recyclerViewScrollState: Parcelable? = null
 
-    private val database: AppDatabase by lazy {
-        AppDatabase.getInstance(requireActivity().applicationContext)
-    }
-
-    private val newsRepository: NewsRepository by lazy {
-        val localDataSource = LocalDataSourceImpl(database)
-        val remoteDataSource = RemoteDataSourceImpl(NewsService.apiService)
-        NewsRepositoryImpl(localDataSource, remoteDataSource)
-    }
-
-    private val savedViewModel: SavedViewModel by viewModels {
-        ViewModelFactory(newsRepository = newsRepository)
-    }
+    private val savedViewModel: SavedViewModel by viewModels()
 
     override fun FragmentSavedBinding.onCreateView() {
 
@@ -84,6 +62,8 @@ class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved
         binding.rvSavedNews.apply {
             adapter = savedNewsAdapter
         }
+
+        savedViewModel.fetchSavedArticleList()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
