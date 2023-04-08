@@ -6,9 +6,9 @@ import com.example.domain.entity.DataNewsRootEntity
 import com.example.domain.entity.DataSourceEntity
 import kotlinx.parcelize.Parcelize
 import org.techtown.presentation.mapper.NewPresentationMapper
-import org.techtown.presentation.model.Articles.Companion.fromData
+import org.techtown.presentation.model.Articles.Companion.fromEntity
 import org.techtown.presentation.model.Articles.Companion.toEntity
-import org.techtown.presentation.model.Source.Companion.fromData
+import org.techtown.presentation.model.Source.Companion.fromEntity
 import org.techtown.presentation.model.Source.Companion.toEntity
 
 data class NewsRootModel(
@@ -28,12 +28,12 @@ data class NewsRootModel(
             )
         }
 
-        override fun DataNewsRootEntity.fromData(): NewsRootModel {
+        override fun DataNewsRootEntity.fromEntity(): NewsRootModel {
             return NewsRootModel(
                 status = this.status,
                 totalResults = this.totalResults,
                 articles = this.articles.map {
-                    it.fromData()
+                    it.fromEntity()
                 }
             )
         }
@@ -53,7 +53,7 @@ data class Source(
                 name = this.name
             )
 
-        override fun DataSourceEntity.fromData(): Source {
+        override fun DataSourceEntity.fromEntity(): Source {
             return Source(
                 id = this.id,
                 name = this.name
@@ -88,9 +88,9 @@ data class Articles(
                 isLoading = this.isLoading
             )
 
-        override fun DataArticlesEntity.fromData(): Articles {
+        override fun DataArticlesEntity.fromEntity(): Articles {
             return Articles(
-                source = this.source?.fromData(),
+                source = this.source?.fromEntity(),
                 author = this.author,
                 title = this.title,
                 description = this.description,

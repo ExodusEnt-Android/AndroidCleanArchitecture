@@ -6,5 +6,5 @@ package org.techtown.presentation.mapper
 
 interface NewPresentationMapper<T, E> {
     fun T.toEntity(): E
-    fun E.fromData(): T
+    fun E.fromEntity(): T
 }

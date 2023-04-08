@@ -10,7 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.techtown.presentation.model.Articles
-import org.techtown.presentation.model.NewsRootModel.Companion.fromData
+import org.techtown.presentation.model.NewsRootModel.Companion.fromEntity
 import javax.inject.Inject
 
 
@@ -40,7 +40,7 @@ class TopNewsViewModel @Inject constructor(
                 getRemoteNewsUseCase.invoke(
                     country = "us", pageSize = limit, offset = offset, category = null
                 ).map { data ->
-                    data.fromData()
+                    data.fromEntity()
                 }.collect { presentArticles ->
                     if (presentArticles.articles.isNotEmpty()) {
                         tempArticleList.addAll(presentArticles.articles)

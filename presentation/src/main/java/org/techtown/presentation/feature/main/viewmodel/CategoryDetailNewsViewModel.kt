@@ -10,7 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.techtown.presentation.model.Articles
-import org.techtown.presentation.model.NewsRootModel.Companion.fromData
+import org.techtown.presentation.model.NewsRootModel.Companion.fromEntity
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,7 +44,7 @@ class CategoryDetailNewsViewModel @Inject constructor(
                     limit,
                     offset
                 ).map { data ->
-                    data.fromData()
+                    data.fromEntity()
                 }.collect { presentArticles ->
 
                     if (presentArticles.articles.isNotEmpty()) {
