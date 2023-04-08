@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoryDetailNewsViewModel @Inject constructor(
-    private val newsUseCase: GetRemoteNewsUseCase,
+    private val getRemoteNewsUseCase: GetRemoteNewsUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -38,7 +38,7 @@ class CategoryDetailNewsViewModel @Inject constructor(
     fun getCategoryArticles() {
         if (shouldRequestViewMore) {
             viewModelScope.launch {
-                newsUseCase(
+                getRemoteNewsUseCase(
                     "us",
                     category = category,
                     limit,

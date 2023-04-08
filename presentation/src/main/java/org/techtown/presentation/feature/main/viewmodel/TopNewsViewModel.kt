@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TopNewsViewModel @Inject constructor(
-    private val newsUseCase: GetRemoteNewsUseCase,
+    private val getRemoteNewsUseCase: GetRemoteNewsUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -37,7 +37,7 @@ class TopNewsViewModel @Inject constructor(
     fun getArticles() {
         if (shouldRequestViewMore) {
             viewModelScope.launch {
-                newsUseCase.invoke(
+                getRemoteNewsUseCase.invoke(
                     country = "us", pageSize = limit, offset = offset, category = null
                 ).map { data ->
                     data.fromData()
