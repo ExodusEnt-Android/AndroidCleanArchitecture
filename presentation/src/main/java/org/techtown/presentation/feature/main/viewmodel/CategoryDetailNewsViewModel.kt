@@ -5,17 +5,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.domain.usecase.GetRemoteNewsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import org.techtown.data.repository.news.NewsRepository
 import org.techtown.presentation.model.Articles
-import org.techtown.presentation.model.NewsRootModel.Companion.fromData
+import org.techtown.presentation.model.NewsRootModel.Companion.fromEntity
 import javax.inject.Inject
 
 @HiltViewModel
 class CategoryDetailNewsViewModel @Inject constructor(
-    private val newsRepository: NewsRepository,
+    private val getRemoteNewsUseCase: GetRemoteNewsUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -38,13 +38,13 @@ class CategoryDetailNewsViewModel @Inject constructor(
     fun getCategoryArticles() {
         if (shouldRequestViewMore) {
             viewModelScope.launch {
-                newsRepository.getTopHeadlinesArticles(
+                getRemoteNewsUseCase(
                     "us",
                     category = category,
                     limit,
                     offset
                 ).map { data ->
-                    data.fromData()
+                    data.fromEntity()
                 }.collect { presentArticles ->
 
                     if (presentArticles.articles.isNotEmpty()) {

@@ -5,16 +5,20 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.domain.usecase.DeleteLocalNewsUseCase
+import com.example.domain.usecase.InsertLocalNewsUseCase
+import com.example.domain.usecase.SelectLocalNewsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import org.techtown.data.repository.news.NewsRepository
 import org.techtown.presentation.model.Articles
-import org.techtown.presentation.model.Articles.Companion.toData
+import org.techtown.presentation.model.Articles.Companion.toEntity
 import javax.inject.Inject
 
 @HiltViewModel
 class NewsDetailViewmodel @Inject constructor(
-    private val newsRepository: NewsRepository,
+    private val selectLocalNewsUseCase: SelectLocalNewsUseCase,
+    private val insertLocalNewsUseCase: InsertLocalNewsUseCase,
+    private val deleteLocalNewsUseCase: DeleteLocalNewsUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -36,7 +40,7 @@ class NewsDetailViewmodel @Inject constructor(
 
     private fun getAllArticles() {
         viewModelScope.launch {
-            newsRepository.getAllArticles().collect { data ->
+            selectLocalNewsUseCase.invoke().collect { data ->
                 val isSelected = data.any { it.url == articles?.url }
                 _isSelected.value = isSelected
             }
@@ -45,14 +49,14 @@ class NewsDetailViewmodel @Inject constructor(
 
     fun deleteArticle() {
         viewModelScope.launch {
-            newsRepository.deleteArticle(articles?.url ?: return@launch)
+            deleteLocalNewsUseCase(articles?.url ?: return@launch)
             _isSelected.value = false
         }
     }
 
     fun insertArticle() {
         viewModelScope.launch {
-            newsRepository.insertArticle(articles.toData())
+            insertLocalNewsUseCase(articles.toEntity())
             _isSelected.value = true
         }
     }

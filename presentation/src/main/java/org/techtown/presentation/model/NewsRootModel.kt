@@ -1,39 +1,39 @@
 package org.techtown.presentation.model
 
 import android.os.Parcelable
+import com.example.domain.entity.DataArticlesEntity
+import com.example.domain.entity.DataNewsRootEntity
+import com.example.domain.entity.DataSourceEntity
 import kotlinx.parcelize.Parcelize
-import org.techtown.data.model.DataArticles
-import org.techtown.data.model.DataNewsRootModel
-import org.techtown.data.model.DataSource
 import org.techtown.presentation.mapper.NewPresentationMapper
-import org.techtown.presentation.model.Articles.Companion.fromData
-import org.techtown.presentation.model.Articles.Companion.toData
-import org.techtown.presentation.model.Source.Companion.fromData
-import org.techtown.presentation.model.Source.Companion.toData
+import org.techtown.presentation.model.Articles.Companion.fromEntity
+import org.techtown.presentation.model.Articles.Companion.toEntity
+import org.techtown.presentation.model.Source.Companion.fromEntity
+import org.techtown.presentation.model.Source.Companion.toEntity
 
 data class NewsRootModel(
     var status: String? = null,
     var totalResults: Int? = null,
     var articles: List<Articles> = listOf()
 ) {
-    companion object : NewPresentationMapper<NewsRootModel, DataNewsRootModel> {
-        override fun NewsRootModel.toData(): DataNewsRootModel {
-            return DataNewsRootModel(
+    companion object : NewPresentationMapper<NewsRootModel, DataNewsRootEntity> {
+        override fun NewsRootModel.toEntity(): DataNewsRootEntity {
+            return DataNewsRootEntity(
                 status = this.status,
                 totalResults = this.totalResults,
                 articles = this.articles.map {
-                    it.toData()
+                    it.toEntity()
                 }
 
             )
         }
 
-        override fun DataNewsRootModel.fromData(): NewsRootModel {
+        override fun DataNewsRootEntity.fromEntity(): NewsRootModel {
             return NewsRootModel(
                 status = this.status,
                 totalResults = this.totalResults,
                 articles = this.articles.map {
-                    it.fromData()
+                    it.fromEntity()
                 }
             )
         }
@@ -46,14 +46,14 @@ data class Source(
     var id: String? = null,
     var name: String? = null
 ) : Parcelable {
-    companion object : NewPresentationMapper<Source, DataSource> {
-        override fun Source.toData(): DataSource =
-            DataSource(
+    companion object : NewPresentationMapper<Source, DataSourceEntity> {
+        override fun Source.toEntity(): DataSourceEntity =
+            DataSourceEntity(
                 id = this.id,
                 name = this.name
             )
 
-        override fun DataSource.fromData(): Source {
+        override fun DataSourceEntity.fromEntity(): Source {
             return Source(
                 id = this.id,
                 name = this.name
@@ -74,10 +74,10 @@ data class Articles(
     var content: String? = null,
     var isLoading: Boolean = false,
 ) : Parcelable {
-    companion object : NewPresentationMapper<Articles, DataArticles> {
-        override fun Articles.toData(): DataArticles =
-            DataArticles(
-                source = this.source?.toData(),
+    companion object : NewPresentationMapper<Articles, DataArticlesEntity> {
+        override fun Articles.toEntity(): DataArticlesEntity =
+            DataArticlesEntity(
+                source = this.source?.toEntity(),
                 author = this.author,
                 title = this.title,
                 description = this.description,
@@ -88,9 +88,9 @@ data class Articles(
                 isLoading = this.isLoading
             )
 
-        override fun DataArticles.fromData(): Articles {
+        override fun DataArticlesEntity.fromEntity(): Articles {
             return Articles(
-                source = this.source?.fromData(),
+                source = this.source?.fromEntity(),
                 author = this.author,
                 title = this.title,
                 description = this.description,
