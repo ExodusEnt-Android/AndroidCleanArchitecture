@@ -5,14 +5,11 @@ import com.example.domain.entity.DataArticlesEntity
 import com.example.domain.entity.DataNewsRootEntity
 import com.example.domain.entity.DataSourceEntity
 import kotlinx.parcelize.Parcelize
-import org.techtown.data.model.DataArticles
-import org.techtown.data.model.DataNewsRootModel
-import org.techtown.data.model.DataSource
 import org.techtown.presentation.mapper.NewPresentationMapper
 import org.techtown.presentation.model.Articles.Companion.fromData
-import org.techtown.presentation.model.Articles.Companion.toData
+import org.techtown.presentation.model.Articles.Companion.toEntity
 import org.techtown.presentation.model.Source.Companion.fromData
-import org.techtown.presentation.model.Source.Companion.toData
+import org.techtown.presentation.model.Source.Companion.toEntity
 
 data class NewsRootModel(
     var status: String? = null,
@@ -20,12 +17,12 @@ data class NewsRootModel(
     var articles: List<Articles> = listOf()
 ) {
     companion object : NewPresentationMapper<NewsRootModel, DataNewsRootEntity> {
-        override fun NewsRootModel.toData(): DataNewsRootEntity {
+        override fun NewsRootModel.toEntity(): DataNewsRootEntity {
             return DataNewsRootEntity(
                 status = this.status,
                 totalResults = this.totalResults,
                 articles = this.articles.map {
-                    it.toData()
+                    it.toEntity()
                 }
 
             )
@@ -50,7 +47,7 @@ data class Source(
     var name: String? = null
 ) : Parcelable {
     companion object : NewPresentationMapper<Source, DataSourceEntity> {
-        override fun Source.toData(): DataSourceEntity =
+        override fun Source.toEntity(): DataSourceEntity =
             DataSourceEntity(
                 id = this.id,
                 name = this.name
@@ -78,9 +75,9 @@ data class Articles(
     var isLoading: Boolean = false,
 ) : Parcelable {
     companion object : NewPresentationMapper<Articles, DataArticlesEntity> {
-        override fun Articles.toData(): DataArticlesEntity =
+        override fun Articles.toEntity(): DataArticlesEntity =
             DataArticlesEntity(
-                source = this.source?.toData(),
+                source = this.source?.toEntity(),
                 author = this.author,
                 title = this.title,
                 description = this.description,

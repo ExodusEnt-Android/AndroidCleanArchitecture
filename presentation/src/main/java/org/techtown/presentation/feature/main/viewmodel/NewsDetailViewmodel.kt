@@ -11,7 +11,7 @@ import com.example.domain.usecase.SelectLocalNewsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.techtown.presentation.model.Articles
-import org.techtown.presentation.model.Articles.Companion.toData
+import org.techtown.presentation.model.Articles.Companion.toEntity
 import javax.inject.Inject
 
 @HiltViewModel
@@ -56,7 +56,7 @@ class NewsDetailViewmodel @Inject constructor(
 
     fun insertArticle() {
         viewModelScope.launch {
-            insertLocalNewsUseCase(articles.toData())
+            insertLocalNewsUseCase(articles.toEntity())
             _isSelected.value = true
         }
     }
