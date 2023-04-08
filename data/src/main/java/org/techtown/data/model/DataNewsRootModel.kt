@@ -6,10 +6,10 @@ import com.example.domain.entity.DataNewsRootEntity
 import com.example.domain.entity.DataSourceEntity
 import kotlinx.parcelize.Parcelize
 import org.techtown.data.mapper.NewsDataMapper
-import org.techtown.data.model.DataArticles.Companion.fromData
-import org.techtown.data.model.DataArticles.Companion.toData
-import org.techtown.data.model.DataSource.Companion.fromData
-import org.techtown.data.model.DataSource.Companion.toData
+import org.techtown.data.model.DataArticles.Companion.fromEntity
+import org.techtown.data.model.DataArticles.Companion.toEntity
+import org.techtown.data.model.DataSource.Companion.fromEntity
+import org.techtown.data.model.DataSource.Companion.toEntity
 
 /**
  * @see
@@ -22,23 +22,23 @@ data class DataNewsRootModel(
     var articles: List<DataArticles> = listOf()
 ) : Parcelable {
     companion object : NewsDataMapper<DataNewsRootEntity, DataNewsRootModel> {
-        override fun DataNewsRootEntity.toData(): DataNewsRootModel {
+        override fun DataNewsRootEntity.toEntity(): DataNewsRootModel {
             return DataNewsRootModel(
                 status = this.status,
                 totalResults = this.totalResults,
                 articles = this.articles.map {
-                    it.toData()
+                    it.toEntity()
                 }
 
             )
         }
 
-        override fun DataNewsRootModel.fromData(): DataNewsRootEntity {
+        override fun DataNewsRootModel.fromEntity(): DataNewsRootEntity {
             return DataNewsRootEntity(
                 status = this.status,
                 totalResults = this.totalResults,
                 articles = this.articles.map {
-                    it.fromData()
+                    it.fromEntity()
                 }
             )
         }
@@ -52,14 +52,14 @@ data class DataSource(
     var name: String? = null
 ) : Parcelable {
     companion object : NewsDataMapper<DataSourceEntity, DataSource> {
-        override fun DataSourceEntity.toData(): DataSource =
+        override fun DataSourceEntity.toEntity(): DataSource =
             DataSource(
                 id = this.id,
                 name = this.name
             )
 
 
-        override fun DataSource.fromData(): DataSourceEntity {
+        override fun DataSource.fromEntity(): DataSourceEntity {
             return DataSourceEntity(
                 id = this.id,
                 name = this.name
@@ -82,9 +82,9 @@ data class DataArticles(
     var isLoading: Boolean = false,
 ) : Parcelable {
     companion object : NewsDataMapper<DataArticlesEntity, DataArticles> {
-        override fun DataArticlesEntity.toData(): DataArticles =
+        override fun DataArticlesEntity.toEntity(): DataArticles =
             DataArticles(
-                source = this.source?.toData(),
+                source = this.source?.toEntity(),
                 author = this.author,
                 title = this.title,
                 description = this.description,
@@ -95,9 +95,9 @@ data class DataArticles(
                 isLoading = this.isLoading
             )
 
-        override fun DataArticles.fromData(): DataArticlesEntity {
+        override fun DataArticles.fromEntity(): DataArticlesEntity {
             return DataArticlesEntity(
-                source = this.source?.fromData(),
+                source = this.source?.fromEntity(),
                 author = this.author,
                 title = this.title,
                 description = this.description,

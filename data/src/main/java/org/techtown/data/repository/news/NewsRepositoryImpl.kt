@@ -4,13 +4,10 @@ import com.example.domain.entity.DataArticlesEntity
 import com.example.domain.entity.DataNewsRootEntity
 import com.example.domain.repository.NewsRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import org.techtown.data.model.DataArticles
-import org.techtown.data.model.DataArticles.Companion.fromData
-import org.techtown.data.model.DataArticles.Companion.toData
-import org.techtown.data.model.DataNewsRootModel
-import org.techtown.data.model.DataNewsRootModel.Companion.fromData
+import org.techtown.data.model.DataArticles.Companion.fromEntity
+import org.techtown.data.model.DataArticles.Companion.toEntity
+import org.techtown.data.model.DataNewsRootModel.Companion.fromEntity
 import org.techtown.data.source.local.news.LocalDataSource
 import org.techtown.data.source.remote.news.RemoteDataSource
 import javax.inject.Inject
@@ -35,16 +32,16 @@ class NewsRepositoryImpl @Inject constructor(
         pageSize = pageSize,
         offset = offset
     ).map { data ->
-        data.fromData()
+        data.fromEntity()
     }
 
     override suspend fun getAllArticles(): Flow<List<DataArticlesEntity>> =
         localDataSource.getAllArticles().map { savedArticles ->
-            savedArticles.map { it.fromData() }
+            savedArticles.map { it.fromEntity() }
         }
 
     override suspend fun insertArticle(articles: DataArticlesEntity) {
-        localDataSource.addArticle(articles = articles.toData())
+        localDataSource.addArticle(articles = articles.toEntity())
     }
 
     override suspend fun deleteArticle(url: String) {
