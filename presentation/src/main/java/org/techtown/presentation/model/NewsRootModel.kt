@@ -1,6 +1,9 @@
 package org.techtown.presentation.model
 
 import android.os.Parcelable
+import com.example.domain.entity.DataArticlesEntity
+import com.example.domain.entity.DataNewsRootEntity
+import com.example.domain.entity.DataSourceEntity
 import kotlinx.parcelize.Parcelize
 import org.techtown.data.model.DataArticles
 import org.techtown.data.model.DataNewsRootModel
@@ -16,9 +19,9 @@ data class NewsRootModel(
     var totalResults: Int? = null,
     var articles: List<Articles> = listOf()
 ) {
-    companion object : NewPresentationMapper<NewsRootModel, DataNewsRootModel> {
-        override fun NewsRootModel.toData(): DataNewsRootModel {
-            return DataNewsRootModel(
+    companion object : NewPresentationMapper<NewsRootModel, DataNewsRootEntity> {
+        override fun NewsRootModel.toData(): DataNewsRootEntity {
+            return DataNewsRootEntity(
                 status = this.status,
                 totalResults = this.totalResults,
                 articles = this.articles.map {
@@ -28,7 +31,7 @@ data class NewsRootModel(
             )
         }
 
-        override fun DataNewsRootModel.fromData(): NewsRootModel {
+        override fun DataNewsRootEntity.fromData(): NewsRootModel {
             return NewsRootModel(
                 status = this.status,
                 totalResults = this.totalResults,
@@ -46,14 +49,14 @@ data class Source(
     var id: String? = null,
     var name: String? = null
 ) : Parcelable {
-    companion object : NewPresentationMapper<Source, DataSource> {
-        override fun Source.toData(): DataSource =
-            DataSource(
+    companion object : NewPresentationMapper<Source, DataSourceEntity> {
+        override fun Source.toData(): DataSourceEntity =
+            DataSourceEntity(
                 id = this.id,
                 name = this.name
             )
 
-        override fun DataSource.fromData(): Source {
+        override fun DataSourceEntity.fromData(): Source {
             return Source(
                 id = this.id,
                 name = this.name
@@ -74,9 +77,9 @@ data class Articles(
     var content: String? = null,
     var isLoading: Boolean = false,
 ) : Parcelable {
-    companion object : NewPresentationMapper<Articles, DataArticles> {
-        override fun Articles.toData(): DataArticles =
-            DataArticles(
+    companion object : NewPresentationMapper<Articles, DataArticlesEntity> {
+        override fun Articles.toData(): DataArticlesEntity =
+            DataArticlesEntity(
                 source = this.source?.toData(),
                 author = this.author,
                 title = this.title,
@@ -88,7 +91,7 @@ data class Articles(
                 isLoading = this.isLoading
             )
 
-        override fun DataArticles.fromData(): Articles {
+        override fun DataArticlesEntity.fromData(): Articles {
             return Articles(
                 source = this.source?.fromData(),
                 author = this.author,

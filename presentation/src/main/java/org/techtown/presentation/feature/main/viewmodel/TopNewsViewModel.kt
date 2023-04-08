@@ -5,10 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.domain.usecase.GetRemoteNewsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import org.techtown.data.repository.news.NewsRepository
 import org.techtown.presentation.model.Articles
 import org.techtown.presentation.model.NewsRootModel.Companion.fromData
 import javax.inject.Inject
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TopNewsViewModel @Inject constructor(
-    private val newsRepository: NewsRepository,
+    private val newsUseCase: GetRemoteNewsUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -37,7 +37,7 @@ class TopNewsViewModel @Inject constructor(
     fun getArticles() {
         if (shouldRequestViewMore) {
             viewModelScope.launch {
-                newsRepository.getTopHeadlinesArticles(
+                newsUseCase.invoke(
                     country = "us", pageSize = limit, offset = offset, category = null
                 ).map { data ->
                     data.fromData()

@@ -5,17 +5,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.domain.repository.NewsRepository
+import com.example.domain.usecase.SelectLocalNewsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import org.techtown.data.repository.news.NewsRepository
 import org.techtown.presentation.model.Articles
 import org.techtown.presentation.model.Articles.Companion.fromData
 import javax.inject.Inject
 
 @HiltViewModel
 class SavedViewModel @Inject constructor(
-    private val newsRepository: NewsRepository,
+    private val selectLocalNewsUseCase: SelectLocalNewsUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -29,7 +30,7 @@ class SavedViewModel @Inject constructor(
         tempSavedArticleList.clear()
 
         viewModelScope.launch {
-            newsRepository.getAllArticles().map { savedArticles ->
+            selectLocalNewsUseCase.invoke().map { savedArticles ->
                 savedArticles.map { it.fromData() }
             }.collect { presentArticles ->
                 if (presentArticles.isNotEmpty()) {

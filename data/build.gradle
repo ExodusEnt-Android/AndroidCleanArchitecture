@@ -36,6 +36,8 @@ android {
 
 dependencies {
 
+    implementation project(":domain")
+
     // 코루틴
     def coroutine_version = "1.6.4"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"

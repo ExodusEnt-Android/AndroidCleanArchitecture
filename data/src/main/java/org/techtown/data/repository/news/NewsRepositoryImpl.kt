@@ -1,8 +1,16 @@
 package org.techtown.data.repository.news
 
+import com.example.domain.entity.DataArticlesEntity
+import com.example.domain.entity.DataNewsRootEntity
+import com.example.domain.repository.NewsRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import org.techtown.data.model.DataArticles
+import org.techtown.data.model.DataArticles.Companion.fromData
+import org.techtown.data.model.DataArticles.Companion.toData
 import org.techtown.data.model.DataNewsRootModel
+import org.techtown.data.model.DataNewsRootModel.Companion.fromData
 import org.techtown.data.source.local.news.LocalDataSource
 import org.techtown.data.source.remote.news.RemoteDataSource
 import javax.inject.Inject
@@ -21,18 +29,22 @@ class NewsRepositoryImpl @Inject constructor(
         category: String?,
         pageSize: Int,
         offset: Int
-    ): Flow<DataNewsRootModel> = remoteDataSource.getTopHeadlinesArticles(
+    ): Flow<DataNewsRootEntity> = remoteDataSource.getTopHeadlinesArticles(
         country = country,
         category = category,
         pageSize = pageSize,
         offset = offset
-    )
+    ).map { data ->
+        data.fromData()
+    }
 
-    override suspend fun getAllArticles(): Flow<List<DataArticles>> =
-        localDataSource.getAllArticles()
+    override suspend fun getAllArticles(): Flow<List<DataArticlesEntity>> =
+        localDataSource.getAllArticles().map { savedArticles ->
+            savedArticles.map { it.fromData() }
+        }
 
-    override suspend fun insertArticle(articles: DataArticles) {
-        localDataSource.addArticle(articles = articles)
+    override suspend fun insertArticle(articles: DataArticlesEntity) {
+        localDataSource.addArticle(articles = articles.toData())
     }
 
     override suspend fun deleteArticle(url: String) {
