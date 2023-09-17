@@ -12,8 +12,6 @@ android {
     defaultConfig {
         minSdk 24
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -32,9 +30,12 @@ android {
     kotlinOptions {
         jvmTarget = '11'
     }
+    namespace 'com.example.data'
 }
 
 dependencies {
+    implementation project(':domain')
+
 // 코루틴
     def coroutine_version = "1.6.4"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"

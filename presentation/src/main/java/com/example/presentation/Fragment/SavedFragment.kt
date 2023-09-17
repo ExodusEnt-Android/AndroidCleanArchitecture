@@ -1,13 +1,12 @@
 package com.example.presentation.fragment
 
-import ViewModelFactory
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.data.model.Articles
+import com.example.data.model.ArticlesDataModel
 import com.example.presentation.*
 import com.example.presentation.adapter.NewsListAdapter
 import com.example.presentation.databinding.FragmentSavedBinding
@@ -19,7 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved) , NewsListAdapter.OnClickListener{
 
     private var saveNewsAdapter : NewsListAdapter? = null
-    private lateinit var models : List<Articles>
+    private lateinit var models : List<ArticlesDataModel>
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController
 

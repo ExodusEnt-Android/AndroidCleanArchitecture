@@ -9,7 +9,7 @@
 package com.example.presentation.viewModel
 
 import androidx.lifecycle.*
-import com.example.data.repository.NewsRepository
+import com.example.domain.repository.NewsRepository
 import com.example.presentation.model.PresentationArticles
 import com.example.presentation.model.PresentationArticles.Companion.fromData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 @HiltViewModel
 class SavedViewModel @Inject constructor (
-    private val newsRepository: NewsRepository,
+    private val newsRepository: com.example.domain.repository.NewsRepository,
     private val savedStateHandle: SavedStateHandle
 ): ViewModel(){
 

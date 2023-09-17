@@ -11,7 +11,7 @@ package com.example.presentation.model
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.PrimaryKey
-import com.example.data.model.Articles
+import com.example.data.model.ArticlesDataModel
 import com.example.presentation.mapper.PresentationMapper
 import kotlinx.android.parcel.Parcelize
 
@@ -26,9 +26,9 @@ data class PresentationArticles(
     @ColumnInfo(name = "content") var content: String? = null,
 ) : Parcelable {
 
-    companion object : PresentationMapper<PresentationArticles, Articles> {
-        override fun PresentationArticles.toData(): Articles =
-            Articles(
+    companion object : PresentationMapper<PresentationArticles, ArticlesDataModel> {
+        override fun PresentationArticles.toData(): ArticlesDataModel =
+            ArticlesDataModel(
                 url = this.url,
                 author = this.author,
                 title = this.title,
@@ -38,7 +38,7 @@ data class PresentationArticles(
                 content = this.content
             )
 
-        override fun Articles.fromData(): PresentationArticles {
+        override fun ArticlesDataModel.fromData(): PresentationArticles {
             return PresentationArticles(
                 url = this.url,
                 author = this.author,

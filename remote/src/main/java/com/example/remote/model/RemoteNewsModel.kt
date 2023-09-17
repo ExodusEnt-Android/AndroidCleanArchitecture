@@ -11,7 +11,7 @@ package com.example.local.model
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.PrimaryKey
-import com.example.data.model.Articles
+import com.example.data.model.ArticlesDataModel
 import com.example.data.model.DataNewsModel
 import com.example.local.model.RemoteArticles.Companion.fromData
 import com.example.local.model.RemoteArticles.Companion.toData
@@ -26,7 +26,7 @@ data class RemoteNewsModel constructor(
     companion object : RemoteMapper<RemoteNewsModel, DataNewsModel> {
         override fun RemoteNewsModel.toData(): DataNewsModel {
             return DataNewsModel(
-                dataArticlesModel = this.articles.map {
+                dataArticlesModelDataModel = this.articles.map {
                     it.toData()
                 }
 
@@ -35,7 +35,7 @@ data class RemoteNewsModel constructor(
 
         override fun DataNewsModel.fromData(): RemoteNewsModel {
             return RemoteNewsModel(
-                articles = this.dataArticlesModel.map {
+                articles = this.dataArticlesModelDataModel.map {
                     it.fromData()
                 }
             )
@@ -54,9 +54,9 @@ data class RemoteArticles(
     @ColumnInfo(name = "content") var content: String? = null,
 ) : Parcelable{
 
-    companion object : RemoteMapper<RemoteArticles, Articles> {
-        override fun RemoteArticles.toData(): Articles =
-            Articles(
+    companion object : RemoteMapper<RemoteArticles, ArticlesDataModel> {
+        override fun RemoteArticles.toData(): ArticlesDataModel =
+            ArticlesDataModel(
                 url = this.url,
                 author = this.author,
                 title = this.title,
@@ -66,7 +66,7 @@ data class RemoteArticles(
                 content = this.content
             )
 
-        override fun Articles.fromData(): RemoteArticles {
+        override fun ArticlesDataModel.fromData(): RemoteArticles {
             return RemoteArticles(
                 url = this.url,
                 author = this.author,

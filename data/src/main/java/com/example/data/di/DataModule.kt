@@ -10,8 +10,8 @@ package com.example.data.di
 
 import com.example.data.local.LocalDataSource
 import com.example.data.remote.RemoteDataSource
-import com.example.data.repository.NewsRepository
 import com.example.data.repository.NewsRepositoryImpl
+import com.example.domain.repository.NewsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

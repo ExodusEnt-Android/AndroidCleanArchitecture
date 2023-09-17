@@ -12,11 +12,8 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.data.model.Articles
-import com.example.data.model.DataNewsModel
+import com.example.data.model.ArticlesDataModel
 import com.example.local.mapper.LocalMapper
-import com.example.local.model.LocalArticles.Companion.fromData
-import com.example.local.model.LocalArticles.Companion.toData
 
 import kotlinx.android.parcel.Parcelize
 
@@ -32,9 +29,9 @@ data class LocalArticles(
     @ColumnInfo(name = "content") var content: String? = null,
 ) : Parcelable{
 
-    companion object : LocalMapper<LocalArticles, Articles> {
-        override fun LocalArticles.toData(): Articles =
-            Articles(
+    companion object : LocalMapper<LocalArticles, ArticlesDataModel> {
+        override fun LocalArticles.toData(): ArticlesDataModel =
+            ArticlesDataModel(
                 url = this.url,
                 author = this.author,
                 title = this.title,
@@ -44,7 +41,7 @@ data class LocalArticles(
                 content = this.content
             )
 
-        override fun Articles.fromData(): LocalArticles {
+        override fun ArticlesDataModel.fromData(): LocalArticles {
             return LocalArticles(
                 url = this.url,
                 author = this.author,

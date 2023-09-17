@@ -9,8 +9,7 @@
 package com.example.local.dataSource
 
 import com.example.data.local.LocalDataSource
-import com.example.data.model.Articles
-import com.example.local.Room.AppDB
+import com.example.data.model.ArticlesDataModel
 import com.example.local.Room.NewsDao
 import com.example.local.model.LocalArticles.Companion.fromData
 import com.example.local.model.LocalArticles.Companion.toData
@@ -29,14 +28,14 @@ import javax.inject.Inject
 class LocalDataSourceImpl @Inject constructor(
     private val newsDao: NewsDao
 ) : LocalDataSource {
-    override suspend fun getAll(): Flow<List<Articles>> = flow {
+    override suspend fun getAll(): Flow<List<ArticlesDataModel>> = flow {
         val result = newsDao.getAll()
         emit(result.map {
             it.toData()
         })
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun insert(items: Articles)  {
+    override suspend fun insert(items: ArticlesDataModel)  {
         withContext(Dispatchers.IO){
             newsDao.insert(items.fromData())
         }
