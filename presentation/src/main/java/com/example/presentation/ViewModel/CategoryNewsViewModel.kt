@@ -9,13 +9,15 @@
 package com.example.presentation.viewModel
 
 import androidx.lifecycle.*
-import com.example.data.repository.NewsRepository
+import com.example.domain.repository.NewsRepository
 import com.example.presentation.model.PresentationArticles
 import com.example.presentation.model.PresentationArticles.Companion.fromData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-
-class CategoryNewsViewModel (
-    private val newsRepository: NewsRepository,
+import javax.inject.Inject
+@HiltViewModel
+class CategoryNewsViewModel @Inject constructor (
+    private val newsRepository: com.example.domain.repository.NewsRepository,
     private val savedStateHandle: SavedStateHandle
 ): ViewModel(){
 
@@ -37,7 +39,7 @@ class CategoryNewsViewModel (
     private fun newsCategory() {
         viewModelScope.launch {
             newsRepository.getNews("us",category).collect{
-                tempArticleList = it.dataArticlesModel.map { it.fromData() }
+                tempArticleList = it.dataArticlesModelDataModel.map { it.fromData() }
                 _articleList.value = tempArticleList
             }
         }

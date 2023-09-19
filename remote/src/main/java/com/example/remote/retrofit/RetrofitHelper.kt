@@ -5,6 +5,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitHelper {
 
-    val retrofit = Retrofit.Builder().baseUrl("https://newsapi.org/")
+    val retrofit: ApiService = Retrofit.Builder().baseUrl("https://newsapi.org/")
         .addConverterFactory(GsonConverterFactory.create()).build().create(com.example.remote.retrofit.ApiService::class.java)
 }

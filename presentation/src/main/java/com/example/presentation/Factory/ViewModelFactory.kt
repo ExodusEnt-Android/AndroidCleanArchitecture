@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.data.repository.NewsRepository
+import com.example.domain.repository.NewsRepository
 import com.example.presentation.viewModel.CategoryNewsViewModel
 import com.example.presentation.viewModel.NewsDetailViewModel
 import com.example.presentation.viewModel.SavedViewModel
@@ -18,7 +18,7 @@ import com.example.presentation.viewModel.TopNewsViewModel
 
 
 class ViewModelFactory(
-    private val repository: NewsRepository
+    private val repository: com.example.domain.repository.NewsRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
         return when {

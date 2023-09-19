@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-parcelize'
     id 'kotlin-kapt'
+    id'com.google.dagger.hilt.android'
 }
 
 android {
@@ -11,8 +12,6 @@ android {
     defaultConfig {
         minSdk 24
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -36,9 +35,11 @@ android {
         jvmTarget = '11'
         freeCompilerArgs += ["-Xjvm-default=all"]
     }
+    namespace 'com.example.presentation'
 }
 
 dependencies {
+    implementation project(':domain')
     implementation project(':data')
     implementation project(':local')
     implementation project(':remote')
@@ -77,4 +78,8 @@ dependencies {
     // For BottomNavigationView from Material Components
     implementation 'com.google.android.material:material:1.1.0'
     implementation "com.jakewharton.timber:timber:4.7.1"
+
+    //hilt
+    implementation "com.google.dagger:hilt-android:2.44"
+    kapt "com.google.dagger:hilt-android-compiler:2.44"
 }

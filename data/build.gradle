@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-parcelize'
     id 'kotlin-kapt'
+    id'com.google.dagger.hilt.android'
 }
 
 android {
@@ -11,8 +12,6 @@ android {
     defaultConfig {
         minSdk 24
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -31,11 +30,18 @@ android {
     kotlinOptions {
         jvmTarget = '11'
     }
+    namespace 'com.example.data'
 }
 
 dependencies {
+    implementation project(':domain')
+
 // 코루틴
     def coroutine_version = "1.6.4"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
+
+    //hilt
+    implementation "com.google.dagger:hilt-android:2.44"
+    kapt "com.google.dagger:hilt-android-compiler:2.44"
 }

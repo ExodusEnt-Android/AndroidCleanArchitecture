@@ -1,44 +1,28 @@
 package com.example.presentation.fragment
 
-import ViewModelFactory
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.data.model.Articles
-import com.example.data.repository.NewsRepository
-import com.example.data.repository.NewsRepositoryImpl
+import com.example.data.model.ArticlesDataModel
 import com.example.presentation.*
 import com.example.presentation.adapter.NewsListAdapter
-import com.example.local.Room.AppDB
 import com.example.presentation.databinding.FragmentSavedBinding
-import com.example.local.dataSource.LocalDataSourceImpl
 import com.example.presentation.viewModel.SavedViewModel
 import com.example.presentation.model.PresentationArticles
-import com.example.remote.dataSource.RemoteDataSourceImpl
-import timber.log.Timber
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint  //객체를 주입할 대상에게 선언 (Activity ,Fragment ,View ,Service ,BroadcastReceiver)
 class SavedFragment : BaseFragment<FragmentSavedBinding>(R.layout.fragment_saved) , NewsListAdapter.OnClickListener{
 
     private var saveNewsAdapter : NewsListAdapter? = null
-    private lateinit var models : List<Articles>
+    private lateinit var models : List<ArticlesDataModel>
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController
 
-    private val savedFragmentRepository : NewsRepository by lazy {
-        val remoteDataSourceImpl = RemoteDataSourceImpl()
-        val localDataSourceImpl = LocalDataSourceImpl(context?.let {
-            AppDB.getInstance(it)
-        }!!)
-
-        NewsRepositoryImpl(remoteDataSourceImpl, localDataSourceImpl)
-    }
-
-    private val savedViewModel: SavedViewModel by viewModels {
-        ViewModelFactory(repository = savedFragmentRepository)
-    }
+    private val savedViewModel: SavedViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

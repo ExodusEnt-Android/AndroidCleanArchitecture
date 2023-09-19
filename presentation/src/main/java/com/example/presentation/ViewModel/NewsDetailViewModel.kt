@@ -9,13 +9,15 @@
 package com.example.presentation.viewModel
 
 import androidx.lifecycle.*
-import com.example.data.repository.NewsRepository
+import com.example.domain.repository.NewsRepository
 import com.example.presentation.model.PresentationArticles
 import com.example.presentation.model.PresentationArticles.Companion.toData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-
-class NewsDetailViewModel (
-    private val newsRepository: NewsRepository,
+import javax.inject.Inject
+@HiltViewModel
+class NewsDetailViewModel @Inject constructor (
+    private val newsRepository: com.example.domain.repository.NewsRepository,
     private val savedStateHandle: SavedStateHandle
 ): ViewModel(){
     private val _isSaved = MutableLiveData<Boolean>(false)

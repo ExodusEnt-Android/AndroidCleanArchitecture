@@ -6,17 +6,14 @@
  *
  * */
 
-package com.example.data.model
+package com.example.domain.entity
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
-
-data class DataNewsModel(
-    var dataArticlesModelDataModel: List<ArticlesDataModel> = listOf()
+data class NewsModelEntity(
+    var dataArticlesModel: List<ArticlesEntity>
 )
 
-@Parcelize
-data class ArticlesDataModel(
+//data 모듈
+class ArticlesEntity(
     var url: String,
     var author: String? = null,
     var title: String,
@@ -24,4 +21,8 @@ data class ArticlesDataModel(
     var urlToImage: String? = null,
     var publishedAt: String? = null,
     var content: String? = null,
-) : Parcelable
+)
+
+//presentation 모듈
+
+

@@ -9,12 +9,15 @@
 package com.example.presentation.viewModel
 
 import androidx.lifecycle.*
-import com.example.data.repository.NewsRepository
+import com.example.domain.repository.NewsRepository
 import com.example.presentation.model.PresentationArticles
 import com.example.presentation.model.PresentationArticles.Companion.fromData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-
-class TopNewsViewModel (
+import javax.inject.Inject
+@HiltViewModel
+class TopNewsViewModel @Inject constructor (
+    private val useCase : GetNewsUse
     private val newsRepository: NewsRepository,
     private val savedStateHandle: SavedStateHandle
 ):ViewModel(){
@@ -29,8 +32,8 @@ class TopNewsViewModel (
     }
     fun topNews() {
         viewModelScope.launch {
-            newsRepository.getNews("us", null).collect{ it ->
-                tempArticleList = it.dataArticlesModel.map { it.fromData() }
+            userCase().collect{ it ->
+                tempArticleList = it.dataArticlesModelDataModel.map { it.fromData() }
                 _articleList.value = tempArticleList
             }
         }

@@ -8,7 +8,7 @@
 
 package com.example.data.local
 
-import com.example.data.model.Articles
+import com.example.data.model.ArticlesDataModel
 import kotlinx.coroutines.flow.Flow
 
 
@@ -18,9 +18,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface LocalDataSource{
 
-    suspend fun getAll() : Flow<List<Articles>>
+    suspend fun getAll() : Flow<List<ArticlesDataModel>>
 
-    suspend fun insert(items : Articles)
+    suspend fun insert(items : ArticlesDataModel)
 
     suspend fun deleteArticle(url : String)
 }
